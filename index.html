@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>物品共享平台 - ？？</title>
+    <link rel="stylesheet" href="./reset.css">
+    <link rel="stylesheet" href="./main.css">
+</head>
+<body>
+    <!-- 常规侧边栏 -->
+    <div class="l-sidebar">
+        <div class="share-user">
+            <div class="share-user-btn">
+                <img src="" alt="退出登录" id="share-user__logout">
+                <img src="" alt="更改主题" id="share-change-theme">
+            </div>
+            <div class="share-user-info">
+                <img src="./images/head.png" alt="头像" id="share-user-info__head">
+                <span id="share-user-info__name">点击登录/注册</span>
+            </div>
+        </div>
+        <div class="share-require">
+            <button class="share-require__btn">我要借出</button>
+            <button class="share-require__btn">我要借入</button>
+        </div>
+        <div class="share-column">
+            <ul class="share-column-list">
+                <li class="share-column-list__item">查看全部</li>
+                <li class="share-column-list__item">我的出借</li>
+                <li class="share-column-list__item">我的借入</li>
+                <li class="share-column-list__item">我的收藏</li>
+                <li class="share-column-list__item">...</li>
+            </ul>
+        </div>
+    </div>
+    <!-- 登录侧边栏 -->
+    <div class="l-sidebar--account">
+        <div class="share-login-cancel">
+            <a href="#" id="share-login-cancel__a">◀返回</a>
+        </div>
+        <div class="share-logo">
+            <img src="./images/tmp-logo.png" alt="logo" id="share-logo__img">
+        </div>
+        <div class="share-choose-login-reg">
+            <span class="share-choose-login-reg__span share-choose-login-reg__span--act">我要登录</span>
+            <span class="share-choose-login-reg__span">我要注册</span>
+        </div>
+        <div class="share-account share-account__login">
+            <form action="" method="get">
+                账号<input type="text">
+                <br>
+                密码<input type="password" name="" id="">
+                <br>
+                <input type="button" value="登录"  class="share-account__btn">
+            </form>
+        </div>
+        <div class="share-account share-account__register">
+                <form action="" method="get">
+                    账号<input type="text" name="" id="">
+                    <br>
+                    密码<input type="password" name="" id="">
+                    <br>
+                    确认密码<input type="password" name="" id="">
+                    <br>
+                    用户名<input type="text" name="" id="">
+                    <br>
+                    <input type="button" value="注册"  class="share-account__btn">
+                </form>
+            </div>
+    </div>
+    <!-- 内容区 -->
+    <div class="l-content">
+        <h2 style="height: 10%;text-align: center;font-size: 66px;color: #fff;">广告位招租</h2>
+        <div class="share-goods-list">
+            <div class="share-goods-list__item"></div>
+            <div class="share-goods-list__item"></div>
+            <div class="share-goods-list__item"></div>
+            <div class="share-goods-list__item"></div>
+            <div class="share-goods-list__item"></div>
+        </div>
+    </div>
+</body>
+</html>

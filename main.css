@@ -1,0 +1,198 @@
+html {
+    
+}
+
+/* 侧边栏 */
+.l-sidebar {
+    position: fixed;
+    width: 25%;
+    height: 100%;
+    overflow: auto;
+    background: #ddd;
+}
+
+/* 左上按钮 */
+.share-user-btn {
+    height: 5%;
+    width: 90%;
+    display: flex;
+    justify-content: space-between;
+    margin: 2.5% 5%;
+}
+#share-user__logout {
+
+}
+
+/* 头像etc. */
+.share-user-info {
+    display: flex;
+    flex-direction: column;
+    /* height: 40%; */
+    width: 90%;
+    margin: 0 5%;
+    padding: 15% 0;
+    background: #bbb;
+
+}
+#share-user-info__head {
+    margin: 5% auto;
+}
+#share-user-info__name {
+    text-align: center;
+    font-size: 20px;
+    cursor: pointer;
+}
+#share-user-info__name:hover {
+    text-decoration: underline;
+}
+
+/* 借入借出发起按钮 */
+.share-require {
+    display: flex;
+    justify-content: space-between;
+    padding: 4% 15%;
+    width: 90%;
+    margin: 5%;
+    background: #bbb;
+    box-sizing: border-box;
+}
+
+/* 功能选择 */
+.share-column {
+    margin: 5%;
+    padding: 5% 15%;
+    text-align: center;
+    background: #bbb;
+    font-size: 30px;
+}
+
+.share-column-list__item {
+    height: 60px;
+    line-height: 60px;
+    cursor: pointer;
+}
+.share-column-list__item:hover {
+    background: #aaa;
+}
+
+/* 注册登录侧边栏 */
+.l-sidebar--account {
+    position: fixed;
+    width: 25%;
+    height: 100%;
+    background: #aaa;
+    overflow: auto;
+    z-index: -1 !important;
+}
+
+#share-login-cancel__a {
+    display: block;
+    margin: 3% 0 3% 3%;
+    font-size: 25px;
+}
+
+.share-logo {
+    margin: 3% auto;
+}
+#share-logo__img {
+    width: 60%;
+    margin: 0 20%;
+}
+
+.share-choose-login-reg {
+    display: flex;
+    justify-content: space-between;
+    height: 10%;
+    width: 60%;
+    margin: 10% auto 5%;
+    background: #888;
+    font-size: 25px;
+    cursor: default;
+}
+
+.share-choose-login-reg__span {
+    cursor: pointer;
+}
+.share-choose-login-reg__span:hover {
+    color: #333;
+}
+
+.share-choose-login-reg__span--act {
+    color: #111;
+}
+
+/* 登录注册信息框 */
+.share-account {
+    background: #888;
+    width: 80%;
+    height: 50% !important;
+    margin: 5% 10%;
+    padding: 5%;
+    font-size: 20px;
+    box-sizing: border-box;
+}
+
+.share-account__login {
+    display: none !important;
+}
+
+.share-account input[type="text"],
+.share-account input[type="password"] {
+    margin: 10px;
+    height: 30px;
+    width: 65%;
+}
+
+.share-account__btn {
+    display: block;
+    margin: 5% auto;
+    width: 70px;
+    height: 35px;
+    border: 2px solid #183d69;
+    background: transparent;
+    color: white;
+    cursor: pointer;
+}
+
+.share-account__btn:hover {
+    background: #183d69;
+}
+
+.share-account__login input[type="text"],
+.share-account__login input[type="password"] {
+    width: 75%;
+}
+
+.share-account__register {
+    text-align: right;
+}
+
+/* 主内容区 */
+.l-content {
+    position: fixed;
+    right: 0;
+    width: 74%;
+    height: 100vh;
+    background: #aaa;
+}
+
+
+.share-goods-list {
+    /* display: flex;
+    flex-direction: column; */
+    overflow-y: scroll;
+    position: relative;
+    width: 100%;
+    height: 90%;
+    background: #999;
+}
+
+/* 单个商品信息 */
+.share-goods-list__item {
+
+    width: 70%;
+    height: 20%;
+    background: #666;
+    margin-bottom: 5%;
+    margin-left: 15%;
+}
