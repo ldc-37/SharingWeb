@@ -1,5 +1,5 @@
-html {
-    
+* {
+    box-sizing: border-box;    
 }
 
 /* 侧边栏 */
@@ -54,7 +54,6 @@ html {
     width: 90%;
     margin: 5%;
     background: #bbb;
-    box-sizing: border-box;
 }
 
 /* 功能选择 */
@@ -77,12 +76,12 @@ html {
 
 /* 注册登录侧边栏 */
 .l-sidebar--account {
-    position: fixed;
+    /* position: fixed;
     width: 25%;
-    height: 100%;
+    height: 100%; */
     background: #aaa;
     overflow: auto;
-    z-index: -1 !important;
+    z-index: 1 !important;
 }
 
 #share-login-cancel__a {
@@ -128,19 +127,22 @@ html {
     height: 50% !important;
     margin: 5% 10%;
     padding: 5%;
-    font-size: 20px;
-    box-sizing: border-box;
+    font-size: 16px;
+}
+
+.share-account ::-webkit-input-placeholder {
+    color:    #999;
 }
 
 .share-account__login {
-    display: none !important;
+    /* display: none !important; */
 }
 
 .share-account input[type="text"],
 .share-account input[type="password"] {
     margin: 10px;
     height: 30px;
-    width: 65%;
+    width: 90%;
 }
 
 .share-account__btn {
@@ -153,18 +155,27 @@ html {
     color: white;
     cursor: pointer;
 }
-
 .share-account__btn:hover {
     background: #183d69;
 }
-
-.share-account__login input[type="text"],
-.share-account__login input[type="password"] {
-    width: 75%;
+.share-account__btn:disabled {
+    background: #ff3a3a;
+    cursor: default;
 }
 
 .share-account__register {
-    text-align: right;
+    /* text-align: right; */
+}
+
+.account-tips {
+    margin-left: 10px;
+    font-size: 14px;
+    color: red;
+}
+.account-tips::before {
+    content: url('./images/icon-warning.png');
+    position: relative;
+    top: 2px;
 }
 
 /* 主内容区 */

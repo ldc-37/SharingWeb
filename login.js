@@ -1,12 +1,227 @@
-function isMobile() {   
-    var sUserAgent = navigator.userAgent.toLowerCase();  
-    var bIsIpad = sUserAgent.match(/ipad/i) == "ipad";  
-    var bIsIphoneOs = sUserAgent.match(/iphone os/i) == "iphone os";  
-    var bIsMidp = sUserAgent.match(/midp/i) == "midp";  
-    var bIsUc7 = sUserAgent.match(/rv:1.2.3.4/i) == "rv:1.2.3.4";  
-    var bIsUc = sUserAgent.match(/ucweb/i) == "ucweb";  
-    var bIsAndroid = sUserAgent.match(/android/i) == "android";  
-    var bIsCE = sUserAgent.match(/windows ce/i) == "windows ce";  
-    var bIsWM = sUserAgent.match(/windows mobile/i) == "windows mobile";  
-    return bIsIpad || bIsIphoneOs || bIsMidp || bIsUc7 || bIsUc || bIsAndroid || bIsCE || bIsWM;
+//  http://api.hs.rtxux.xyz:8080
+"use strict";
+
+let isLegalEmail = 0,isLegalPass = 0,isLegalName = 0;
+
+$(function () {
+    $('.account-tips').hide();
+
+    $('#reg-username').blur(function () {
+        CheckUsername (this.value);
+        RegisterBtnUnlock ();
+    });
+    $('#reg-pass').blur(function () {
+    	CheckPassword (this.value);
+        RegisterBtnUnlock ();
+    })
+    $('#reg-pass-2').blur(function () {
+    	if (this.value == $('#reg-pass').val()) {
+            $('#reg-pass-2').css("border", "2px solid green");
+            $('#reg-tips__password2').hide();
+    	}
+    	else {
+            $('#reg-pass-2').css("border", "2px solid red");
+            $('#reg-tips__password2').html("密码不一致<br>");
+            $('#reg-tips__password2').show();
+    	}
+        RegisterBtnUnlock ();
+    })
+    $('#reg-email').blur(function () {
+    	if (this.value) {
+    		CheckEmail (this.value);
+        }
+        RegisterBtnUnlock ();
+    })
+})
+
+function CheckUsername (username)
+{
+    $('#reg-username').css("border", "2px solid red");
+    $.ajax ({
+        type: "GET",
+        url: apiBase + "/user/checkUsernameAvailability",
+        data: {
+            username: username
+        },
+        dataType: "json",
+        success: function (res) {
+            console.log(res);
+            if (res.code == 0) {
+                isLegalName = 1;
+                $('#reg-username').css("border", "2px solid green");
+                $('#reg-tips__username').hide();
+            }
+            else {
+                isLegalName = 0;
+                $('#reg-tips__username').html(res.data.message + '<br>');
+                $('#reg-tips__username').show();
+            }
+        },
+        error: function (xhr) {
+            console.log(JSON.parse(xhr.responseText).message);
+            if (xhr.status == 500) {
+                isLegalName = 0;
+                $('#reg-tips__username').html('长度限制3-15<br>');
+                $('#reg-tips__username').show();
+            }
+            else {
+                alert('status:' + xhr.status)
+            }
+        }
+    })
+}
+
+function CheckEmail (email)
+{
+	//!!当email为空的时候该接口认为*合法*
+    $('#reg-email').css("border", "2px solid red");
+    $.ajax ({
+        type: "GET",
+        url: apiBase + "/user/checkEmailAvailability",
+        data: {
+            email: email
+        },
+        dataType: "json",
+        success: function (res) {
+            console.log(res);
+            if (res.code == 0) {
+            	isLegalEmail = 1;
+                $('#reg-email').css("border", "2px solid green");
+                $('#reg-tips__email').hide();
+            }
+            else {
+                isLegalEmail = 0;
+                $('#reg-tips__email').html(res.data.message + '<br>');
+                $('#reg-tips__email').show();
+            }
+        },
+        error: function (xhr) {
+        	if (xhr.status == 500) {
+                isLegalEmail = 0;
+                $('#reg-tips__email').html('邮箱地址格式有误<br>');
+                debugger;
+                $('#reg-tips__email').show();
+        	}
+        	else {
+	        	alert('status:' + xhr.status)
+        	}
+        }
+    })
+}
+
+function CheckPassword (password)
+{
+    let errMsg;
+    if (password.length < 3 || password.length > 15) {
+        errMsg = "长度限制3-15";
+    }
+    //@other checks
+    if (!errMsg) {
+    	isLegalPass = 1;
+        $('#reg-pass').css("border", "2px solid green");
+        $('#reg-tips__password').hide();
+    }
+    else {
+    	isLegalPass = 0;
+        $('#reg-pass').css("border", "2px solid red");
+        $('#reg-tips__password').html(errMsg + '<br>');
+        $('#reg-tips__password').show();
+    }
+}
+
+function LoginBtnUnlock ()
+{
+
+}
+function RegisterBtnUnlock ()
+{
+    if (isLegalName && isLegalPass && isLegalEmail && 
+        $('#reg-pass').val() == $('#reg-pass-2').val()) {
+            $('#reg-btn').attr("disabled",false);
+    }
+}
+
+function UserRegister ()
+{
+    //no data-checking here
+    const username = $('#reg-username').val();
+    const password = $('#reg-pass').val();
+    const email = $('#reg-email').val();
+    Register (username, password, email);
+}
+function UserLogin ()
+{
+    //no data-checking here
+    const username = $('#login-account').val();
+    const password = $('#login-pass').val();
+    Login (username, password);
+}
+
+function Register (username, password, email)
+{
+    const regInfo = `{
+        "username": "${username}",
+        "password": "${password}", 
+        "email": "${email}", 
+        "details": {} 
+    }`;
+    $.ajax ({
+        type: "POST",
+        url: apiBase + "/auth/signup",
+        contentType: "application/json",
+        dataType: "json",
+        // async: false,
+        // processData: false,
+        data: regInfo,
+        success: function (res) {
+            console.log(res);
+            if (res.code == 0) {
+                alert('注册成功！请牢记账号密码\n' + '账号：' + username + '\n密码：' + password);
+                Login (username, password);
+            }
+            else {
+                alert(res.data.reason);
+            }
+        },
+        error: function (xhr) {alert('status:' + xhr.status)}
+    })
+}
+
+function Login (username, password)
+{
+    $.ajax ({
+        type: "POST",
+        url: apiBase + "/auth/login",
+        contentType: "application/json",
+        dataType: "json",
+        data: `{
+            "usernameOrEmail": "${username}",
+            "password": "${password}"
+        }`,
+        success: function (res) {
+            console.log (res);
+            $('#login-tips').hide();
+            alert('登陆成功');
+            setCookie("accessToken", res.data.accessToken);
+            setCookie("tokenType", res.data.tokenType);
+        },
+        error: function (xhr) {
+            if (xhr.status == 401) {
+                $('#login-tips').html("密码错误<br>");
+                $('#login-tips').show();
+            }
+            else if (xhr.status == 400) {
+                $('#login-tips').html("账号密码未填写完整<br>");
+                $('#login-tips').show();
+            }
+            else {
+                $('#login-tips').html(xhr.status + "错误<br>");
+                $('#login-tips').show();
+            }
+        }
+    })
+}
+
+function ShowLoginSidebar () {
+    $('.l-sidebar--account').animate({left: '25%'}, 500);
 }
