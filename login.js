@@ -3,46 +3,65 @@
 
 let isLegalEmail = 0,isLegalPass = 0,isLegalName = 0;
 
-$(function () {
-    $('.account-tips').hide();
+//预处理
+$('.account-tips').hide();
+$('.share-account__register').hide();
 
-    $('#reg-username').blur(function () {
+// 用户填写内容实时检查
+$('#reg-username').blur(function () {
+    if (this.value) {
         CheckUsername (this.value);
-        RegisterBtnUnlock ();
-    });
-    $('#reg-pass').blur(function () {
-    	CheckPassword (this.value);
-        RegisterBtnUnlock ();
-    })
-    $('#reg-pass-2').blur(function () {
-    	if (this.value == $('#reg-pass').val()) {
-            $('#reg-pass-2').css("border", "2px solid green");
-            $('#reg-tips__password2').hide();
-    	}
-    	else {
-            $('#reg-pass-2').css("border", "2px solid red");
-            $('#reg-tips__password2').html("密码不一致<br>");
-            $('#reg-tips__password2').show();
-    	}
-        RegisterBtnUnlock ();
-    })
-    $('#reg-email').blur(function () {
-    	if (this.value) {
-    		CheckEmail (this.value);
-        }
-        RegisterBtnUnlock ();
-    })
+    }
+    RegisterBtnUnlock ();
+});
+$('#reg-pass').blur(function () {
+    CheckPassword (this.value);
+    RegisterBtnUnlock ();
 })
+$('#reg-pass-2').blur(function () {
+    if (this.value == $('#reg-pass').val()) {
+        $('#reg-pass-2').css("border", "2px solid green");
+        $('#reg-tips__password2').hide();
+    }
+    else {
+        $('#reg-pass-2').css("border", "2px solid #b13e3c");
+        $('#reg-tips__password2').html("密码不一致<br>");
+        $('#reg-tips__password2').show();
+    }
+    RegisterBtnUnlock ();
+})
+$('#reg-email').blur(function () {
+    if (this.value) {
+        CheckEmail (this.value);
+    }
+    RegisterBtnUnlock ();
+});
+
+// 注册登录选择切换
+$('#share-choose-login').click(function () {
+    $('.share-account__register').hide();
+    $('.share-account__login').show();
+    $('#share-choose-login').addClass('share-choose-login-reg__span--act');
+    $('#share-choose-register').removeClass('share-choose-login-reg__span--act');
+})
+$('#share-choose-register').click(function () {
+    $('.share-account__register').show();
+    $('.share-account__login').hide();
+    $('#share-choose-register').addClass('share-choose-login-reg__span--act');
+    $('#share-choose-login').removeClass('share-choose-login-reg__span--act');
+})
+
 
 function CheckUsername (username)
 {
-    $('#reg-username').css("border", "2px solid red");
+    $('#reg-username').css("border", "2px solid #b13e3c");
     $.ajax ({
         type: "GET",
         url: apiBase + "/user/checkUsernameAvailability",
         data: {
             username: username
         },
+        //@any problems above?
         dataType: "json",
         success: function (res) {
             console.log(res);
@@ -58,14 +77,13 @@ function CheckUsername (username)
             }
         },
         error: function (xhr) {
-            console.log(JSON.parse(xhr.responseText).message);
             if (xhr.status == 500) {
                 isLegalName = 0;
                 $('#reg-tips__username').html('长度限制3-15<br>');
                 $('#reg-tips__username').show();
             }
             else {
-                alert('status:' + xhr.status)
+                alert('其他错误，status:' + xhr.status)
             }
         }
     })
@@ -74,13 +92,14 @@ function CheckUsername (username)
 function CheckEmail (email)
 {
 	//!!当email为空的时候该接口认为*合法*
-    $('#reg-email').css("border", "2px solid red");
+    $('#reg-email').css("border", "2px solid #b13e3c");
     $.ajax ({
         type: "GET",
         url: apiBase + "/user/checkEmailAvailability",
         data: {
             email: email
         },
+        //@any problems above?
         dataType: "json",
         success: function (res) {
             console.log(res);
@@ -103,7 +122,7 @@ function CheckEmail (email)
                 $('#reg-tips__email').show();
         	}
         	else {
-	        	alert('status:' + xhr.status)
+	        	alert('其他错误，status:' + xhr.status)
         	}
         }
     })
@@ -123,16 +142,12 @@ function CheckPassword (password)
     }
     else {
     	isLegalPass = 0;
-        $('#reg-pass').css("border", "2px solid red");
+        $('#reg-pass').css("border", "2px solid #b13e3c");
         $('#reg-tips__password').html(errMsg + '<br>');
         $('#reg-tips__password').show();
     }
 }
 
-function LoginBtnUnlock ()
-{
-
-}
 function RegisterBtnUnlock ()
 {
     if (isLegalName && isLegalPass && isLegalEmail && 
@@ -183,7 +198,7 @@ function Register (username, password, email)
                 alert(res.data.reason);
             }
         },
-        error: function (xhr) {alert('status:' + xhr.status)}
+        error: function (xhr) {alert('出现错误，status:' + xhr.status)}
     })
 }
 
@@ -204,6 +219,8 @@ function Login (username, password)
             alert('登陆成功');
             setCookie("accessToken", res.data.accessToken);
             setCookie("tokenType", res.data.tokenType);
+            HideLoginSidebar ();
+            $('#share-user-info__name').text(username);
         },
         error: function (xhr) {
             if (xhr.status == 401) {
@@ -222,6 +239,18 @@ function Login (username, password)
     })
 }
 
+function Logout ()
+{
+    setCookie("accessToken", "");
+    setCookie("tokenType", "");
+    location.reload();
+}
+
 function ShowLoginSidebar () {
-    $('.l-sidebar--account').animate({left: '25%'}, 500);
+    $('.l-sidebar--nor').animate({left: '-100%'}, 300);
+    $('.l-sidebar--account').animate({left: '0'}, 300);
+}
+function HideLoginSidebar () {
+    $('.l-sidebar--nor').animate({left: '0'}, 300);
+    $('.l-sidebar--account').animate({left: '100%'}, 300);
 }
