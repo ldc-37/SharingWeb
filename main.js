@@ -1,0 +1,1 @@
+const apiBase = "https://api.hs.rtxux.xyz";

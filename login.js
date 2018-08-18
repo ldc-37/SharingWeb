@@ -41,12 +41,14 @@ $('#reg-email').blur(function () {
 $('#share-choose-login').click(function () {
     $('.share-account__register').hide();
     $('.share-account__login').show();
+    $('#login-account').focus();
     $('#share-choose-login').addClass('share-choose-login-reg__span--act');
     $('#share-choose-register').removeClass('share-choose-login-reg__span--act');
 })
 $('#share-choose-register').click(function () {
     $('.share-account__register').show();
     $('.share-account__login').hide();
+    $('#reg-username').focus();
     $('#share-choose-register').addClass('share-choose-login-reg__span--act');
     $('#share-choose-login').removeClass('share-choose-login-reg__span--act');
 })
@@ -248,7 +250,9 @@ function Logout ()
 
 function ShowLoginSidebar () {
     $('.l-sidebar--nor').animate({left: '-100%'}, 300);
-    $('.l-sidebar--account').animate({left: '0'}, 300);
+    $('.l-sidebar--account').animate({left: '0'}, 300, function () {
+        $('#login-account').focus();
+    });
 }
 function HideLoginSidebar () {
     $('.l-sidebar--nor').animate({left: '0'}, 300);

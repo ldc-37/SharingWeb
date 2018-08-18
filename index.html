@@ -6,6 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>物品共享平台 - ？？</title>
     <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
+    <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.8&key=fa3631a70c69a05c101b4d94ea99b5f3"></script>
+    <script src="//webapi.amap.com/ui/1.0/main.js"></script>
     <link rel="stylesheet" href="./reset.css">
     <link rel="stylesheet" href="./scrollbar.css">
     <link rel="stylesheet" href="./main.css">
@@ -26,11 +28,11 @@
                 </div>
             </div>
             <div class="share-require">
-                <button class="share-require__btn">发起借出</button>
+                <button id="share-require__btn">发起借出</button>
             </div>
             <div class="share-column">
                 <ul class="share-column-list">
-                    <li class="share-column-list__item">查看全部</li>
+                    <li class="share-column-list__item share-column-list__item--act">查看全部</li>
                     <li class="share-column-list__item">我的借出</li>
                     <li class="share-column-list__item">我的借入</li>
                     <li class="share-column-list__item">我的收藏</li>
@@ -52,9 +54,9 @@
             </div>
             <div class="share-account share-account__login">
                 <form>
-                    <input type="text" name="" id="login-account" placeholder="账号/邮箱">
+                    <input type="text" name="" id="login-account" placeholder="账号/邮箱" required>
                     <br>
-                    <input type="password" name="" id="login-pass" placeholder="密码">
+                    <input type="password" name="" id="login-pass" placeholder="密码" required>
                     <br>
                     <span class="account-tips" id="login-tips"></span>
                     <input type="button" value="登录" id="login-btn" class="share-account__btn" onclick="UserLogin()">
@@ -88,7 +90,7 @@
     <div class="l-content">
         <div class="l-main">
             <!-- 排序方式、搜索框、全局公告 -->
-            <h2 style="height: 10%;text-align: center;font-size: 66px;color: #fff;">广告位招租</h2>
+            <h2 style="height: 80px;text-align: center;font-size: 60px;color: #fff;">广告位招租</h2>
             <div class="share-goods-list">
                 <div class="share-goods-list__item">
                     <div class="lend-box-top">
@@ -119,48 +121,67 @@
 
     </div>
 
-    <!-- 弹窗区 -->
+    <!-- 发起借出弹窗 -->
     <div class="l-alert-box l-alert-box-lend">
-        <div class="lend-launch__hd">
+        <div id="lend-launch__hd">
             <h3>发起借出</h3>
             <button>×</button>
         </div>
-        <div class="lend-launch__bd">
+        <div id="lend-launch__bd">
             <form action="POST">
                 <div class="lend-launch__left">
                     <div class="lend-launch__item">
                         <label for="itemName">物品名称</label>
                         <input type="text" name="itemName" id="">
                     </div>
-                    <div class="lend-launch__item">
+                    <!-- <div class="lend-launch__item">
                         <label for="lendMethod">租还方式</label>
                         <input type="radio" name="lendMethod" id="">自取自还
                         <input type="radio" name="lendMethod" id="">送货上门
-                    </div>
+                    </div> -->
                     <div class="lend-launch__item">
                         <label for="lendTime">出租时间</label>
-                        <input type="radio" name="lendTime" id="">7天
+                        <input type="radio" name="lendTime" id="" checked>7天
                         <input type="radio" name="lendTime" id="">15天
                         <input type="radio" name="lendTime" id="">1月
+                    </div>
+                    <div class="lend-launch__item">
+                            <label for="place">选择地点(使用滚轮缩放)</label>
+                            <span id="lend-map-position-txt"></span>
+                            <div id="lend-map"></div>
                     </div>
                 </div>
                 <hr>
                 <div class="lend-launch__right">
-                    <label for="lendDesc">文字描述</label>
-                    <textarea name="lendDesc" id="" cols="30" rows="10" placeholder="请在此输入对物品的描述..."></textarea><br>
-                    <label for="lendPic">添加图片（支持gif,jpg,jpeg,png）</label><br>
-                    <input type="file" name="lendPic" id="lend-img-unload" accept="image/gif,image/jpeg,image/jpg,image/png"><br>
-                    <img src="" width="100px" height="100px" id="lend-img" onclick="$('#lend-img-unload').click()">
+                    <div class="lend-launch__item">
+                        <label for="lendPrice">出租价格</label><br>
+                        <input type="radio" name="lendPrice" id="lend-price-free" checked>无偿&nbsp;&nbsp;
+                        <input type="radio" name="lendPrice" id="lend-price-charge">有偿&nbsp;
+                        <input type="text" name="lendPrice" id="lend-price" disabled>
+                    </div>
+                    <div class="lend-launch__item">
+                        <label for="lendDesc">文字描述</label><br>
+                        <textarea name="lendDesc" id="" cols="35" rows="5" placeholder="请在此输入对物品的描述..."></textarea><br>
+                    </div>
+                    <div class="lend-launch__item">
+                        <label for="lendPic">添加图片（支持gif,jpg,jpeg,png）</label><br>
+                        <input type="file" name="lendPic" id="lend-img-unload" accept="image/gif,image/jpeg,image/jpg,image/png" style="display: none;">
+                        <img src="./images/plus-square.png" class="lend-img" onclick="$('#lend-img-unload').click()">
+                    </div>
+                </div>
+                <div class="lend-launch__ft">
+                    <button type="reset">重置</button>
+                    <button type="button" id="lend-submit">提交</button>
                 </div>
             </form>
         </div>
     </div>
+    <div class="l-alert-box l-prompt">TODO:</div>
+    <div id="l-body-cover"></div>
 
-<script>
-    const apiBase = "http://api.hs.rtxux.xyz:8080";
-</script>
 <script src="./login.js"></script>
 <script src="./alertbox.js"></script>
 <script src="./utils.js"></script>
+<script src="./main.js"></script>
 </body>
 </html>

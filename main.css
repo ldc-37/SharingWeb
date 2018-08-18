@@ -3,7 +3,7 @@
 }
 
 /* @temp */
-::-webkit-input-placeholder {
+html ::-webkit-input-placeholder {
     color:    #999;
     font-size: 18px;
 }
@@ -16,6 +16,7 @@
     width: 25%;
     height: 100%;
     overflow: hidden;
+    transition: filter .2s linear;
 }
 
 .l-sidebar--nor {
@@ -81,7 +82,7 @@
     background: #bbb;
 }
 
-.share-require__btn {
+#share-require__btn {
     font-size: 25px;
     padding: 2% 15%;
     margin: 0 auto;
@@ -103,6 +104,10 @@
 }
 .share-column-list__item:hover {
     background: #aaa;
+}
+
+.share-column-list__item--act {
+    background: #ddd;
 }
 
 /* 注册登录侧边栏 */
@@ -227,6 +232,7 @@
     width: 74%;
     height: 100%;
     background: #aaa;
+    transition: filter .2s linear;
 }
 
 .l-main {
@@ -253,41 +259,66 @@
     margin-left: 15%;
 }
 
+
 /* 通用弹窗 */
 .l-alert-box {
+    display: none;
     position: absolute;
     top:0;
     left: 0;
     right: 0;
     bottom: 0;
     margin: auto;
-    background: rgba(255, 255, 255, 0.5);
+    background: rgba(255, 255, 255, 0.8);
     z-index: 1;
 }
 
+/* 发起借出弹窗 */
 .l-alert-box-lend {
     width: 800px;
     height: 500px;
     border-radius: 15px;
-
-    /* padding: 5px 15px; */
 }
 
-.lend-launch__hd {
+.l-alert-box-lend label {
+    font-weight: bold;
+}
+
+.l-alert-box-lend input[type="text"] {
+    width: 190px;
+    padding-left: 10px;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid #555;
+    transition: .3s;
+}
+
+.l-alert-box-lend input[type="text"]:focus {
+    border-bottom: 2px solid #111;
+    width: 200px;
+}
+
+.l-alert-box-lend hr {
+    display: inline-block;
+    position: absolute;
+    width: 1px;
+    height: 350px;
+    left: 50%;
+    top: 90px;
+}
+
+#lend-launch__hd {
     width: 100%;
     height: 80px;
     background: #888;
     box-shadow: 0 5px 15px 3px rgba(0,0,0,0.5);
-}
-
-.lend-launch__hd h3{
     font-size: 40px;
     line-height: 80px;
     text-align: center;
     color: #eee;
 }
 
-.lend-launch__hd button {
+#lend-launch__hd button {
     float: right;
     height: 20px;
     width: 20px;
@@ -299,7 +330,77 @@
     cursor: pointer;
 }
 
-.lend-launch__hd button:hover {
+#lend-launch__hd button:hover {
     color: #fff;
     text-shadow: 3px -2px 2px #000;
+}
+
+#lend-launch__bd {
+    padding: 10px 30px;
+}
+
+.lend-launch__left {
+    float: left;
+    /* border: 1px solid #000; */
+}
+
+.lend-launch__right {
+    float: right;
+    /* border: 1px solid #000; */
+    width: 45%;
+}
+
+.lend-launch__item {
+    margin: 20px 0;
+}
+
+.lend-img {
+    width: 100px;
+    height: 100px;
+    cursor: pointer;
+}
+
+#lend-map-position-txt {
+    display: block;
+    max-width: 350px;
+    font-size: 14px;
+}
+
+#lend-map {
+    width: 300px;
+    height: 200px;
+}
+
+.lend-launch__ft {
+    position: absolute;
+    bottom: 10px;
+    left: calc(50% - 102px);
+}
+
+.lend-launch__ft button {
+    width: 70px;
+    height: 35px;
+    margin-left: 20px;
+}
+
+/* 背景遮罩（弹窗层以下） */
+#l-body-cover {
+    display: none;
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    opacity: .5;
+}
+
+/* 通用提示（顶层） */
+.l-prompt {
+    position: fixed;
+    width: 200px;
+    height: 50px;
+    line-height: 50px;
+    background: rgba(0, 0, 0, 0.5);
+    color: white;
+    text-align: center;
+    z-index: 100;
 }
