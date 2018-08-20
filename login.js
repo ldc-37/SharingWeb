@@ -6,6 +6,20 @@ let isLegalEmail = 0,isLegalPass = 0,isLegalName = 0;
 //预处理
 $('.account-tips').hide();
 $('.share-account__register').hide();
+//事件处理
+$('#reg-btn').click(function () {
+        //no data-checking here
+        const username = $('#reg-username').val();
+        const password = $('#reg-pass').val();
+        const email = $('#reg-email').val();
+        Register (username, password, email);
+});
+$('#login-btn').click(function () {
+        //no data-checking here
+        const username = $('#login-account').val();
+        const password = $('#login-pass').val();
+        Login (username, password);
+})
 
 // 用户填写内容实时检查
 $('#reg-username').blur(function () {
@@ -156,22 +170,6 @@ function RegisterBtnUnlock ()
         $('#reg-pass').val() == $('#reg-pass-2').val()) {
             $('#reg-btn').attr("disabled",false);
     }
-}
-
-function UserRegister ()
-{
-    //no data-checking here
-    const username = $('#reg-username').val();
-    const password = $('#reg-pass').val();
-    const email = $('#reg-email').val();
-    Register (username, password, email);
-}
-function UserLogin ()
-{
-    //no data-checking here
-    const username = $('#login-account').val();
-    const password = $('#login-pass').val();
-    Login (username, password);
 }
 
 function Register (username, password, email)

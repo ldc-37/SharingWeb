@@ -1,37 +1,38 @@
 /**
- * 发起弹窗相关
+ * 弹窗相关
  */
 
+ let g_longitude, g_latitude;
+////发起借出弹窗
 $('#share-require__btn').click(function () {
-    $('.l-alert-box-lend').eq(0).show();
-    $('#l-body-cover').show();
+    $('.alert-box-lend').eq(0).show();
+    $('#body-cover').show();
     $('.l-content, .l-sidebar').css('filter', 'blur(5px)')
-    //加载地图
     var map = new AMap.Map('lend-map',{
         zoom:16,
     });
     AMapUI.loadUI(['misc/PositionPicker'], function(PositionPicker) {
         AMap.plugin(['AMap.Geolocation'], function(){
-            // 在图面添加定位控件，用来获取和展示用户主机所在的经纬度位置
             map.addControl(new AMap.Geolocation());
         });
         var positionPicker = new PositionPicker({
-            mode:'dragMap',//设定为拖拽地图模式，可选'dragMap'、'dragMarker'，默认为'dragMap'
-            map:map//依赖地图对象
+            mode:'dragMap',
+            map:map
         });
         positionPicker.start(map.getBounds().getSouthWest());
         map.on('complete', function () {
             console.log('地图加载完成');
         });
         positionPicker.on('success', function (positionResult) {
-            console.log(positionResult.position);
-            $('#lend-map-position-txt').text("【" + positionResult.address + "】");
+            g_longitude = positionResult.position.lng;
+            g_latitude = positionResult.position.lat;
+            $('#lend-map-position-txt').val(positionResult.address);
         });
     });
     $('#lend-launch__hd button').click(function () {
         $('.l-content, .l-sidebar').css('filter', '')
-        $('#l-body-cover').hide();
-        $('.l-alert-box-lend').eq(0).hide();
+        $('#body-cover').hide();
+        $('.alert-box-lend').eq(0).hide();
         map.destroy();
     })
 })
@@ -67,5 +68,30 @@ $('#lend-price-charge').click(function () {
 })
 
 $('#lend-submit').click(function () {
-    
+    //TODO:数据合法性校验
+    const itemName = $('#lend-item-name').val();
+    const itemDescription = $('#lend-description').val();
+    const locationText = $('#lend-map-position-txt').val();
+    const itemPrice = $('#lend-price').attr('disabled') ? 0 : parseInt($('#lend-price').val());
+    const lendLocationJson = `{
+        "longitude": "${g_longitude}",
+        "latitude": "${g_latitude}",
+        "locationDescription": "${locationText}"
+    }`;
+    const lendItemJson = `{
+        "name": "${itemName}",
+        "description": "${itemDescription}",
+        "price": ${itemPrice},
+        "location": ${lendLocationJson}
+    }`;
+    const authorizationText = getCookie("tokenType") + " " + getCookie("accessToken");
+    $.ajax({
+        type: "POST",
+        url: apiBase + "/item",
+        headers: {
+            Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNTM0Nzc0ODQyLCJleHAiOjE1MzUzNzk2NDJ9.UGFQcswMn8Ng3U1gPK3iL2RHNzmMJZetKyjNs97DaPh5X2DymUFPpKsPsJz5VsM-_osAL9OBK663qctfo6vYig"
+        },
+        contentType: "application/json",
+        data: lendItemJson
+    })
 })

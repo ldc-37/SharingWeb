@@ -28,3 +28,7 @@
     width: 12px;
     content: '↓';
 }*/
+
+.goods-img-intro::-webkit-scrollbar {
+    width: 8px;
+}
