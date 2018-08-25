@@ -36,7 +36,7 @@
                     <li class="share-column-list__item">我的借出</li>
                     <li class="share-column-list__item">我的借入</li>
                     <li class="share-column-list__item">我的收藏</li>
-                    <li class="share-column-list__item">...</li>
+                    <li class="share-column-list__item">聊天</li>
                 </ul>
             </div>
         </div>
@@ -94,7 +94,7 @@
             <div class="goods-list">
                 <div class="goods-list__item" data-index="0">
                     <div class="goods-item__hd">
-                        <span class="goods-owner">物主：
+                        <span class="goods-owner">物主：TODO:style:limit
                             <span id="goods-owner__name">example_things_owner_name_looooooooong</span>
                         </span>
                         <span class="goods-owner-info">主人已借出：
@@ -150,7 +150,7 @@
         <div class="l-my-like"></div>
     </div>
 
-    <!-- 发起借出弹窗 TODO:js[2] -->
+    <!-- 发起借出弹窗 -->
     <div class="alert-box alert-box-lend">
         <div id="lend-launch__hd">
             <h3>发起借出</h3>
@@ -161,7 +161,7 @@
                 <div class="lend-launch__left">
                     <div class="lend-launch__item">
                         <label for="itemName">物品名称</label>
-                        <input type="text" name="itemName" id="lend-item-name">
+                        <input type="text" name="itemName" id="lend-item-name" maxlength="20" placeholder="最多20字">
                     </div>
                     <!-- <div class="lend-launch__item">
                         <label for="lendMethod">租还方式</label>
@@ -169,10 +169,8 @@
                         <input type="radio" name="lendMethod" id="">送货上门
                     </div> -->
                     <div class="lend-launch__item">
-                        <label for="lendTime">出租时间</label>
-                        <input type="radio" name="lendTime" id="" checked>7天
-                        <input type="radio" name="lendTime" id="">15天
-                        <input type="radio" name="lendTime" id="">1月
+                        <label for="lendTime">出租时长</label>
+                        <input type="text" name="lendTime" id="lend-time" placeholder="1-30">天
                     </div>
                     <div class="lend-launch__item">
                             <label for="place">选择地点(请选点后修改下方文字)</label>
@@ -186,21 +184,26 @@
                         <label for="lendPrice">出租价格</label><br>
                         <input type="radio" name="lendPrice" id="lend-price-free" checked>无偿&nbsp;&nbsp;
                         <input type="radio" name="lendPrice" id="lend-price-charge">有偿&nbsp;<em class="share-rmb">¥</em>
-                        <input type="text" name="lendPrice" id="lend-price" disabled>
+                        <input type="text" name="lendPrice" id="lend-price" disabled maxlength="6">
                     </div>
                     <div class="lend-launch__item">
                         <label for="lendDesc">文字描述</label><br>
-                        <textarea name="lendDesc" id="lend-description" cols="35" rows="5" placeholder="请在此输入对图片/物品的描述..."></textarea><br>
+                        <textarea name="lendDesc" id="lend-description" cols="35" rows="5" maxlength="80" placeholder="请在此输入对图片/物品的描述..."></textarea><br>
+                        <span id="lend-left-char">还可以填写<span id="lend-left-char-num">80</span>字</span>
                     </div>
                     <div class="lend-launch__item">
+                        <!-- TODO: more pictures -->
                         <label for="lendPic">添加图片（支持gif,jpg,jpeg,png）</label><br>
-                        <input type="file" name="lendPic" id="lend-img-unload" accept="image/gif,image/jpeg,image/jpg,image/png" style="display: none;">
-                        <img src="./images/plus-square.png" class="lend-img" onclick="$('#lend-img-unload').click()">
+                        <input type="file" name="lendPic" id="lend-img-upload" accept="image/gif,image/jpeg,image/jpg,image/png" style="display: none;">
+                        <img src="./images/plus-square.png" class="lend-img" onclick="$('#lend-img-upload').click()">
                     </div>
                 </div>
                 <div class="lend-launch__ft">
-                    <button type="reset">重置</button>
-                    <button type="button" id="lend-submit">提交</button>
+                    <span class="lend-tips"></span><br>
+                    <div class="lend-btns">
+                        <button type="reset">重置</button>
+                        <button type="button" id="lend-submit">提交</button>
+                    </div>
                 </div>
             </form>
         </div>
@@ -208,9 +211,9 @@
     <div class="alert-box prompt-box"></div>
     <div id="body-cover"></div>
 
-<script src="./login.js"></script>
-<script src="./alertbox.js"></script>
-<script src="./utils.js"></script>
-<script src="./main.js"></script>
+    <script src="./main.js"></script>
+    <script src="./login.js"></script>
+    <script src="./alertbox.js"></script>
+    <script src="./utils.js"></script>
 </body>
 </html>

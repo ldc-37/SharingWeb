@@ -403,17 +403,27 @@ html ::-webkit-input-placeholder {
 
 .lend-launch__left {
     float: left;
-    /* border: 1px solid #000; */
 }
 
 .lend-launch__right {
     float: right;
-    /* border: 1px solid #000; */
     width: 45%;
 }
 
 .lend-launch__item {
     margin: 20px 0;
+}
+
+.lend-launch__item .share-rmb{
+    color: #aaa;
+}
+
+#lend-time {
+    width: 60px;
+}
+
+#lend-price {
+    border-bottom-color: #aaa;
 }
 
 .lend-img {
@@ -441,16 +451,50 @@ html ::-webkit-input-placeholder {
     height: 233px;
 }
 
-.lend-launch__ft {
+#lend-left-char {
     position: absolute;
-    bottom: 10px;
-    left: calc(50% - 102px);
+    top: 270px;
+    right: 60px;
+    font-size: 12px;
+    color: #999;
 }
 
-.lend-launch__ft button {
+#lend-left-char-num {
+    color: black;
+}
+
+.lend-launch__ft {
+    position: absolute;
+    width: 100%;
+    bottom: 10px;
+    left: 0;
+    /* left: calc(50% - 102px); */
+}
+
+.lend-tips {
+    display: none;
+    position: absolute;
+    text-align: center;
+    width: 100%;
+    bottom: 35px;
+    color: red;
+    font-size: 14px;
+}
+.lend-tips::before {
+    content: url('./images/icon-warning.png');
+    position: relative;
+    top: 3px;
+}
+
+.lend-btns {
+    display: flex;
+    justify-content: center;
+}
+
+.lend-btns button {
     width: 70px;
     height: 35px;
-    margin-left: 20px;
+    margin: 0 10px;
 }
 
 /* 背景遮罩（弹窗层以下） */

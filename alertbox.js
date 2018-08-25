@@ -3,6 +3,7 @@
  */
 
  let g_longitude, g_latitude;
+
 ////发起借出弹窗
 $('#share-require__btn').click(function () {
     $('.alert-box-lend').eq(0).show();
@@ -37,9 +38,10 @@ $('#share-require__btn').click(function () {
     })
 })
 
+//图片上传相关
 // https://www.cnblogs.com/dj3839/p/6027417.html
 // https://blog.csdn.net/tangxiujiang/article/details/78693890
-$('#lend-img-unload').on('change',function(){
+$('#lend-img-upload').on('change',function(){
     let filePath = this.value,
     imgSrc = window.URL.createObjectURL(this.files[0]), //转成可以在本地预览的格式
     fileFormat = filePath.substring(filePath.lastIndexOf(".")).toLowerCase();
@@ -58,21 +60,70 @@ $('#lend-img-unload').on('change',function(){
     // URL.revokeObjectURL(imgSrc);
 });
 
+// 有偿/无偿切换
 $('#lend-price-free').click(function () {
     $('#lend-price').attr("disabled", true);
     $('#lend-price').attr("placeholder", "");
+    $('#lend-price').val("");
+    $('#lend-price').css('borderBottomColor', '#aaa');
+    $('.lend-launch__item .share-rmb').css('color', '#aaa');
+    
 })
 $('#lend-price-charge').click(function () {
     $('#lend-price').attr("disabled", false);
-    $('#lend-price').attr("placeholder", "请输入价格(纯数字)");
+    $('#lend-price').attr("placeholder", "请输入价格(0.01-999.99)");
+    $('#lend-price').css('borderBottomColor', '#555');
+    $('#lend-price').focus();
+    $('.lend-launch__item .share-rmb').css('color', '#555');
 })
 
+//剩余字数更新
+$('#lend-description').keyup(function () {
+    $('#lend-left-char-num').text(80 - $('#lend-description').val().length);
+});
+
+//提交请求
 $('#lend-submit').click(function () {
     //TODO:数据合法性校验
+    $('.lend-tips').hide();
+    $('.lend-tips').eq(0).text('');
+    if (!$('#lend-item-name').val()) {
+        $('.lend-tips').show();
+        $('.lend-tips').eq(0).text('名称不能为空');
+        return;
+    }
+    else if (!$('#lend-time').val()) {
+        $('.lend-tips').show();
+        $('.lend-tips').eq(0).text('时长不能为空');
+        return;
+    }
+    //TODO:时长限制
+    else if (isNaN($('#lend-time').val()) || parseInt($('#lend-time').val()) > 30 || parseInt($('#lend-time').val()) < 1) {
+        $('.lend-tips').show();
+        $('.lend-tips').eq(0).text('时长只能为1-30的数字');
+        return;
+    }
+    else if (!$('#lend-price').attr('disabled') && !$('#lend-price').val()) {
+        $('.lend-tips').show();
+        $('.lend-tips').eq(0).text('选择有偿则价格不能为空');
+        return;
+    }
+    else if (!$('#lend-description').val()) {
+        $('.lend-tips').show();
+        $('.lend-tips').eq(0).text('描述不能为空');
+        return;
+    }
+    else if ($('.lend-img').eq(0).attr('src') == "./images/plus-square.png") {
+        $('.lend-tips').show();
+        $('.lend-tips').eq(0).text('请上传至少一张图片');
+        return;
+    }
+
     const itemName = $('#lend-item-name').val();
+    const itemTime = $('#lend-time').val() * 60 * 60 * 24;
     const itemDescription = $('#lend-description').val();
     const locationText = $('#lend-map-position-txt').val();
-    const itemPrice = $('#lend-price').attr('disabled') ? 0 : parseInt($('#lend-price').val());
+    const itemPrice = $('#lend-price').attr('disabled') ? 0 : parseFloat($('#lend-price').val());
     const lendLocationJson = `{
         "longitude": "${g_longitude}",
         "latitude": "${g_latitude}",
@@ -80,6 +131,7 @@ $('#lend-submit').click(function () {
     }`;
     const lendItemJson = `{
         "name": "${itemName}",
+        "duration": ${itemTime},
         "description": "${itemDescription}",
         "price": ${itemPrice},
         "location": ${lendLocationJson}
@@ -88,10 +140,43 @@ $('#lend-submit').click(function () {
     $.ajax({
         type: "POST",
         url: apiBase + "/item",
-        headers: {
+        headers: {//TODO:Test account:test13
             Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNTM0Nzc0ODQyLCJleHAiOjE1MzUzNzk2NDJ9.UGFQcswMn8Ng3U1gPK3iL2RHNzmMJZetKyjNs97DaPh5X2DymUFPpKsPsJz5VsM-_osAL9OBK663qctfo6vYig"
+            // Authorization: authorizationText
         },
         contentType: "application/json",
-        data: lendItemJson
+        data: lendItemJson,
+        success: function (res) {
+            console.log (res);
+            alert('提交成功');
+            //for... 多张图片
+            let formData = new FormData();
+            formData.append("item", res.id);
+            formData.append("file", $("#lend-img-upload")[0].files[0]);
+            $.ajax({
+                type: 'POST',
+                url: apiBase + '/image',
+                headers: {//TODO:Test account:test13
+                    Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNTM0Nzc0ODQyLCJleHAiOjE1MzUzNzk2NDJ9.UGFQcswMn8Ng3U1gPK3iL2RHNzmMJZetKyjNs97DaPh5X2DymUFPpKsPsJz5VsM-_osAL9OBK663qctfo6vYig"
+                    // Authorization: authorizationText
+                },
+                processData: false,
+                contentType: false,
+                data: formData,
+                success: function (imgRes) {
+                    console.log(imgRes);
+                    if (imgRes.code == 0) {
+                        // console.log(imgRes.data.image_id);
+                    }
+                    else {
+                        alert("图片上传错误，错误码" + imgRes.code);
+                    }
+                }
+            }); 
+        },
+        error: function (xhr) {
+            alert(xhr.status + "错误");
+        }
     })
-})
+});
+

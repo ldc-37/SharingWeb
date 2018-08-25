@@ -73,3 +73,28 @@ function checkFzuID (id, pass)
         console.log(JSON.parse(data));
     });
 }
+
+//二进制流文件形式的图片处理
+//https://www.cnblogs.com/cdemo/p/5225848.html#!comments #44
+function parstBinPic () 
+{
+    var url = "https://api.hs.rtxux.xyz/image/1";
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.responseType = "blob";
+    // xhr.setRequestHeader("Authorization", "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNTM0Nzc0ODQyLCJleHAiOjE1MzUzNzk2NDJ9.UGFQcswMn8Ng3U1gPK3iL2RHNzmMJZetKyjNs97DaPh5X2DymUFPpKsPsJz5VsM-_osAL9OBK663qctfo6vYig");
+    xhr.onload = function() {
+            if (this.status == 200) {
+                var img = document.createElement("img");
+                var blob = this.response;
+                var filereader = new FileReader();
+                filereader.readAsDataURL(blob);
+                filereader.onload=function(oFREvent){
+                    img.src = oFREvent.target.result;
+                }
+            };
+            console.log(img)
+            $("#test").html(img);   
+        }
+    xhr.send();
+}
