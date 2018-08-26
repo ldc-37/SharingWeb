@@ -259,25 +259,25 @@ html ::-webkit-input-placeholder {
     width: 46%;
     height: 30%;
     background: #999;
-    /* margin: 5% 0 5% 15%; */
     margin: 1.5%;
     transition: transform .2s;/* @delay */
-    overflow: hidden !important;
 }
 .goods-list__item:hover {
-    transform: scale(1.05);
+    /* transform: scale(1.05); */
 }
 
 .goods-item__hd {
-    background: #888;
-    padding: 0 20px;
+    display: flex;
+    justify-content: space-around;
     height: 30px;
     line-height: 30px;
-    overflow: hidden !important;
+    padding: 0 20px;
+    background: #888;
 }
 
 .goods-item__bd {
     /* float导致高度塌陷 */
+    position: relative;
     height: calc(100% - 30px);
     padding: 2% 5%;
 }
@@ -318,7 +318,70 @@ html ::-webkit-input-placeholder {
 
 .goods-item__info {
     float: right;
-    width: 48%;
+    position: relative;
+    width: 50%;
+    right: 6%;
+}
+
+.goods-info {
+    margin-bottom: 10px;
+}
+
+.goods-property {
+    font-weight: bold;
+}
+
+.goods-position__txt {
+    text-decoration: underline;
+    cursor: pointer;
+    word-break: break-all;
+}
+.goods-position__txt:hover {
+    text-decoration: underline;
+    color: blue;
+}
+
+.goods-position-map {
+    display: none;
+    position: absolute;
+    background: #666;
+    width: 300px;
+    height: 200px;
+    right: 10px;
+    top: 130px;
+    background: transparent;
+    overflow: hidden;
+}
+
+#goods-map {
+    height: 100%;
+    position: relative;
+    bottom: 100%;
+    border: 1px solid #000;
+}
+
+#goods-map-close {
+    position: absolute;
+    right: 10px;
+    font-size: 35px;
+    z-index: 2;
+    cursor: pointer;
+}
+
+#goods-map-close:hover {
+    color: #000;
+    transform: scale(1.05);
+}
+
+.goods-item__enter {
+    position: absolute;
+    bottom: 12px;
+    right: 15px;
+}
+
+.goods-enter {
+    width: 55px;
+    height: 30px;
 }
 
 
@@ -468,7 +531,6 @@ html ::-webkit-input-placeholder {
     width: 100%;
     bottom: 10px;
     left: 0;
-    /* left: calc(50% - 102px); */
 }
 
 .lend-tips {

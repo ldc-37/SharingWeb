@@ -8,7 +8,7 @@
 $('#share-require__btn').click(function () {
     $('.alert-box-lend').eq(0).show();
     $('#body-cover').show();
-    $('.l-content, .l-sidebar').css('filter', 'blur(5px)')
+    $('.l-content, .l-sidebar').css('filter', 'blur(5px)');
     var map = new AMap.Map('lend-map',{
         zoom:16,
     });
@@ -22,7 +22,7 @@ $('#share-require__btn').click(function () {
         });
         positionPicker.start(map.getBounds().getSouthWest());
         map.on('complete', function () {
-            console.log('地图加载完成');
+            console.log('lend地图加载完成');
         });
         positionPicker.on('success', function (positionResult) {
             g_longitude = positionResult.position.lng;
@@ -33,6 +33,7 @@ $('#share-require__btn').click(function () {
     $('#lend-launch__hd button').click(function () {
         $('.l-content, .l-sidebar').css('filter', '')
         $('#body-cover').hide();
+        $('#lend-map-position-txt').css('color', '');    
         $('.alert-box-lend').eq(0).hide();
         map.destroy();
     })
@@ -60,6 +61,10 @@ $('#lend-img-upload').on('change',function(){
     // URL.revokeObjectURL(imgSrc);
 });
 
+$('#lend-map-position-txt').click(function () {
+    $('#lend-map-position-txt').css('color', 'black');
+})
+
 // 有偿/无偿切换
 $('#lend-price-free').click(function () {
     $('#lend-price').attr("disabled", true);
@@ -84,7 +89,6 @@ $('#lend-description').keyup(function () {
 
 //提交请求
 $('#lend-submit').click(function () {
-    //TODO:数据合法性校验
     $('.lend-tips').hide();
     $('.lend-tips').eq(0).text('');
     if (!$('#lend-item-name').val()) {
@@ -97,7 +101,6 @@ $('#lend-submit').click(function () {
         $('.lend-tips').eq(0).text('时长不能为空');
         return;
     }
-    //TODO:时长限制
     else if (isNaN($('#lend-time').val()) || parseInt($('#lend-time').val()) > 30 || parseInt($('#lend-time').val()) < 1) {
         $('.lend-tips').show();
         $('.lend-tips').eq(0).text('时长只能为1-30的数字');
@@ -149,7 +152,7 @@ $('#lend-submit').click(function () {
         success: function (res) {
             console.log (res);
             alert('提交成功');
-            //for... 多张图片
+            //TODO:for... 多张图片
             let formData = new FormData();
             formData.append("item", res.id);
             formData.append("file", $("#lend-img-upload")[0].files[0]);

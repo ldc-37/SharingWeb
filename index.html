@@ -88,20 +88,63 @@
 
     <!-- 内容区 -->
     <div class="l-content">
-        <div class="l-main">
+        <div class="l-main" style="display: none">
             <!-- 排序方式、搜索框、全局公告 -->
             <h2 style="height: 80px;text-align: center;font-size: 60px;color: #fff;">广告位招租</h2>
             <div class="goods-list">
                 <div class="goods-list__item" data-index="0">
                     <div class="goods-item__hd">
-                        <span class="goods-owner">物主：TODO:style:limit
-                            <span id="goods-owner__name">example_things_owner_name_looooooooong</span>
+                        <span class="goods-owner">物主:
+                            <span class="goods-owner__name"></span>
                         </span>
-                        <span class="goods-owner-info">主人已借出：
-                            <span id="goods-owner-lend-num">example_100</span>
+                        <span class="goods-owner-info">主人已借出:
+                            <span class="goods-owner-lend-num"></span>
                         </span>
-                        <span class="goods-owner-info">主人已借入：
-                            <span id="goods-owner-borrow-num">example_100</span>
+                        <span class="goods-owner-info">主人已借入:
+                            <span class="goods-owner-borrow-num"></span>
+                        </span>
+                    </div>
+                    <i class="goods-like"></i>
+                    <div class="goods-item__bd">
+                        <div class="goods-item__pic">
+                            <img src="" alt="" class="goods-img">
+                            <div class="goods-img-intro"></div>
+                        </div>
+                        <div class="goods-item__info">
+                            <div class="goods-name goods-info">
+                                <span class="goods-property">物品名称</span>
+                                <span class="goods-name__txt"></span>
+                            </div>
+                            <div class="goods-price goods-info">
+                                <span class="goods-property">租用价格</span>
+                                <em class="share-rmb">¥</em>
+                                <span class="goods-price__txt"></span>
+                            </div>
+                            <div class="goods-time goods-info">
+                                    <span class="goods-property">租用时长</span>
+                                    <span class="goods-time__txt"></span>
+                            </div>
+                            <div class="goods-position goods-info">
+                                    <span class="goods-property">租还地址</span>
+                                    <a class="goods-position__txt" title="点击查看地图"></a>
+                            </div>
+                        </div>
+                        <div class="goods-item__enter">
+                            <button class="goods-enter">租用</button>
+                        </div>
+                        <div class="goods-position-map"></div>
+                    </div>
+                </div>
+                <div class="goods-list__item" data-index="1">
+                    <div class="goods-item__hd">
+                        <span class="goods-owner">物主:
+                            <span id="goods-owner__name">things_owner_name</span>
+                        </span>
+                        <span class="goods-owner-info">主人已借出:
+                            <span id="goods-owner-lend-num">100</span>
+                        </span>
+                        <span class="goods-owner-info">主人已借入:
+                            <span id="goods-owner-borrow-num">100</span>
                         </span>
                     </div>
                     <i class="goods-like"></i>
@@ -112,30 +155,30 @@
                                 2017年1月8日 - HTML5画布Canvas文本填充、线段属性、裁剪、透明度与像素合并方式2017年01月08日 22:56:34 阅读数:3ssd</div>
                         </div>
                         <div class="goods-item__info">
-                            <div class="goods-name">
+                            <div class="goods-name goods-info">
                                 <span class="goods-property">物品名称</span>
                                 <span class="goods-name__txt">exm_things_name</span>
                             </div>
-                            <div class="goods-price">
+                            <div class="goods-price goods-info">
                                 <span class="goods-property">租用价格</span>
                                 <em class="share-rmb">¥</em>
-                                <span class="goods-price__txt">10000_price</span>
+                                <span class="goods-price__txt">10000</span>
                             </div>
-                            <div class="goods-time">
+                            <div class="goods-time goods-info">
                                     <span class="goods-property">租用时长</span>
-                                    <span class="goods-time__txt">15d</span>
+                                    <span class="goods-time__txt">15天</span>
                             </div>
-                            <div class="goods-position">
+                            <div class="goods-position goods-info">
                                     <span class="goods-property">租还地址</span>
-                                    <a class="goods-position__txt">exm_这个等会儿再说</a>
+                                    <a class="goods-position__txt" title="点击查看地图">可能会出现一个超级长的地址，测试ing…… s38435435g14s354h3t</a>
                             </div>
-                            <div class="goods-position-map">
-                                <div id="goods-map">loading</div>
+                            <div class="goods-enter">
+                                <button>租用</button>
                             </div>
                         </div>
+                        <div class="goods-position-map"></div>
                     </div>
                 </div>
-                <div class="goods-list__item" data-index="1"></div>
                 <div class="goods-list__item" data-index="2"></div>
                 <div class="goods-list__item" data-index="3"></div>
                 <div class="goods-list__item" data-index="4"></div>
