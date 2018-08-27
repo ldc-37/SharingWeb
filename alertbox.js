@@ -117,9 +117,9 @@ $('#lend-submit').click(function () {
         return;
     }
     else if ($('.lend-img').eq(0).attr('src') == "./images/plus-square.png") {
-        $('.lend-tips').show();
-        $('.lend-tips').eq(0).text('请上传至少一张图片');
-        return;
+        if (confirm('真的不上传一张图片让大家看看？\n【点确认返回上传图片，点取消继续】')) {
+            return;
+        }
     }
 
     const itemName = $('#lend-item-name').val();
@@ -144,7 +144,7 @@ $('#lend-submit').click(function () {
         type: "POST",
         url: apiBase + "/item",
         headers: {//TODO:Test account:test13
-            Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNTM0Nzc0ODQyLCJleHAiOjE1MzUzNzk2NDJ9.UGFQcswMn8Ng3U1gPK3iL2RHNzmMJZetKyjNs97DaPh5X2DymUFPpKsPsJz5VsM-_osAL9OBK663qctfo6vYig"
+            Authorization: "Bearer " + tempToken
             // Authorization: authorizationText
         },
         contentType: "application/json",
@@ -170,6 +170,7 @@ $('#lend-submit').click(function () {
                     console.log(imgRes);
                     if (imgRes.code == 0) {
                         // console.log(imgRes.data.image_id);
+                        $('#lend-launch__hd button').click();
                     }
                     else {
                         alert("图片上传错误，错误码" + imgRes.code);

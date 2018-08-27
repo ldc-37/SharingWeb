@@ -7,6 +7,8 @@ html ::-webkit-input-placeholder {
     color:    #999;
     font-size: 14px;
 }
+
+
 /* @temp-end */
 
 /* 侧边栏 */
@@ -237,7 +239,8 @@ html ::-webkit-input-placeholder {
 }
 
 /* 主内容 */
-.l-main {
+/* .l-main { */
+.l-content>* {
     height: 100%;
 }
 
@@ -245,7 +248,7 @@ html ::-webkit-input-placeholder {
 .goods-list {
     /* display: flex;
     flex-direction: column; */
-    overflow-y: scroll;
+    overflow-y: auto;
     position: relative;
     width: 100%;
     height: 90%;
@@ -314,6 +317,7 @@ html ::-webkit-input-placeholder {
     line-height: initial;
     overflow: auto;
     white-space: normal;
+    word-break: break-all;
 }
 
 .goods-item__info {
@@ -557,6 +561,91 @@ html ::-webkit-input-placeholder {
     width: 70px;
     height: 35px;
     margin: 0 10px;
+}
+
+/* 已借出类型选择 */
+.my-lend-type {
+    float: left;
+    width: 50px;
+    height: 100%;
+    background: #aaa;
+}
+
+.my-lend-type__item {
+    writing-mode: vertical-rl;
+    height: 25%;
+    width: 100%;
+    line-height: 50px;
+    /* = padding: 0 calc(50% - 17px); */
+    font-size: 25px;
+    text-align: center;
+    /* = display: flex; */
+    /* += justify-content: space-around; */
+    letter-spacing: 10px;
+    cursor: pointer;
+    font-weight: lighter;
+    overflow: hidden;
+    transition: .2s;
+}
+
+.my-lend-type__item:hover {
+    /* TODO:交叉重叠问题 */
+    transform: scale(1.2);
+}
+
+.my-lend-type--act {
+    font-weight: bold;
+}
+
+#my-lend-type__all {
+    background: #feb890;
+    color: #724730;
+}
+#my-lend-type__waiting {
+    background: #feeb9e;
+    color: #715804;
+}
+#my-lend-type__lending {
+    background: #ffba5f;
+    color: #664f05;
+}
+#my-lend-type__finished {
+    background: #b0fdbd;
+    color: #154e1b;
+}
+.no-use {
+    background: #c6efcd;
+    background: #feeb9e;
+    background: #ffc9ce;
+    color: #154e1b;
+    color: #715804;
+    color: #cd6473;
+    background: #ffba5f;
+    color: #664f05;
+}
+
+/* 已借出列表 */
+.my-lend-list {
+    float: right;
+    position: relative;
+    width: calc(100% - 50px);
+    height: 100%;
+    padding: 2% 10%;
+    background: #bbb;
+    overflow-y: auto;
+}
+
+.my-lend__item {
+    display: flex;
+    height: 20%;
+    margin-bottom: 30px;
+    background: #999;
+}
+
+.my-lend__item[data-index="0"] .my-lend-status-color {
+    width: 30px;
+    height: 100%;
+    background: #feeb9e;
 }
 
 /* 背景遮罩（弹窗层以下） */

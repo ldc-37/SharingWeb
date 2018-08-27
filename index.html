@@ -32,11 +32,11 @@
             </div>
             <div class="share-column">
                 <ul class="share-column-list">
-                    <li class="share-column-list__item share-column-list__item--act">查看全部</li>
-                    <li class="share-column-list__item">我的借出</li>
-                    <li class="share-column-list__item">我的借入</li>
-                    <li class="share-column-list__item">我的收藏</li>
-                    <li class="share-column-list__item">聊天</li>
+                    <li class="share-column-list__item" id="share-column-all">查看全部</li>
+                    <li class="share-column-list__item share-column-list__item--act" id="share-column-my-lend">我的借出</li>
+                    <li class="share-column-list__item" id="share-column-my-borrow">我的借入</li>
+                    <li class="share-column-list__item" id="share-column-my-like">我的收藏</li>
+                    <li class="share-column-list__item" id="share-column-chat">申请/交流</li>
                 </ul>
             </div>
         </div>
@@ -188,7 +188,52 @@
                 <div class="goods-list__item" data-index="4"></div>
             </div>
         </div>
-        <div class="l-my-lend"></div>
+        <div class="l-my-lend">
+            <div class="my-lend-type">
+                <div class="my-lend-type__item my-lend-type--act" id="my-lend-type__all">全部发布</div>
+                <div class="my-lend-type__item" id="my-lend-type__waiting">待借出</div>
+                <div class="my-lend-type__item" id="my-lend-type__lending">已借出</div>
+                <div class="my-lend-type__item" id="my-lend-type__finished">已完成</div>
+            </div>
+            <div class="my-lend-list">
+                <div class="my-lend__item my-lend__item--waiting" data-index="0">
+                    <div class="my-lend-status-color"></div>
+                    <div class="my-lend-item__pic">
+                        <img src="./images/no-picture.jpg" alt="物品图片">
+                    </div>
+                    <div class="my-lend-item__basic-info">
+                        <div class="my-lend-item-name">
+                            <span class="my-lend-property">物品名称</span>
+                            <span class="my-lend-item-name__txt"></span>
+                        </div>
+                        <div class="my-lend-item-time">
+                            <span class="my-lend-property">租借时长</span>
+                            <span class="my-lend-item-time__txt"></span>
+                        </div>
+                        <div class="my-lend-item-price">
+                            <span class="my-lend-property">租借价格</span>
+                            <span class="my-lend-item-price__txt"></span>
+                        </div>
+                    </div>
+                    <div class="my-lend-item__description">
+                        <span class="my-lend-property">描述</span><br>
+                        <p class="my-lend-item-description__txt"></p>
+                    </div>
+                    <div class="my-lend-item__op">
+                        <div class="my-lend-item-status">
+                            <span class="my-lend-property">当前状态</span>
+                            <span class="my-lend-item-status__txt"></span>
+                        </div>
+                        <button>编辑</button>
+                        <button>删除</button>
+                    </div>
+                </div>
+                <div class="my-lend__item"></div>
+                <div class="my-lend__item"></div>
+                <div class="my-lend__item"></div>
+                <div class="my-lend__item"></div>
+            </div>
+        </div>
         <div class="l-my-borrow"></div>
         <div class="l-my-like"></div>
     </div>
