@@ -601,27 +601,17 @@ html ::-webkit-input-placeholder {
     background: #feb890;
     color: #724730;
 }
-#my-lend-type__waiting {
+#my-lend-type__waiting, .my-lend-color-waiting {
     background: #feeb9e;
     color: #715804;
 }
-#my-lend-type__lending {
+#my-lend-type__lending, .my-lend-color-lending {
     background: #ffba5f;
     color: #664f05;
 }
-#my-lend-type__finished {
+#my-lend-type__finished, .my-lend-color-finished {
     background: #b0fdbd;
     color: #154e1b;
-}
-.no-use {
-    background: #c6efcd;
-    background: #feeb9e;
-    background: #ffc9ce;
-    color: #154e1b;
-    color: #715804;
-    color: #cd6473;
-    background: #ffba5f;
-    color: #664f05;
 }
 
 /* 已借出列表 */
@@ -637,16 +627,85 @@ html ::-webkit-input-placeholder {
 
 .my-lend__item {
     display: flex;
-    height: 20%;
+    height: 25%;
     margin-bottom: 30px;
     background: #999;
 }
 
-.my-lend__item[data-index="0"] .my-lend-status-color {
+.my-lend-status-color {
     width: 30px;
     height: 100%;
-    background: #feeb9e;
 }
+
+
+.my-lend-item__pic {
+    display: inline-block;
+    width: 20%;
+    text-align: center;
+}
+
+.my-lend-item__pic img{
+    height: 86%;
+    margin-top: 7%;
+}
+
+.my-lend-item__basic-info {
+    width: 19%;
+    margin-left: 3%;
+}
+
+.my-lend-item__publish-info {
+    width: 18%;
+}
+
+.my-lend-item__basic-info div,
+.my-lend-item__publish-info div {
+    margin: 10px 0;
+}
+
+.my-lend-property {
+    display: block;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.my-lend-item__description {
+    width: 25%;
+    margin-top: 10px;
+}
+
+.my-lend-item-description__txt {
+    width: 90%;
+    height: 75%;
+    margin-top: 5px;
+    padding: 5px 10px;
+    border: 2px solid #000;
+    word-break: break-all;
+}
+
+.my-lend-item__op {
+    background: #555;
+    width: calc(15% - 30px);
+}
+
+.my-lend-item-status__txt {
+    display: block;
+    height: 40px;
+    line-height: 40px;
+    text-align: center;
+    font-size: 20px;
+}
+
+.my-lend-btn {
+    height: 30px;
+    width: 70%;
+    margin: 23% 15% 0;
+}
+
+
+
+
+
 
 /* 背景遮罩（弹窗层以下） */
 #body-cover {
@@ -668,4 +727,15 @@ html ::-webkit-input-placeholder {
     color: white;
     text-align: center;
     z-index: 100;
+}
+
+.no-use {
+    background: #c6efcd;
+    background: #feeb9e;
+    background: #ffc9ce;
+    color: #154e1b;
+    color: #715804;
+    color: #cd6473;
+    background: #ffba5f;
+    color: #664f05;
 }
