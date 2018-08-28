@@ -1,6 +1,19 @@
 'use strict'
 const apiBase = "https://api.hs.rtxux.xyz";
 const tempToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI3IiwiaWF0IjoxNTM1NDY0NjE5LCJleHAiOjE1MzYwNjk0MTl9.iOdngkxncUqLNNW7SrS0Ppd8rCAKBjgOAJAQWNF764GXsmRef-xc20Z171vBhexYanAraNrr0cKeXMTkqW5J4w";
+
+/**
+ * 跳转及网址传参
+ */
+$(function () {
+    const searchWords = GetQueryVariable ("s");
+    if (searchWords) {
+        $('#searchBox').val('ID:' + searchWords);
+        $('#mainSearchBtn').click();
+    }
+})
+
+
 /**
  * Column控制
  */
@@ -19,22 +32,81 @@ $('#share-column-my-borrow').click(function () {
 })
 $('#share-column-my-like').click(function () {
 
-})
+});
 
 /**
  * Content-main控制
  */
-
-//点击物品地址
-$('.goods-position__txt').click(function () {
-    let idx = this.parentNode.parentNode.parentNode.parentNode.dataset.index;
-    let lon;
-    let lat;
-    ShowItemMap(idx);
+//搜索相关
+$('#searchBox').keypress(function (e) {
+    if (e.keyCode == "13") 
+        $('#mainSearchBtn').click();
+})
+$('#mainSearchBtn').click(function () {
+    const words = $('#searchBox').val();
+    if (words == "") {
+        $('#searchBox').focus();
+        return;
+    }
+    else if (words.substring(0,3) == 'ID:') {
+        const id = words.substring(3);
+        $.ajax({
+            type: 'GET',
+            url: apiBase + '/item/' + id,
+            headers: {//TODO:Test account:test13
+                Authorization: "Bearer " + tempToken
+                // Authorization: authorizationText
+            },
+            dataType: 'json',
+            success: function (res) {
+                if (res.length == 0) {
+                    $('.goods-list').text('未找到该id对应物品！');
+                }
+                else {
+                    FillMain(res);
+                }
+            },
+            error: function (xhr) {
+                alert('物品id搜索失败：' + xhr.status + '错误');
+            }
+        });
+    }
+    else {
+        $.ajax({
+            type: 'GET',
+            url: apiBase + '/item?search=' + words,
+            dataType: 'json',
+            success: function (res) {
+                if (res.length == 0) {
+                    $('.goods-list').text('未找到相关物品！');
+                }
+                else {
+                    FillMain(res);
+                }
+            },
+            error: function (xhr) {
+                alert('搜索失败：' + xhr.status + '错误');
+            }
+        });
+    }
 })
 
+//点击物品地址 TODO:Better solution?
+$('.l-main').change(function () {
+    setTimeout(function () {
+        $('.goods-position__txt').click(function () {
+            let idx = this.parentNode.parentNode.parentNode.parentNode.dataset.index;
+            let lon = this.parentNode.parentNode.parentNode.parentNode.dataset.lon;
+            let lat = this.parentNode.parentNode.parentNode.parentNode.dataset.lat;
+            ShowItemMap(lon, lat, idx);
+        });
+    }, 1000)
+
+})
+
+
 //展示地图
-function ShowItemMap (/* lon, lat, */ idx)
+function ShowItemMap (lon, lat, idx)
 {
     if ($('#goods-map').length) {
         $('.goods-position-map').empty();
@@ -43,9 +115,15 @@ function ShowItemMap (/* lon, lat, */ idx)
     $('.goods-position-map').eq(idx).append('<div id="goods-map"></div>');
     $('.goods-position-map').eq(idx).show();
     var mapObj = new AMap.Map('goods-map', {
-        zoom:12,
-        // center:[lon, lat]
+        zoom:16,
+        center:[lon, lat]
     });
+    //地图坐标标记
+    var marker = new AMap.Marker({
+        position:[lon, lat]
+    })
+    mapObj.add(marker);
+    //地图控制条
     mapObj.plugin(["AMap.ToolBar"],function(){
         var tool = new AMap.ToolBar({
             liteStyle: true,
@@ -70,7 +148,7 @@ function ShowItemMap (/* lon, lat, */ idx)
 }
 
 function FillMain (data)
-{
+{console.log(data)
     $('.goods-list').empty();
     const itemHTML = 
     `<div class="goods-item__hd">
@@ -113,7 +191,7 @@ function FillMain (data)
             <button class="goods-enter">租用</button>
         </div>
         <div class="goods-position-map"></div>
-    </div>`;
+    </div>`;//TODO:data不为数组
     for (let i = 0; i < data.length; ++i) {
         let name = data[i].name;
         let price = data[i].price;
@@ -121,11 +199,14 @@ function FillMain (data)
         let positionText = data[i].location.locationDescription;
         let time = data[i].duration;
         let imgId = data[i].images; //@temp
-        console.log(!imgId.length, imgId[0])
-        let newIdx = $('.goods-list__item').length - 1;
+        let lon = data[i].location.longitude;
+        let lat = data[i].location.latitude;
+        let newIdx = $('.goods-list__item').length;
         $('.goods-list').append('<div class="goods-list__item" data-index="' + newIdx + '"></div>');
         let $newItem = $('.goods-list__item').last();
         $newItem.append(itemHTML);
+        $newItem.attr('data-lon', lon);
+        $newItem.attr('data-lat', lat);
         $newItem.find('.goods-owner__name').text('example');
         $newItem.find('.goods-owner-lend-num').text('test');
         $newItem.find('.goods-owner-borrow-num').text('test');
@@ -135,7 +216,7 @@ function FillMain (data)
         $newItem.find('.goods-img-intro').text(desc);
         $newItem.find('.goods-name__txt').text(name);
         $newItem.find('.goods-price__txt').text(price);
-        $newItem.find('.goods-time__txt').text(time);
+        $newItem.find('.goods-time__txt').text(time / 86400 + '天');
         $newItem.find('.goods-position__txt').text(positionText);
     }
 }
@@ -207,11 +288,14 @@ function FillMyLend (data)
         let positionText = data[i].location.locationDescription;
         let time = data[i].duration;
         let imgId = data[i].images; //@temp
-        console.log(!imgId.length, imgId[0])
-        let newIdx = $('.goods-list__item').length - 1;
+        let lon = data[i].location.longitude;
+        let lat = data[i].location.latitude;
+        let newIdx = $('.goods-list__item').length;
         $('.my-lend-list').append('<div class="goods-list__item" data-index="' + newIdx + '"></div>');
         let $newItem = $('.goods-list__item').last();
         $newItem.append(itemHTML);
+        $newItem.attr('data-lon', lon);
+        $newItem.attr('data-lat', lat);
         $newItem.find('.goods-owner__name').text('example');
         $newItem.find('.goods-owner-lend-num').text('test');
         $newItem.find('.goods-owner-borrow-num').text('test');

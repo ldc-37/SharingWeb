@@ -88,9 +88,26 @@
 
     <!-- 内容区 -->
     <div class="l-content">
-        <div class="l-main" style="display: none">
+        <div class="l-main">
             <!-- 排序方式、搜索框、全局公告 -->
-            <h2 style="height: 80px;text-align: center;font-size: 60px;color: #fff;">广告位招租</h2>
+            <div class="main__hd">
+                <div class="main-head-search">
+                    <div class="main-head-hot">
+                        <b>热门搜索：</b>
+                        <span>充电宝</span>
+                        <span>热水壶</span>
+                        <span>雨伞</span>
+                    </div>
+                    <!-- TODO:清空按钮 -->
+                    <input type="text" name="searchBox" id="searchBox" placeholder="请输入需要的物品名称，或输入ID/UID:{id}查看指定物品或用户[算了，有心情在写这个]">
+                    <button id="mainSearchBtn">搜索</button>
+                </div>
+                <div class="main-head-sort">
+                    <b>排序方式</b>&nbsp;&nbsp;&nbsp;
+                    <span>按时间排序</span>
+                    <span>按距离排序</span>
+                </div>
+            </div>  
             <div class="goods-list">
                 <div class="goods-list__item" data-index="0">
                     <div class="goods-item__hd">
@@ -188,7 +205,7 @@
                 <div class="goods-list__item" data-index="4"></div>
             </div>
         </div>
-        <div class="l-my-lend">
+        <div class="l-my-lend" style="display: none;">
             <div class="my-lend-type">
                 <div class="my-lend-type__item my-lend-type--act" id="my-lend-type__all">全部发布</div>
                 <div class="my-lend-type__item" id="my-lend-type__waiting">待借出</div>

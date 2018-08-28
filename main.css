@@ -244,6 +244,39 @@ html ::-webkit-input-placeholder {
     height: 100%;
 }
 
+/* 主内容顶部 */
+.main__hd {
+    display: flex;
+    padding: 5px 5%;
+    height: 80px;
+}
+
+.main-head-search {
+    width: 55%;
+    height: 50%;
+}
+
+.main-head-hot span:hover{
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+#searchBox {
+    width: 85%;
+    height: 100%;
+}
+
+#mainSearchBtn {
+    width: 10%;
+    height: 100%;
+}
+
+.main-head-sort {
+    margin-left: 15%;
+    line-height: 75px;
+    font-size: 20px;
+}
+
 /* 物品列表 */
 .goods-list {
     /* display: flex;
@@ -304,16 +337,18 @@ html ::-webkit-input-placeholder {
     bottom: 0;
     padding: 0 3%;
     background: white;
+    color: black;
     line-height: 25px;
     font-size: 14px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    opacity: .6;
+    opacity: .7;
     transition: .1s;
 }
 .goods-img-intro:hover {
     height: 100%;
+    padding: 5px 3%;
     line-height: initial;
     overflow: auto;
     white-space: normal;
@@ -355,6 +390,7 @@ html ::-webkit-input-placeholder {
     top: 130px;
     background: transparent;
     overflow: hidden;
+    z-index: 1;
 }
 
 #goods-map {
@@ -379,7 +415,7 @@ html ::-webkit-input-placeholder {
 
 .goods-item__enter {
     position: absolute;
-    bottom: 12px;
+    top: 12px;
     right: 15px;
 }
 
