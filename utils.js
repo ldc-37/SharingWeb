@@ -76,7 +76,7 @@ function checkFzuID (id, pass)
 
 //二进制流文件形式的图片处理
 //https://www.cnblogs.com/cdemo/p/5225848.html#!comments #44
-function parstBinPic () 
+function ParseBinPic () 
 {
     var url = "https://api.hs.rtxux.xyz/image/1";
     var xhr = new XMLHttpRequest();
@@ -93,7 +93,6 @@ function parstBinPic ()
                     img.src = oFREvent.target.result;
                 }
             };
-            console.log(img)
             $("#test").html(img);   
         }
     xhr.send();
@@ -112,4 +111,21 @@ function GetQueryVariable(variable)
         }
     }
     return false;
+}
+
+//处理位集
+function ParseBitSet (bitSet, bit)
+{
+    //@经验教训：想清楚再敲
+    // let mask = "";
+    // for (let i = 0; i < bitSet.length; ++i) {
+    //     if (bitSet.length - i == bit) {
+    //         mask += "1";
+    //     }
+    //     else {
+    //         mask += "0";
+    //     }
+    // }
+    const mask = Math.pow(2, bit);
+    return (bitSet & mask);
 }

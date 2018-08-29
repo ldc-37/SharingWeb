@@ -247,7 +247,7 @@ html ::-webkit-input-placeholder {
 /* 主内容顶部 */
 .main__hd {
     display: flex;
-    padding: 5px 5%;
+    padding: 5px 0 5px 50px;
     height: 80px;
 }
 
@@ -272,7 +272,8 @@ html ::-webkit-input-placeholder {
 }
 
 .main-head-sort {
-    margin-left: 15%;
+    position: absolute;
+    right: 5%;
     line-height: 75px;
     font-size: 20px;
 }
@@ -682,6 +683,7 @@ html ::-webkit-input-placeholder {
 
 .my-lend-item__pic img{
     height: 86%;
+    max-width: 105%;
     margin-top: 7%;
 }
 

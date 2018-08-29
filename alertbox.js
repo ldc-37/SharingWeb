@@ -139,13 +139,12 @@ $('#lend-submit').click(function () {
         "price": ${itemPrice},
         "location": ${lendLocationJson}
     }`;
-    const authorizationText = getCookie("tokenType") + " " + getCookie("accessToken");
     $.ajax({
         type: "POST",
         url: apiBase + "/item",
         headers: {//TODO:Test account:test13
             Authorization: "Bearer " + tempToken
-            // Authorization: authorizationText
+            // Authorization: AuthorizationText ()
         },
         contentType: "application/json",
         data: lendItemJson,
@@ -161,7 +160,7 @@ $('#lend-submit').click(function () {
                 url: apiBase + '/image',
                 headers: {//TODO:Test account:test13
                     Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNTM0Nzc0ODQyLCJleHAiOjE1MzUzNzk2NDJ9.UGFQcswMn8Ng3U1gPK3iL2RHNzmMJZetKyjNs97DaPh5X2DymUFPpKsPsJz5VsM-_osAL9OBK663qctfo6vYig"
-                    // Authorization: authorizationText
+                    // Authorization: AuthorizationText ()
                 },
                 processData: false,
                 contentType: false,
