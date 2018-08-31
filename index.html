@@ -8,9 +8,9 @@
     <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.8&key=fa3631a70c69a05c101b4d94ea99b5f3"></script>
     <script src="//webapi.amap.com/ui/1.0/main.js"></script>
-    <link rel="stylesheet" href="./reset.css">
-    <link rel="stylesheet" href="./scrollbar.css">
-    <link rel="stylesheet" href="./main.css">
+    <link rel="stylesheet" href="./css/reset.css">
+    <link rel="stylesheet" href="./css/scrollbar.css">
+    <link rel="stylesheet" href="./css/main.css">
 </head>
 <body>
     <!-- 侧边栏 -->
@@ -205,12 +205,12 @@
                 <div class="goods-list__item" data-index="4"></div>
             </div>
         </div>
-        <div class="l-my-lend">
-            <div class="my-lend-type">
-                <div class="my-lend-type__item my-lend-type--act" id="my-lend-type__all">全部发布</div>
-                <div class="my-lend-type__item" id="my-lend-type__waiting">待借出</div>
-                <div class="my-lend-type__item" id="my-lend-type__lending">已借出</div>
-                <div class="my-lend-type__item" id="my-lend-type__finished">已完成</div>
+        <div class="l-my-lend" style="display: none;">
+            <div class="my-lend-type my-type">
+                <div class="my-type__item my-lend-type--act" id="my-lend-type__all">全部发布</div>
+                <div class="my-type__item" id="my-lend-type__waiting">待借出</div>
+                <div class="my-type__item" id="my-lend-type__lending">已借出</div>
+                <div class="my-type__item" id="my-lend-type__finished">已完成</div>
             </div>
             <div class="my-lend-list">
                 <div class="my-lend__item my-lend__item--lending" data-index="0">
@@ -346,8 +346,16 @@
                 <div class="my-lend__item"></div>
             </div>
         </div>
-        <div class="l-my-borrow"></div>
+        <div class="l-my-borrow">
+            <div class="my-borrow-type my-type">
+                <div class="my-type__item my-lend-type--act" id="my-lend-type__all">全部申请</div>
+                <div class="my-type__item" id="my-lend-type__waiting">待审核</div>
+                <div class="my-type__item" id="my-lend-type__lending">已借入</div>
+                <div class="my-type__item" id="my-lend-type__finished">已归还</div>
+            </div>
+        </div>
         <div class="l-my-like"></div>
+        <div class="l-inform-chat"></div>
     </div>
 
     <!-- 发起借出弹窗 -->
@@ -411,9 +419,9 @@
     <div class="alert-box prompt-box"></div>
     <div id="body-cover"></div>
 
-    <script src="./main.js"></script>
-    <script src="./login.js"></script>
-    <script src="./alertbox.js"></script>
-    <script src="./utils.js"></script>
+    <script src="./js/main.js"></script>
+    <script src="./js/login.js"></script>
+    <script src="./js/alertbox.js"></script>
+    <script src="./js/utils.js"></script>
 </body>
 </html>

@@ -31,11 +31,12 @@ html ::-webkit-input-placeholder {
 
 /* 左上按钮 */
 .share-sidebar-top-btn {
+    position: absolute;
     height: 5%;
-    width: 90%;
+    width: 86%;
     display: flex;
     justify-content: space-between;
-    margin: 2.5% 5%;
+    margin: 2.5% 7%;
 }
 
 .share-sidebar-top-btn img {
@@ -53,6 +54,10 @@ html ::-webkit-input-placeholder {
 }
 
 /* 头像etc. */
+.share-user {
+    margin-top: 2%;
+}
+
 .share-user-info {
     display: flex;
     flex-direction: column;
@@ -273,7 +278,7 @@ html ::-webkit-input-placeholder {
 
 .main-head-sort {
     position: absolute;
-    right: 5%;
+    right: 30px;
     line-height: 75px;
     font-size: 20px;
 }
@@ -294,13 +299,15 @@ html ::-webkit-input-placeholder {
 .goods-list__item {
     display: inline-block;
     width: 46%;
-    height: 30%;
+    height: 200px;
     background: #999;
     margin: 1.5%;
     transition: transform .2s;/* @delay */
 }
 .goods-list__item:hover {
+    /* 下方item异常显示 */
     /* transform: scale(1.05); */
+    /* z-index: 1; */
 }
 
 .goods-item__hd {
@@ -417,7 +424,7 @@ html ::-webkit-input-placeholder {
 .goods-item__enter {
     position: absolute;
     top: 12px;
-    right: 15px;
+    right: 8px;
 }
 
 .goods-enter {
@@ -600,15 +607,15 @@ html ::-webkit-input-placeholder {
     margin: 0 10px;
 }
 
-/* 已借出类型选择 */
-.my-lend-type {
+/* 已借出/已借入类型选择 */
+.my-type {
     float: left;
     width: 50px;
     height: 100%;
     background: #aaa;
 }
 
-.my-lend-type__item {
+.my-type__item {
     writing-mode: vertical-rl;
     height: 25%;
     width: 100%;
@@ -625,7 +632,7 @@ html ::-webkit-input-placeholder {
     transition: .2s;
 }
 
-.my-lend-type__item:hover {
+.my-type__item:hover {
     /* TODO:交叉重叠问题 */
     transform: scale(1.2);
 }

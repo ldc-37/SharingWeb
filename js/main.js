@@ -48,13 +48,19 @@ $('.share-column-list__item').click(function () {
     $(this).addClass('share-column-list__item--act');
 })
 $('#share-column-all').click(function () {
+    $('.l-content>div').hide();
+    $('.l-main').show();
     LoadMain ();
 })
 $('#share-column-my-lend').click(function () {
+    $('.l-content>div').hide();
+    $('.l-my-lend').show();
     LoadMyLend ();
 })
 $('#share-column-my-borrow').click(function () {
-
+    $('.l-content>div').hide();
+    $('.l-my-borrow').show();
+    LoadMyBorrow ();
 })
 $('#share-column-my-like').click(function () {
 
@@ -126,7 +132,7 @@ $('.l-main').change(function () {
             let lat = this.parentNode.parentNode.parentNode.parentNode.dataset.lat;
             ShowItemMap(lon, lat, idx);
         });
-    }, 1000)
+    }, 2000)
 
 })
 
@@ -177,7 +183,7 @@ function ShowItemMap (lon, lat, idx)
  * Content-my-lend
  */
 //类别控制
-$('.my-lend-type__item').click(function () {
+$('.my-type__item').click(function () {
     $('.my-lend-type--act').removeClass('my-lend-type--act');
     $(this).addClass('my-lend-type--act');
     $('.my-lend__item').show();
@@ -239,7 +245,7 @@ function FillMain (data)
         <div class="goods-position-map"></div>
     </div>`;
     //TODO:better parse single object
-    for (let i = 0; i < data.length || 1; ++i) {
+    for (let i = 0; i < (data.length ? data.length : 1); ++i) {
         let name, price, desc, positionText, time, imgId, lon , lat;
         if (data.length == undefined) {
             //传入的是单个item的对象
@@ -288,17 +294,38 @@ function FillMain (data)
 
 function LoadMain ()
 {
-    $.ajax({
-        type: 'GET',
-        url: apiBase,
-        dataType: 'json',
-        success: function (res) {
-            FillMain (res);
-        },
-        error: function (xhr) {
-            alert('加载主页失败：' + xhr.status + '错误');
+    let i = 0, endFlag = 0;
+    let data = [];
+    let interval = setInterval (function () {
+        $.ajax({
+            type: 'GET',
+            url: apiBase + '/item/' + ++i,
+            dataType: 'json',
+            headers: {//TODO:Test account
+                Authorization: "Bearer " + tempToken
+                // Authorization: AuthorizationText ()
+            },
+            async: false,
+            success: function (res) {
+                // FillMain (res);
+                if (res.status == 0 || res.status == 1)
+                    data.push(res);
+            },
+            error: function (xhr) {
+                // alert('加载主页失败：' + xhr.status + '错误');
+                endFlag += 1;
+                return;
+            }
+        });
+        if (endFlag == 2) {
+            clearInterval(interval);
+            FillMain (data);
         }
-    });
+        if (i == 100) {
+            clearInterval(interval);
+            return;
+        }
+    }, 10);
 }
 
 function FillMyLend (data)
@@ -398,7 +425,7 @@ function LoadMyLend ()
     $.ajax({
         type: 'GET',
         url: apiBase + '/item',
-        headers: {//TODO:Test account:test13
+        headers: {//TODO:Test account
             Authorization: "Bearer " + tempToken
             // Authorization: AuthorizationText ()
         },
@@ -408,5 +435,29 @@ function LoadMyLend ()
         error: function (xhr) {
             alert('加载已借出列表失败：' + xhr.status + '错误');
         }
-    })
+    });
+}
+
+function FillMyBorrow (data)
+{
+
+}
+
+function LoadMyBorrow ()
+{
+    $.ajax({
+        type: 'GET',
+        url: apiBase + '/item?borrow',
+        headers: {//TODO:Test account
+            Authorization: "Bearer " + tempToken
+            // Authorization: AuthorizationText ()
+        },
+        success: function (res) {
+            console.log(res);
+            FillMyBorrow(res);
+        },
+        error: function (xhr) {
+            alert('加载已借入列表失败：' + xhr.status + '错误');
+        }
+    });
 }
