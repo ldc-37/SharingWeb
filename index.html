@@ -8,9 +8,11 @@
     <script src="https://code.jquery.com/jquery-1.11.1.min.js"></script>
     <script type="text/javascript" src="https://webapi.amap.com/maps?v=1.4.8&key=fa3631a70c69a05c101b4d94ea99b5f3"></script>
     <script src="//webapi.amap.com/ui/1.0/main.js"></script>
+    <script src="./js/dropzone.min.js"></script>
     <link rel="stylesheet" href="./css/reset.css">
     <link rel="stylesheet" href="./css/scrollbar.css">
     <link rel="stylesheet" href="./css/main.css">
+    <link rel="stylesheet" href="./css/dropzone.css">
 </head>
 <body>
     <!-- 侧边栏 -->
@@ -369,7 +371,7 @@
                 <div class="lend-launch__left">
                     <div class="lend-launch__item">
                         <label for="itemName">物品名称</label>
-                        <input type="text" name="itemName" id="lend-item-name" maxlength="20" placeholder="最多20字">
+                        <input type="text" name="itemName" id="lend-item-name" maxlength="10" placeholder="最多10字">
                     </div>
                     <!-- <div class="lend-launch__item">
                         <label for="lendMethod">租还方式</label>
@@ -396,14 +398,15 @@
                     </div>
                     <div class="lend-launch__item">
                         <label for="lendDesc">文字描述</label><br>
-                        <textarea name="lendDesc" id="lend-description" cols="35" rows="5" maxlength="80" placeholder="请在此输入对图片/物品的描述..."></textarea><br>
-                        <span id="lend-left-char">还可以填写<span id="lend-left-char-num">80</span>字</span>
+                        <textarea name="lendDesc" id="lend-description" cols="40" rows="5" maxlength="100" placeholder="请在此输入对图片/物品的描述..."></textarea><br>
+                        <span id="lend-left-char">还可以填写<span id="lend-left-char-num">100</span>字</span>
                     </div>
                     <div class="lend-launch__item">
                         <!-- TODO: more pictures -->
-                        <label for="lendPic">添加图片（支持gif,jpg,jpeg,png）</label><br>
-                        <input type="file" name="lendPic" id="lend-img-upload" accept="image/gif,image/jpeg,image/jpg,image/png" style="display: none;">
-                        <img src="./images/plus-square.png" class="lend-img" onclick="$('#lend-img-upload').click()">
+                        <label for="lendPic">添加图片（0~3张）</label><br>
+                        <div class="lend-launch-pic dropzone" id="lendPicDropzone"></div>
+                        <!-- <input type="file" name="lendPic" id="lend-img-upload" accept="image/gif,image/jpeg,image/jpg,image/png" style="display: none;">
+                        <img src="./images/plus-square.png" class="lend-img" onclick="$('#lend-img-upload').click()"> -->
                     </div>
                 </div>
                 <div class="lend-launch__ft">

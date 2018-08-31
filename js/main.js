@@ -1,11 +1,10 @@
 'use strict'
 const apiBase = "https://api.hs.rtxux.xyz";
-const tempToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNTM1NTM5OTI1LCJleHAiOjE1MzYxNDQ3MjV9.AGKPMEYxarEWr6cMUtKLmCQOzRN3Z72MPis0wHl3ajV3Xfh4LdI9AVN5b8zUyC7H1OK6qSc3lHLX3f_wpIaCYA";
+const tempToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNTM1NzI3MjUwLCJleHAiOjE1MzYzMzIwNTB9.8hkwYSK8OI72HgCAhzUUHny0TwNSp2vB2BuThgFLnpSw0H54tO5BaUz6UYcJ9InPuZV4Hl0c9j3v3oWsWcHTGA";
 //@test13
-function AuthorizationText ()
-{
+let AuthorizationText = () => {
     return getCookie("tokenType") + " " + getCookie("accessToken");
-} 
+};
 
 /**
  * 跳转及网址传参
@@ -74,6 +73,7 @@ $('#searchBox').keypress(function (e) {
     if (e.keyCode == "13") 
         $('#mainSearchBtn').click();
 })
+
 $('#mainSearchBtn').click(function () {
     const words = $('#searchBox').val();
     if (words == "") {

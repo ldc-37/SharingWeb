@@ -39,28 +39,6 @@ $('#share-require__btn').click(function () {
     })
 })
 
-//图片上传相关
-// https://www.cnblogs.com/dj3839/p/6027417.html
-// https://blog.csdn.net/tangxiujiang/article/details/78693890
-$('#lend-img-upload').on('change',function(){
-    let filePath = this.value,
-    imgSrc = window.URL.createObjectURL(this.files[0]), //转成可以在本地预览的格式
-    fileFormat = filePath.substring(filePath.lastIndexOf(".")).toLowerCase();
-    // 检查是否是图片
-    if( !fileFormat.match(/.png|.jpg|.jpeg|.gif/) ) {
-        alert('上传错误,文件格式必须为：png/jpg/jpeg');
-        return false;  
-    }
-    // 检查图片大小
-    if (this.files[0].size > 1024 * 1024 * 2) {
-        alert('图片大小不能超过 2MB!');
-        return false;
-    }
-    $('.lend-img').eq(0).attr('src',imgSrc);
-    // 使用下面这句可以在内存中释放对此 url 的伺服，跑了之后那个 URL 就无效了
-    // URL.revokeObjectURL(imgSrc);
-});
-
 $('#lend-map-position-txt').click(function () {
     $('#lend-map-position-txt').css('color', 'black');
 })
@@ -82,12 +60,92 @@ $('#lend-price-charge').click(function () {
     $('.lend-launch__item .share-rmb').css('color', '#555');
 })
 
-//剩余字数更新
+//description剩余字数更新
 $('#lend-description').keyup(function () {
-    $('#lend-left-char-num').text(80 - $('#lend-description').val().length);
+    $('#lend-left-char-num').text(100 - $('#lend-description').val().length);
 });
 
-//提交请求
+//图片上传相关 @弃用
+// https://www.cnblogs.com/dj3839/p/6027417.html
+// https://blog.csdn.net/tangxiujiang/article/details/78693890
+/*$('#lend-img-upload').on('change',function(){
+    let filePath = this.value,
+    imgSrc = window.URL.createObjectURL(this.files[0]), //转成可以在本地预览的格式
+    fileFormat = filePath.substring(filePath.lastIndexOf(".")).toLowerCase();
+    // 检查是否是图片
+    if( !fileFormat.match(/.png|.jpg|.jpeg|.gif/) ) {
+        alert('上传错误,文件格式必须为：png/jpg/jpeg');
+        return false;  
+    }
+    // 检查图片大小
+    if (this.files[0].size > 1024 * 1024 * 2) {
+        alert('图片大小不能超过 2MB!');
+        return false;
+    }
+    $('.lend-img').eq(0).attr('src',imgSrc);
+    // 使用下面这句可以在内存中释放对此 url 的伺服，跑了之后那个 URL 就无效了
+    // URL.revokeObjectURL(imgSrc);
+}); */
+
+//图片上传
+let imgDataObj, uploadItemId;
+Dropzone.options.lendPicDropzone = {
+    autoProcessQueue: false,
+    init: function () {
+        imgDataObj = this;
+    },
+    url: apiBase + '/image',
+    headers: {//TODO:Test account
+        "Authorization": "Bearer " + tempToken
+        // Authorization: AuthorizationText ()
+    },
+    maxFilesize: 1,
+    maxFiles: 3,
+    acceptedFiles: 'image/*',
+    addRemoveLinks: true,
+    dictDefaultMessage: '点击空白处上传图片',
+    dictCancelUpload: '删除该图片',
+    sending: function (file, xhr, formData) {
+        formData.append("item", uploadItemId);
+    },
+    maxfilesreached: function () {
+    },
+    maxfilesexceeded: function (file) {
+        alert('图片数量超限');
+        this.removeFile(file);
+    },
+    // error: function (file, msg) {
+        //
+        // alert('图片上传错误：' + msg);
+    // },
+    queuecomplete: function () {
+        //避免首张图片不被accept也算作全部完成
+        if (this.files[0].accepted) {
+            $.ajax({
+                type: "POST",
+                url: apiBase + "/item/" + uploadItemId + "/publish",
+                headers: {//TODO:Test account
+                    Authorization: "Bearer " + tempToken
+                    // Authorization: AuthorizationText ()
+                },
+                success: function (res) {
+                    if (res.code == 0) {
+                        alert('借出请求已发布');
+                        $('#lend-launch__hd button').click();
+                    }
+                    else {
+                        alert('图片上传失败，错误代码：' + res.code);
+                    }
+                },
+                error: function (xhr) {
+                    alert('发布失败：' + xhr.status + "错误");
+                }
+            })
+        }
+    }
+}
+
+//提交借出请求
 $('#lend-submit').click(function () {
     $('.lend-tips').hide();
     $('.lend-tips').eq(0).text('');
@@ -116,7 +174,7 @@ $('#lend-submit').click(function () {
         $('.lend-tips').eq(0).text('描述不能为空');
         return;
     }
-    else if ($('.lend-img').eq(0).attr('src') == "./images/plus-square.png") {
+    else if (imgDataObj.files) {
         if (confirm('真的不上传一张图片让大家看看？\n【点确认返回上传图片，点取消继续】')) {
             return;
         }
@@ -142,7 +200,7 @@ $('#lend-submit').click(function () {
     $.ajax({
         type: "POST",
         url: apiBase + "/item",
-        headers: {//TODO:Test account:test13
+        headers: {//TODO:Test account
             Authorization: "Bearer " + tempToken
             // Authorization: AuthorizationText ()
         },
@@ -150,36 +208,12 @@ $('#lend-submit').click(function () {
         data: lendItemJson,
         success: function (res) {
             console.log (res);
-            alert('提交成功');
-            //TODO:for... 多张图片
-            let formData = new FormData();
-            formData.append("item", res.id);
-            formData.append("file", $("#lend-img-upload")[0].files[0]);
-            $.ajax({
-                type: 'POST',
-                url: apiBase + '/image',
-                headers: {//TODO:Test account:test13
-                    Authorization: "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNTM0Nzc0ODQyLCJleHAiOjE1MzUzNzk2NDJ9.UGFQcswMn8Ng3U1gPK3iL2RHNzmMJZetKyjNs97DaPh5X2DymUFPpKsPsJz5VsM-_osAL9OBK663qctfo6vYig"
-                    // Authorization: AuthorizationText ()
-                },
-                processData: false,
-                contentType: false,
-                data: formData,
-                success: function (imgRes) {
-                    console.log(imgRes);
-                    if (imgRes.code == 0) {
-                        // console.log(imgRes.data.image_id);
-                        $('#lend-launch__hd button').click();
-                    }
-                    else {
-                        alert("图片上传错误，错误码" + imgRes.code);
-                    }
-                }
-            }); 
+            //上传图片
+            uploadItemId = res.id;
+            imgDataObj.processQueue();
         },
         error: function (xhr) {
-            alert(xhr.status + "错误");
+            alert('提交失败：' + xhr.status + "错误");
         }
     })
 });
-

@@ -228,7 +228,7 @@ html ::-webkit-input-placeholder {
     color: red;
 }
 .account-tips::before {
-    content: url('./images/icon-warning.png');
+    content: url('../images/icon-warning.png');
     position: relative;
     top: 2px;
 }
@@ -449,7 +449,7 @@ html ::-webkit-input-placeholder {
 /* 发起借出弹窗 */
 .alert-box-lend {
     width: 800px;
-    height: 500px;
+    height: 550px;
     border-radius: 15px;
 }
 
@@ -475,7 +475,7 @@ html ::-webkit-input-placeholder {
     display: inline-block;
     position: absolute;
     width: 1px;
-    height: 350px;
+    height: 380px;
     left: 50%;
     top: 90px;
 }
@@ -518,7 +518,7 @@ html ::-webkit-input-placeholder {
 
 .lend-launch__right {
     float: right;
-    width: 45%;
+    width: 47%;
 }
 
 .lend-launch__item {
@@ -552,14 +552,8 @@ html ::-webkit-input-placeholder {
 }
 
 #lend-map {
-    width: 300px;
-    height: 200px;
-    transition: .3s;
-}
-#lend-map:hover {
-    /* transform: scale(1.2); */
     width: 350px;
-    height: 233px;
+    height: 250px;
 }
 
 #lend-left-char {
@@ -591,7 +585,7 @@ html ::-webkit-input-placeholder {
     font-size: 14px;
 }
 .lend-tips::before {
-    content: url('./images/icon-warning.png');
+    content: url('../images/icon-warning.png');
     position: relative;
     top: 3px;
 }
