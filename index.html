@@ -35,8 +35,8 @@
             <div class="share-column">
                 <ul class="share-column-list">
                     <li class="share-column-list__item" id="share-column-all">查看全部</li>
-                    <li class="share-column-list__item share-column-list__item--act" id="share-column-my-lend">我的借出</li>
-                    <li class="share-column-list__item" id="share-column-my-borrow">我的借入</li>
+                    <li class="share-column-list__item" id="share-column-my-lend">我的借出</li>
+                    <li class="share-column-list__item  share-column-list__item--act" id="share-column-my-borrow">我的借入</li>
                     <li class="share-column-list__item" id="share-column-my-like">我的收藏</li>
                     <li class="share-column-list__item" id="share-column-chat">申请/交流</li>
                 </ul>
@@ -111,6 +111,7 @@
                 </div>
             </div>  
             <div class="goods-list">
+                <!-- example -->
                 <div class="goods-list__item" data-index="0">
                     <div class="goods-item__hd">
                         <span class="goods-owner">物主:
@@ -189,7 +190,7 @@
                             </div>
                             <div class="goods-position goods-info">
                                     <span class="goods-property">租还地址</span>
-                                    <a class="goods-position__txt" title="点击查看地图">可能会出现一个超级长的地址，测试ing…… s38435435g14s354h3t</a>
+                                    <a class="goods-position__txt position-txt" title="点击查看地图">可能会出现一个超级长的地址，测试ing…… s38435435g14s354h3t</a>
                             </div>
                             <div class="goods-enter">
                                 <button>租用</button>
@@ -205,47 +206,49 @@
                 <div class="goods-list__item" data-index="4"></div>
                 <div class="goods-list__item" data-index="4"></div>
                 <div class="goods-list__item" data-index="4"></div>
+                <!-- example end -->
             </div>
         </div>
         <div class="l-my-lend" style="display: none;">
             <div class="my-lend-type my-type">
-                <div class="my-type__item my-lend-type--act" id="my-lend-type__all">全部发布</div>
-                <div class="my-type__item" id="my-lend-type__waiting">待借出</div>
-                <div class="my-type__item" id="my-lend-type__lending">已借出</div>
-                <div class="my-type__item" id="my-lend-type__finished">已完成</div>
+                <div class="my-type__item my-type--act" id="my-lend-type__all">全部发布</div>
+                <div class="my-type__item my-lend-color-waiting" id="my-lend-type__waiting">待借出</div>
+                <div class="my-type__item my-lend-color-lending" id="my-lend-type__lending">已借出</div>
+                <div class="my-type__item  my-lend-color-finished" id="my-lend-type__finished">已完成</div>
             </div>
-            <div class="my-lend-list">
+            <div class="my-list my-lend-list">
+                <!-- example -->
                 <div class="my-lend__item my-lend__item--lending" data-index="0">
-                    <div class="my-lend-status-color my-lend-color-waiting"></div>
+                    <div class="my-status-color my-lend-color-waiting"></div>
                     <div class="my-lend-item__pic">
                         <img src="./images/no-picture.jpg" alt="物品图片">
                     </div>
                     <div class="my-lend-item__basic-info">
                         <div class="my-lend-item-name">
-                            <span class="my-lend-property">物品名称</span>
+                            <span class="my-property">物品名称</span>
                             <span class="my-lend-item-name__txt">nameeeeeeee</span>
                         </div>
                         <div class="my-lend-item-duration">
-                            <span class="my-lend-property">租借时长</span>
+                            <span class="my-property">租借时长</span>
                             <span class="my-lend-item-duration__txt">15tian</span>
                         </div>
                         <div class="my-lend-item-price">
-                            <span class="my-lend-property">租借价格</span>
+                            <span class="my-property">租借价格</span>
                             <span class="my-lend-item-price__txt">9999</span>
                         </div>
                     </div>
                     <div class="my-lend-item__publish-info">
                         <div class="my-lend-item-publish-id">
-                                <span class="my-lend-property">订单ID</span>
+                                <span class="my-property">订单ID</span>
                                 <span class="my-lend-item-publish-id__txt">99</span>
                         </div>
                         <div class="my-lend-item-publish-time">
-                                <span class="my-lend-property">发布时间</span>
+                                <span class="my-property">发布时间</span>
                                 <span class="my-lend-item-publish-time__txt">2018/8/8 08:09</span>
                         </div>
                     </div>
                     <div class="my-lend-item__description">
-                        <span class="my-lend-property">物品描述</span>
+                        <span class="my-property">物品描述</span>
                         <p class="my-lend-item-description__txt">desccccccddddddddddddddddddddddddddddcccccc</p>
                     </div>
                     <div class="my-lend-item__op">
@@ -256,40 +259,40 @@
                 </div>
                 <div class="my-lend__item" data-index="1">
                     <!-- 颜色更改 -->
-                    <div class="my-lend-status-color my-lend-color-lending"></div>
+                    <div class="my-status-color my-lend-color-lending"></div>
                     <div class="my-lend-item__pic">
                         <img src="./images/no-picture.jpg" alt="物品图片">
                     </div>
                     <div class="my-lend-item__basic-info">
                         <div class="my-lend-item-name">
-                            <span class="my-lend-property">物品名称</span>
+                            <span class="my-property">物品名称</span>
                             <span class="my-lend-item-name__txt">nameeeeeeee</span>
                         </div>
                         <div class="my-lend-item-duration">
-                            <span class="my-lend-property">租借时长</span>
+                            <span class="my-property">租借时长</span>
                             <span class="my-lend-item-duration__txt">7天</span>
                         </div>
                         <div class="my-lend-item-price">
-                            <span class="my-lend-property">租借价格</span>
+                            <span class="my-property">租借价格</span>
                             <span class="my-lend-item-price__txt">99999</span>
                         </div>
                     </div>
                     <div class="my-lend-item__publish-info">
                         <div class="my-lend-item-publish-id">
-                                <span class="my-lend-property">订单ID</span>
+                                <span class="my-property">订单ID</span>
                                 <span class="my-lend-item-publish-id__txt">100</span>
                         </div>
                         <div class="my-lend-item-lend-time">
-                                <span class="my-lend-property">借出时间</span>
+                                <span class="my-property">借出时间</span>
                                 <span class="my-lend-item-lend-time__txt">2018/8/8 08:08</span>
                         </div>
                         <div class="my-lend-borrower-id">
-                                <span class="my-lend-property">借入者ID</span>
+                                <span class="my-property">借入者ID</span>
                                 <span class="my-lend-borrower-id__txt">26</span>
                         </div>
                     </div>
                     <div class="my-lend-item__description">
-                        <span class="my-lend-property">物品描述</span>
+                        <span class="my-property">物品描述</span>
                         <p class="my-lend-item-description__txt">desccccgggggrewyt3546456467456ccddddddddddddddddddddddddddddcccccc</p>
                     </div>
                     <div class="my-lend-item__op">
@@ -300,45 +303,44 @@
                     </div>
                 </div>
                 <div class="my-lend__item" data-index="2">
-                    <!-- 颜色更改 -->
-                    <div class="my-lend-status-color my-lend-color-finished"></div>
+                    <div class="my-status-color my-lend-color-finished"></div>
                     <div class="my-lend-item__pic">
                         <img src="./images/no-picture.jpg" alt="物品图片">
                     </div>
                     <div class="my-lend-item__basic-info">
                         <div class="my-lend-item-name">
-                            <span class="my-lend-property">物品名称</span>
+                            <span class="my-property">物品名称</span>
                             <span class="my-lend-item-name__txt">nameeeeeeee</span>
                         </div>
                         <div class="my-lend-item-duration">
-                            <span class="my-lend-property">租借时长</span>
+                            <span class="my-property">租借时长</span>
                             <span class="my-lend-item-duration__txt">7天</span>
                         </div>
                         <div class="my-lend-item-price">
-                            <span class="my-lend-property">租借价格</span>
+                            <span class="my-property">租借价格</span>
                             <span class="my-lend-item-price__txt">99999</span>
                         </div>
                     </div>
                     <div class="my-lend-item__publish-info">
                         <div class="my-lend-item-publish-id">
-                                <span class="my-lend-property">订单ID</span>
+                                <span class="my-property">订单ID</span>
                                 <span class="my-lend-item-publish-id__txt">100</span>
                         </div>
+                        <!-- TODO:三种时间 -->
                         <div class="my-lend-item-publish-time">
-                                <span class="my-lend-property">完成时间</span>
+                                <span class="my-property">完成时间</span>
                                 <span class="my-lend-item-finish-time__txt">2018/8/8 08:08</span>
                         </div>
                         <div class="my-lend-borrower-id">
-                                <span class="my-lend-property">借入者ID</span>
+                                <span class="my-property">借入者ID</span>
                                 <span class="my-lend-borrower-id__txt">26</span>
                         </div>
                     </div>
                     <div class="my-lend-item__description">
-                        <span class="my-lend-property">物品描述</span>
+                        <span class="my-property">物品描述</span>
                         <p class="my-lend-item-description__txt">desccccgggggrewyt3546456467456ccddddddddddddddddddddddddddddcccccc</p>
                     </div>
                     <div class="my-lend-item__op">
-                        <!-- 颜色文字更改 -->
                         <span class="my-lend-item-status__txt my-lend-color-finished" title="当前状态">已完成</span>
                         <button class="my-lend-btn my-lend-btn__edit" disabled>编辑</button>
                         <button class="my-lend-btn my-lend-btn__del" disabled>删除</button>
@@ -346,14 +348,70 @@
                 </div>
                 <div class="my-lend__item"></div>
                 <div class="my-lend__item"></div>
+                <!-- example end -->
             </div>
         </div>
         <div class="l-my-borrow">
             <div class="my-borrow-type my-type">
-                <div class="my-type__item my-lend-type--act" id="my-lend-type__all">全部申请</div>
-                <div class="my-type__item" id="my-lend-type__waiting">待审核</div>
-                <div class="my-type__item" id="my-lend-type__lending">已借入</div>
-                <div class="my-type__item" id="my-lend-type__finished">已归还</div>
+                <div class="my-type__item my-type--act" id="my-borrow-type__all">全部申请</div>
+                <div class="my-type__item my-borrow-color-auditing" id="my-borrow-type__auditing">待审核</div>
+                <div class="my-type__item my-borrow-color-borrowed" id="my-borrow-type__borrowed">已借入</div>
+                <div class="my-type__item my-borrow-color-returned" id="my-borrow-type__returned">已归还</div>
+            </div>
+            <div class="my-list my-borrow-list">
+                <!-- example -->
+                <div class="my-borrow__item my-borrow__item--returned" data-index="0">
+                    <div class="my-status-color my-borrow-color-returned"></div>
+                    <div class="my-item__pic">
+                        <img src="./images/no-picture.jpg" alt="物品图片">
+                        <div class="my-borrow-description">
+                            allllafasdfasdfasdfasegtrngyukudghsdfla
+                        </div>
+                    </div>
+                    <div class="my-item__info-1">
+                        <div class="my-borrow-item-name">
+                            <span class="my-property">物品名称</span>
+                            <span class="my-borrow-item-name__txt">nameeeeeeee</span>
+                        </div>
+                        <div class="my-borrow-item-duration">
+                            <span class="my-property">租借时长</span>
+                            <span class="my-borrow-item-duration__txt">7天</span>
+                        </div>
+                        <div class="my-borrow-item-price">
+                            <span class="my-property">租借价格</span>
+                            <span class="my-borrow-item-price__txt">99999</span>
+                        </div>
+                    </div>
+                    <div class="my-item__info-2">
+                        <div class="my-borrow-item-publish-id">
+                                <span class="my-property">物品ID</span>
+                                <span class="my-borrow-item-publish-id__txt">100</span>
+                        </div>
+                        <div class="my-borrow-item-owner-id">
+                                <span class="my-property">物主UID</span>
+                                <span class="my-borrow-item-owner-id__txt">10</span>
+                        </div>
+                        <div class="my-borrow-item-publish-time">
+                                <span class="my-property">发起时间</span>
+                                <!-- 借入时间 归还时间 -->
+                                <span class="my-borrow-item-time__txt">2018/8/8 08:08</span>
+                        </div>
+                    </div>
+                    <div class="my-borrow-item__position">
+                        <span class="my-property">物品地址</span>
+                        <p class="my-borrow-item-position__txt position-txt">北京天安门</p>
+                    </div>
+                    <div class="position-map my-borrow-position-map"></div>
+                    <div class="my-item__op">
+                        <span class="my-item-status__txt my-borrow-color-returned" title="当前状态">已完成</span>
+                        <button class="my-item-btn my-borrow-btn__contact" disabled>联系</button>
+                        <button class="my-item-btn my-borrow-btn__sug" disabled>投诉</button>
+                    </div>
+                </div>
+                <div class="my-borrow__item" data-index="0"></div>
+                <div class="my-borrow__item" data-index="0"></div>
+                <div class="my-borrow__item" data-index="0"></div>
+                <!-- example end -->
             </div>
         </div>
         <div class="l-my-like"></div>
@@ -373,11 +431,6 @@
                         <label for="itemName">物品名称</label>
                         <input type="text" name="itemName" id="lend-item-name" maxlength="10" placeholder="最多10字">
                     </div>
-                    <!-- <div class="lend-launch__item">
-                        <label for="lendMethod">租还方式</label>
-                        <input type="radio" name="lendMethod" id="">自取自还
-                        <input type="radio" name="lendMethod" id="">送货上门
-                    </div> -->
                     <div class="lend-launch__item">
                         <label for="lendTime">出租时长</label>
                         <input type="text" name="lendTime" id="lend-time" placeholder="1-30">天
@@ -405,8 +458,6 @@
                         <!-- TODO: more pictures -->
                         <label for="lendPic">添加图片（0~3张）</label><br>
                         <div class="lend-launch-pic dropzone" id="lendPicDropzone"></div>
-                        <!-- <input type="file" name="lendPic" id="lend-img-upload" accept="image/gif,image/jpeg,image/jpg,image/png" style="display: none;">
-                        <img src="./images/plus-square.png" class="lend-img" onclick="$('#lend-img-upload').click()"> -->
                     </div>
                 </div>
                 <div class="lend-launch__ft">

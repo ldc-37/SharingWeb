@@ -108,8 +108,8 @@ Dropzone.options.lendPicDropzone = {
     sending: function (file, xhr, formData) {
         formData.append("item", uploadItemId);
     },
-    maxfilesreached: function () {
-    },
+    // maxfilesreached: function () {
+    // },
     maxfilesexceeded: function (file) {
         alert('图片数量超限');
         this.removeFile(file);
