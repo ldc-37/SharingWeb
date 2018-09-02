@@ -180,10 +180,6 @@ html ::-webkit-input-placeholder {
     font-size: 18px;
 }
 
-.share-account__login {
-
-}
-
 .share-account input[type="text"],
 .share-account input[type="password"] {
     margin: 10px;
@@ -274,6 +270,25 @@ html ::-webkit-input-placeholder {
 #mainSearchBtn {
     width: 10%;
     height: 100%;
+}
+
+.main-head-qrcode {
+    margin-left: 2%;
+    line-height: 80px;
+    text-decoration: underline;
+    cursor: pointer;
+    font-size: 20px;
+    color: #b61212;
+}
+
+.main-head-qrcode__pic {
+    display: none;
+    position: fixed;
+    margin-top: -20px;
+    width: 100px;
+    height: 100px;
+    background: #000;
+    z-index: 2;
 }
 
 .main-head-sort {
@@ -800,6 +815,14 @@ html ::-webkit-input-placeholder {
     border: 1px solid #000;
 }
 
+/* 通知、审核内容 */
+.audit-list {
+
+}
+
+.inform-list {
+    
+}
 
 /* 背景遮罩（弹窗层以下） */
 #body-cover {

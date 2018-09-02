@@ -36,9 +36,10 @@
                 <ul class="share-column-list">
                     <li class="share-column-list__item" id="share-column-all">查看全部</li>
                     <li class="share-column-list__item" id="share-column-my-lend">我的借出</li>
-                    <li class="share-column-list__item  share-column-list__item--act" id="share-column-my-borrow">我的借入</li>
-                    <li class="share-column-list__item" id="share-column-my-like">我的收藏</li>
-                    <li class="share-column-list__item" id="share-column-chat">申请/交流</li>
+                    <li class="share-column-list__item" id="share-column-my-borrow">我的借入</li>
+                    <!-- <li class="share-column-list__item" id="share-column-my-like">我的收藏</li> -->
+                    <li class="share-column-list__item share-column-list__item--act" id="share-column-audit-inform">审核/通知</li>
+                    <!-- 交流 -->
                 </ul>
             </div>
         </div>
@@ -103,6 +104,12 @@
                     <!-- TODO:清空按钮 -->
                     <input type="text" name="searchBox" id="searchBox" placeholder="请输入物品名称，或输入ID/UID:{id}查看指定物品或用户[算了，有心情在写这个]">
                     <button id="mainSearchBtn">搜索</button>
+                </div>
+                <div class="main-head-qrcode" title="点击访问下载页面">
+                    下载APP!!!
+                    <div class="main-head-qrcode__pic">
+                        <img src="./images/appQR.png" id="qrcodeAPPDownload">
+                    </div>
                 </div>
                 <div class="main-head-sort">
                     <b>排序方式</b>&nbsp;&nbsp;&nbsp;
@@ -351,7 +358,7 @@
                 <!-- example end -->
             </div>
         </div>
-        <div class="l-my-borrow">
+        <div class="l-my-borrow" style="display: none;">
             <div class="my-borrow-type my-type">
                 <div class="my-type__item my-type--act" id="my-borrow-type__all">全部申请</div>
                 <div class="my-type__item my-borrow-color-auditing" id="my-borrow-type__auditing">待审核</div>
@@ -414,8 +421,15 @@
                 <!-- example end -->
             </div>
         </div>
+        <div class="l-audit-inform">
+            <div class="audit-list">
+                
+            </div>
+            <div class="inform-list">
+
+            </div>
+        </div>
         <div class="l-my-like"></div>
-        <div class="l-inform-chat"></div>
     </div>
 
     <!-- 发起借出弹窗 -->

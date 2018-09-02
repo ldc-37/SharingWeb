@@ -11,9 +11,11 @@ let AuthorizationText = () => {
  */
 $(function () {
     if (isMobile ()) {
+        $('#body-cover').show().css('opacity', 0.7);
         alert('移动端请暂时使用app');
         // document.execCommand("stop");
         // window.stop();
+
     }
     const searchWords = GetQueryVariable ("s");
     if (searchWords) {
@@ -43,7 +45,7 @@ $.ajax({
     }
 });
 
-//用户类型选择栏
+// 用户选择类型栏
 $('.share-column-list__item').click(function () {
     $('.share-column-list__item').removeClass('share-column-list__item--act');
     $(this).addClass('share-column-list__item--act');
@@ -63,14 +65,16 @@ $('#share-column-my-borrow').click(function () {
     $('.l-my-borrow').show();
     LoadMyBorrow ();
 })
-$('#share-column-my-like').click(function () {
-
+$('#share-column-audit-inform').click(function () {
+    $('.l-content>div').hide();
+    $('.l-audit-inform').show();
+    // LoadMyBorrow ();
 });
 
 /**
  * Content-main
  */
-//搜索相关
+//head相关
 $('#searchBox').keypress(function (e) {
     if (e.keyCode == "13") 
         $('#mainSearchBtn').click();
@@ -124,19 +128,14 @@ $('#mainSearchBtn').click(function () {
         });
     }
 })
-
-//点击物品地址 TODO:Better solution?
-// $('.l-main').change(function () {
-//     setTimeout(function () {
-//         $('.goods-position__txt').click(function () {
-//             let idx = this.parentNode.parentNode.parentNode.parentNode.dataset.index;
-//             let lon = this.parentNode.parentNode.parentNode.parentNode.dataset.lon;
-//             let lat = this.parentNode.parentNode.parentNode.parentNode.dataset.lat;
-//             ShowItemMap(lon, lat, idx);
-//         });
-//     }, 2000)
-// })
-
+//二维码 APP
+$('.main-head-qrcode').mouseover(function () {
+    $('.main-head-qrcode__pic').show();
+}).mouseout(function () {
+    $('.main-head-qrcode__pic').hide();
+}).click(function () {
+    window.open("https://xilym.tk/storage/apk/happySharing.apk")
+});
 
 //展示item地图
 function ShowItemMap (lon, lat, idx)
@@ -215,6 +214,8 @@ $('#my-borrow-type__returned').click(function () {
 });
 
 
+
+
 function FillMain (data)
 {
     $('.goods-list').empty();
@@ -223,11 +224,11 @@ function FillMain (data)
         <span class="goods-owner">物主UID:
             <span class="goods-owner__name"></span>
         </span>
-        <span class="goods-owner-info">主人已借出:
-            <span class="goods-owner-lend-num"></span>
+        <span class="goods-id">物品ID:
+            <span class="goods-id__txt"></span>
         </span>
-        <span class="goods-owner-info">主人已借入:
-            <span class="goods-owner-borrow-num"></span>
+        <span class="goods-date">发布时间:
+            <span class="goods-date__txt"></span>
         </span>
     </div>
     <i class="goods-like"></i>
@@ -261,10 +262,11 @@ function FillMain (data)
         <div class="position-map goods-position-map"></div>
     </div>`;
     //TODO:better parse single object
-    let name, price, desc, positionText, time, imgId, ownerId, lon , lat;
+    let name, price, desc, positionText, time, imgId, ownerId, id, lon , lat;
     for (let i = 0; i < (data.length ? data.length : 1); ++i) {
         if (data.length == undefined) {
             //传入的是单个item的对象
+            id = data.id;
             name = data.name;
             price = data.price;
             desc = data.description;
@@ -276,6 +278,7 @@ function FillMain (data)
             lat = data.location.latitude;
         }
         else {
+            id = data[i].id;
             name = data[i].name;
             price = data[i].price;
             desc = data[i].description;
@@ -292,9 +295,10 @@ function FillMain (data)
         $newItem.append(itemHTML);
         $newItem.attr('data-lon', lon);
         $newItem.attr('data-lat', lat);
+        $newItem.attr('data-id', id);
         $newItem.find('.goods-owner__name').text(ownerId);
-        $newItem.find('.goods-owner-lend-num').text('test');
-        $newItem.find('.goods-owner-borrow-num').text('test');
+        $newItem.find('.goods-id__txt').text(id);
+        $newItem.find('.goods-date__txt').text('17-12-22');
         if (imgId.length) {
             $newItem.find('.goods-img').attr('src', apiBase + '/image/' + imgId[0]); //@temp
         }
@@ -315,6 +319,10 @@ function FillMain (data)
         let lat = this.parentNode.parentNode.parentNode.parentNode.dataset.lat;
         ShowItemMap(lon, lat, idx);
     });
+    //点击租用
+    $('.goods-enter').click(function () {
+        LaunchBorrow ()
+    })
 }
 
 function LoadMain ()
@@ -351,6 +359,29 @@ function LoadMain ()
             return;
         }
     }, 10);
+}
+
+function LaunchBorrow ()
+{
+    if (confirm('确认申请？')) {
+        const id = this.parentNode.parentNode.parentNode.dataset.id;
+        $.ajax({
+            type: 'POST',
+            url: apiBase + '/item/' + id +  '/borrow',
+            dataType: 'json',
+            success: function (res) {
+                if (res.code == 0) {
+                    alert('成功申请，等待物主审核');
+                }
+                else {
+                    alert('申请失败，错误：' + res.code);
+                }
+            },
+            error: function (xhr) {
+                alert('发起申请失败：' + xhr.status + '错误');
+            }
+        });
+    }
 }
 
 function FillMyLend (data)
