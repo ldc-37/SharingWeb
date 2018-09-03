@@ -116,16 +116,22 @@ function GetQueryVariable(variable)
 //处理位集
 function ParseBitSet (bitSet, bit)
 {
-    //@经验教训：想清楚再敲
-    // let mask = "";
-    // for (let i = 0; i < bitSet.length; ++i) {
-    //     if (bitSet.length - i == bit) {
-    //         mask += "1";
-    //     }
-    //     else {
-    //         mask += "0";
-    //     }
-    // }
     const mask = Math.pow(2, bit);
     return (bitSet & mask);
+}
+
+//获取timestamp对应时间，格式yyyy-mm-dd hh:mm:ss
+//https://www.cnblogs.com/lmyt/p/6013097.html
+function GetTime(timeStamp = undefined) {
+    var now;
+    if (timeStamp) {
+        now = new Date(timeStamp);
+    }
+    else {
+        now = new Date();
+    }
+    var y = now.getFullYear(),
+        m = ("0" + (now.getMonth() + 1)).slice(-2),
+        d = ("0" + now.getDate()).slice(-2);
+    return y + "-" + m + "-" + d + " " + now.toTimeString().substr(0, 8);
 }

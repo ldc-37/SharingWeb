@@ -68,7 +68,8 @@ $('#share-column-my-borrow').click(function () {
 $('#share-column-audit-inform').click(function () {
     $('.l-content>div').hide();
     $('.l-audit-inform').show();
-    // LoadMyBorrow ();
+    LoadAudit ();
+    LoadInform ();
 });
 
 /**
@@ -130,9 +131,9 @@ $('#mainSearchBtn').click(function () {
 })
 //二维码 APP
 $('.main-head-qrcode').mouseover(function () {
-    $('.main-head-qrcode__pic').show();
+    $('.main-head-qrcode__pic').slideDown();
 }).mouseout(function () {
-    $('.main-head-qrcode__pic').hide();
+    $('.main-head-qrcode__pic').slideUp();
 }).click(function () {
     window.open("https://xilym.tk/storage/apk/happySharing.apk")
 });
@@ -212,6 +213,10 @@ $('#my-borrow-type__borrowed').click(function () {
 $('#my-borrow-type__returned').click(function () {
     $('.my-borrow__item:not(.my-borrow__item--returned)').hide();
 });
+
+/**
+ * Content audit-inform
+ */
 
 
 
@@ -664,4 +669,93 @@ function LoadMyBorrow ()
             alert('加载已借入列表失败：' + xhr.status + '错误');
         }
     });
+}
+
+function FillInform (data)
+{
+    for (let i = 0; i < data.length; ++i) {
+        let sender = data[i].from;
+        let timestamp = data[i].timestamp;
+        let msg = data[i].message;
+
+        let timeStr = GetTime (timestamp);
+        let listHTML = 
+        `<li class="inform-list__item">
+            ${timeStr} 
+            【${sender ? '用户' : '系统'}】 
+            ${msg}
+        </li>`
+        $('.inform-list').append(listHTML);
+        if (i > 10) {
+            $('.inform-list').append('<span>仅加载最新10条消息！</span>')
+            break;
+        }
+    }
+}
+
+function LoadInform ()
+{
+    $.ajax({
+        type: 'GET',
+        url: apiBase + '/message',
+        headers: {//TODO:Test account
+            Authorization: "Bearer " + tempToken
+            // Authorization: AuthorizationText ()
+        },
+        success: function (res) {
+            console.log(res);
+            FillInform(res);
+        },
+        error: function (xhr) {
+            alert('加载通知列表失败：' + xhr.status + '错误');
+        }
+    })
+}
+
+function FillAudit (data)
+{
+    console.log(data);
+}
+
+function LoadAudit ()
+{
+    let waitingAuditObj = [];
+    $.ajax({
+        type: 'GET',
+        url: apiBase + '/item',
+        headers: {//TODO:Test account
+            Authorization: "Bearer " + tempToken
+            // Authorization: AuthorizationText ()
+        },
+        success: function (res) {
+            for (let i = 0; i < res.length; ++i) {
+                if (res[i].status == 3 || res[i].status == 7) {
+                    waitingAuditObj.push(res[i]);
+                }
+            }
+            FillAudit (waitingAuditObj);
+        },
+        error: function (xhr) {
+            alert('加载待审核-未借出列表失败：' + xhr.status + '错误');
+        }
+    });
+}
+
+
+function GetUserInfo (userId)
+{
+    $.ajax({
+        type: 'GET',
+        url: apiBase + '/user/profile/' + userId,
+        headers: {//TODO:Test account
+            Authorization: "Bearer " + tempToken
+            // Authorization: AuthorizationText ()
+        },
+        success: function (res) {
+            return res;
+        },
+        error: function (xhr) {
+            alert('加载指定用户信息失败：' + xhr.status + '错误');
+        }
+    })
 }

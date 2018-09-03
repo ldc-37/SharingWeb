@@ -235,7 +235,7 @@ html ::-webkit-input-placeholder {
     right: 0;
     width: 74%;
     height: 100%;
-    background: #aaa;
+    background: #eee;
     transition: filter .1s linear;
 }
 
@@ -816,12 +816,38 @@ html ::-webkit-input-placeholder {
 }
 
 /* 通知、审核内容 */
+.l-audit-inform {
+    padding: 5% 10%;
+}
+
 .audit-list {
 
 }
 
+.audit-inform-list__title {
+    font-weight: bold;
+    font-size: 28px;
+}
+
+.audit-list__item {
+    padding: 15px 30px;
+    background: #aaa;
+}
+.audit-list__item:nth-child(odd) {
+    background: #bbb;
+}
+
 .inform-list {
     
+}
+
+.inform-list__item {
+    padding: 15px 30px;
+    /* border-bottom: 1px solid #000; */
+    background: #ccc;
+}
+.inform-list__item:nth-child(odd) {
+    background: #bbb;
 }
 
 /* 背景遮罩（弹窗层以下） */
