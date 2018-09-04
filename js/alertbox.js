@@ -95,9 +95,8 @@ Dropzone.options.lendPicDropzone = {
         imgDataObj = this;
     },
     url: apiBase + '/image',
-    headers: {//TODO:Test account
-        "Authorization": "Bearer " + tempToken
-        // Authorization: AuthorizationText ()
+    headers: {
+        Authorization: AuthorizationText ()
     },
     maxFilesize: 1,
     maxFiles: 3,
@@ -124,9 +123,8 @@ Dropzone.options.lendPicDropzone = {
             $.ajax({
                 type: "POST",
                 url: apiBase + "/item/" + uploadItemId + "/publish",
-                headers: {//TODO:Test account
-                    Authorization: "Bearer " + tempToken
-                    // Authorization: AuthorizationText ()
+                headers: {
+                    Authorization: AuthorizationText ()
                 },
                 success: function (res) {
                     if (res.code == 0) {
@@ -138,6 +136,7 @@ Dropzone.options.lendPicDropzone = {
                     }
                 },
                 error: function (xhr) {
+                    $('#lend-submit').text('提交');
                     alert('发布失败：' + xhr.status + "错误");
                 }
             })
@@ -197,12 +196,12 @@ $('#lend-submit').click(function () {
         "price": ${itemPrice},
         "location": ${lendLocationJson}
     }`;
+    $('#lend-submit').text('发布中...');
     $.ajax({
         type: "POST",
         url: apiBase + "/item",
-        headers: {//TODO:Test account
-            Authorization: "Bearer " + tempToken
-            // Authorization: AuthorizationText ()
+        headers: {
+            Authorization: AuthorizationText ()
         },
         contentType: "application/json",
         data: lendItemJson,
@@ -214,6 +213,7 @@ $('#lend-submit').click(function () {
         },
         error: function (xhr) {
             alert('提交失败：' + xhr.status + "错误");
+            $('#lend-submit').text('提交');
         }
     })
 });

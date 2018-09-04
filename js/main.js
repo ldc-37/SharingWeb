@@ -1,9 +1,10 @@
 'use strict'
 const apiBase = "https://api.hs.rtxux.xyz";
-const tempToken = "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNTM1NzI3MjUwLCJleHAiOjE1MzYzMzIwNTB9.8hkwYSK8OI72HgCAhzUUHny0TwNSp2vB2BuThgFLnpSw0H54tO5BaUz6UYcJ9InPuZV4Hl0c9j3v3oWsWcHTGA";
-//@test13
-let AuthorizationText = () => {
-    return getCookie("tokenType") + " " + getCookie("accessToken");
+
+let AuthorizationText = () => { //TODO:test account
+    // return getCookie("tokenType") + " " + getCookie("accessToken");
+    //@test13
+    return "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNTM1NzI3MjUwLCJleHAiOjE1MzYzMzIwNTB9.8hkwYSK8OI72HgCAhzUUHny0TwNSp2vB2BuThgFLnpSw0H54tO5BaUz6UYcJ9InPuZV4Hl0c9j3v3oWsWcHTGA";
 };
 
 /**
@@ -29,21 +30,91 @@ $(function () {
  * Sidebar控制
  */
 //用户名
-$.ajax({
-    type: 'GET',
-    url: apiBase + '/user/profile',
-    contentType: 'application/json',
-    dataType: 'json',
-    headers: {
-        Authorization: 'Bearer ' + tempToken
-    },
-    success: function (res) {
-        $('#share-user-info__name').text(res.nickName);
-    },
-    error: function (xhr) {
-        alert('加载用户信息失败：' + xhr.status + '错误');
-    }
+$('#share-user-info__name').click(function () {
+    ShowLoginSidebar();
 });
+if (AuthorizationText ()) {
+    // 尝试Cookie中token登录
+    $.ajax({
+        type: 'GET',
+        url: apiBase + '/user/profile',
+        contentType: 'application/json',
+        dataType: 'json',
+        headers: {
+            Authorization: AuthorizationText ()
+        },
+        success: function (res) {
+            $('#share-user-info__name').text(res.nickName)
+                .unbind('click')
+                .click(function () {
+                    $('.l-sidebar--info').fadeIn(500);
+                    $('.l-sidebar--nor').css('filter', 'blur(3px)');
+                    LoadUserInfoEdit ();
+                });
+        },
+        error: function () {
+            return;
+        }
+    });
+}
+
+function LoadUserInfoEdit ()
+{
+    $.ajax({
+        type: 'GET',
+        url: apiBase + '/user/profile',
+        headers: {
+            Authorization: AuthorizationText ()
+        },
+        success: function (res) {
+            $('#account-info-id__txt').val(res.user_id);
+            $('#account-info-nickname__txt').val(res.nickName);
+            $('#account-info-phone__txt').val(res.phone);
+            $('#account-info-description__txt').val(res.description);
+            if (res.gender == "male") {
+                $('#account-info-gender__male').attr('checked', true);
+            }
+            else {
+                $('#account-info-gender__female').attr('checked', true);
+            }
+        },
+        error: function () {
+            alert('加载当前用户信息失败！');
+        }
+    });
+    $('#account-info-btn__cancel').click(function () {
+        $('.l-sidebar--nor').css('filter', '');
+        $('.l-sidebar--info').fadeOut(500);
+    });
+    $('#account-info-btn__update').click(function () {
+        $('#account-info-btn__update').text('更新中..');
+        $.ajax({
+            type: 'POST',
+            url: apiBase + '/user/profile',
+            headers: {
+                Authorization: AuthorizationText ()
+            },
+            contentType: 'application/json',
+            data:`{
+                "nickName": "${$('#account-info-nickname__txt').val()}",
+                "gender": "${$('#account-info-gender__male')[0].checked ? 'male' : 'female'}",
+                "description": "${$('#account-info-description__txt').val()}",
+                "phone": "${$('#account-info-phone__txt').val()}"
+            }`,
+            success: function (res) {
+                if (res.code == 0) {
+                    alert ('信息更新成功！');
+                }
+                else {
+                    alert('信息更新失败！')
+                }
+            },
+            error: function (xhr) {
+                alert('信息更新失败：' + xhr.status + '错误');
+            }
+        });
+    });
+}
 
 // 用户选择类型栏
 $('.share-column-list__item').click(function () {
@@ -72,6 +143,8 @@ $('#share-column-audit-inform').click(function () {
     LoadInform ();
 });
 
+
+
 /**
  * Content-main
  */
@@ -92,9 +165,8 @@ $('#mainSearchBtn').click(function () {
         $.ajax({
             type: 'GET',
             url: apiBase + '/item/' + id,
-            headers: {//TODO:Test account:test13
-                Authorization: "Bearer " + tempToken
-                // Authorization: AuthorizationText ()
+            headers: {
+                Authorization: AuthorizationText ()
             },
             dataType: 'json',
             success: function (res) {
@@ -339,9 +411,8 @@ function LoadMain ()
             type: 'GET',
             url: apiBase + '/item/' + ++i,
             dataType: 'json',
-            headers: {//TODO:Test account
-                Authorization: "Bearer " + tempToken
-                // Authorization: AuthorizationText ()
+            headers: {
+                Authorization: AuthorizationText ()
             },
             async: false,
             success: function (res) {
@@ -486,9 +557,8 @@ function LoadMyLend ()
     $.ajax({
         type: 'GET',
         url: apiBase + '/item',
-        headers: {//TODO:Test account
-            Authorization: "Bearer " + tempToken
-            // Authorization: AuthorizationText ()
+        headers: {
+            Authorization: AuthorizationText ()
         },
         success: function (res) {
             FillMyLend (res);
@@ -580,7 +650,7 @@ function FillMyBorrow (data)
         </div>
     </div>
     <div class="my-borrow-item__position">
-        <span class="my-property">物品地址</span>
+        <span class="my-property">物品地址<br>(点击打开地图)</span>
         <p class="my-borrow-item-position__txt position-txt"></p>
     </div>
     <div class="position-map my-borrow-position-map"></div>
@@ -657,9 +727,8 @@ function LoadMyBorrow ()
     $.ajax({
         type: 'GET',
         url: apiBase + '/item?borrowed',
-        headers: {//TODO:Test account
-            Authorization: "Bearer " + tempToken
-            // Authorization: AuthorizationText ()
+        headers: {
+            Authorization: AuthorizationText ()
         },
         success: function (res) {
             console.log(res);
@@ -686,8 +755,8 @@ function FillInform (data)
             ${msg}
         </li>`
         $('.inform-list').append(listHTML);
-        if (i > 10) {
-            $('.inform-list').append('<span>仅加载最新10条消息！</span>')
+        if (i > 6) {
+            $('.inform-list').append('<span>仅加载最新6条消息！</span>')
             break;
         }
     }
@@ -698,9 +767,8 @@ function LoadInform ()
     $.ajax({
         type: 'GET',
         url: apiBase + '/message',
-        headers: {//TODO:Test account
-            Authorization: "Bearer " + tempToken
-            // Authorization: AuthorizationText ()
+        headers: {
+            Authorization: AuthorizationText ()
         },
         success: function (res) {
             console.log(res);
@@ -714,7 +782,47 @@ function LoadInform ()
 
 function FillAudit (data)
 {
-    console.log(data);
+    $('.audit-list').empty();
+    for (let i = 0; i < data.length; ++i) {
+        let listHTML, borrowerName;
+        const id = data[i].id,
+            itemName = data[i].name,
+            duration = data[i].duration,
+            item = GetItemInfo (data[i].id);
+            status = data[i].status;
+        try {
+            borrowerName = GetUserInfo (item.borrower_id).nickName;
+        }
+        catch (err) {
+            borrowerName = '未命名(id:' + item.borrower_id + ')';
+        }
+        if (status == 3) {
+            listHTML = `<li class="audit-list__item audit-borrow-req" data-id=${id}>
+                用户"${borrowerName}"向你的物品${itemName}（时长${duration}天）发起租借请求，请进行审核。
+                <button class="audit-inform-btn audit-btn__agree">同意申请</button>
+                <Button class="audit-inform-btn audit-btn__refuse">拒绝申请</Button>
+                </li>`;
+        }
+        else if (status == 7) {
+            listHTML = `<li class="audit-list__item audit-return-req" data-id=${id}>
+                用户"${borrowerName}"借出的物品${itemName}是否已经被归还？
+                <button class="audit-inform-btn">已归还</button>`;
+        }
+        $('.audit-list').append(listHTML);
+    }
+    //按钮
+    $('.audit-btn__agree').click(function () {
+        const id = this.parentNode.dataset.id;
+        SolveApply (id, 0);
+    })
+    $('.audit-btn__refuse').click(function () {
+        const id = this.parentNode.dataset.id;
+        SolveApply (id, 1);
+    })
+    $('.audit-btn__returned').click(function () {
+        const id = this.parentNode.dataset.id;
+        SolveApply (id, 2);
+    })
 }
 
 function LoadAudit ()
@@ -723,9 +831,8 @@ function LoadAudit ()
     $.ajax({
         type: 'GET',
         url: apiBase + '/item',
-        headers: {//TODO:Test account
-            Authorization: "Bearer " + tempToken
-            // Authorization: AuthorizationText ()
+        headers: {
+            Authorization: AuthorizationText ()
         },
         success: function (res) {
             for (let i = 0; i < res.length; ++i) {
@@ -741,21 +848,78 @@ function LoadAudit ()
     });
 }
 
+//@param id, operator(0:agree, 1:refuse, 2:returned)
+function SolveApply (id, op)
+{
+    if (op === 0 || op === 1)
+    $.ajax({
+        type: 'POST',
+        url: apiBase + `/item/${id}/accept?reject=${op ? 'false' : 'true'}`,
+        headers: {
+            Authorization: AuthorizationText ()
+        },
+        success: function (res) {
+            if (res.code == 0)
+                alert(op === 0 ? '已同意借出' : '已拒绝借出');
+        },
+        error: function (xhr) {
+            alert('操作失败：' + xhr.status + '错误');
+        }
+    });
+    else if (op === 2) {
+        $.ajax({
+            type: 'POST',
+            url: apiBase + `/item/${id}/return`,
+            headers: {
+                Authorization: AuthorizationText ()
+            },
+            success: function () {
+                alert('已确认归还');
+            },
+            error: function (xhr) {
+                alert('操作失败：' + xhr.status + '错误');
+            }
+        })
+    }
+}
+
 
 function GetUserInfo (userId)
 {
+    let data;
     $.ajax({
         type: 'GET',
         url: apiBase + '/user/profile/' + userId,
-        headers: {//TODO:Test account
-            Authorization: "Bearer " + tempToken
-            // Authorization: AuthorizationText ()
+        async: false,
+        headers: {
+            Authorization: AuthorizationText ()
         },
         success: function (res) {
-            return res;
+            data = res;
+        },
+        error: function (xhr) {
+            console.log('加载指定用户信息失败：' + xhr.status + '错误');
+        }
+    });
+    return data;
+}
+
+function GetItemInfo (id) 
+{
+    let data;
+    $.ajax({
+        type: 'GET',
+        url: apiBase + '/item/' + id,
+        async: false,
+        headers: {
+            Authorization: AuthorizationText ()
+        },
+        success: function (res) {
+            data = res;
         },
         error: function (xhr) {
             alert('加载指定用户信息失败：' + xhr.status + '错误');
         }
-    })
+    });
+    return data;
 }

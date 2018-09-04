@@ -26,7 +26,7 @@
                 </div>
                 <div class="share-user-info">
                     <img src="./images/head.png" alt="头像" id="share-user-info__head">
-                    <span id="share-user-info__name" onclick="ShowLoginSidebar()">点击登录/注册</span>
+                    <span id="share-user-info__name">点击登录/注册</span>
                 </div>
             </div>
             <div class="share-require">
@@ -44,7 +44,7 @@
             </div>
         </div>
         <!-- 登录侧边栏 -->
-        <div class="l-sidebar--account">
+        <div class="l-sidebar--account sidebar-plus">
             <div class="share-login-cancel">
                 <a onclick="HideLoginSidebar()" id="share-login-cancel__a">◀返回</a>
             </div>
@@ -84,8 +84,40 @@
             </div>
         </div>
         <!-- 用户信息侧边栏 -->
-        <div class="l-sidebar--info">
-
+        <div class="l-sidebar--info sidebar-plus">
+            <!-- <img src="./images/head.png" alt="头像" id="share-user-info__head"> -->
+            <div class="share-account-info">
+                <div class="account-info__title">
+                    修改用户信息
+                </div>
+                <div class="account-info-id share-account-info__item">
+                    <span class="account-info-attr">用户ID：</span>
+                    <span id="account-info-id__txt"></span>
+                </div>
+                <div class="account-info-nickname share-account-info__item">
+                    <span class="account-info-attr">用户昵称</span><br>
+                    <input type="text" name="userNickname" id="account-info-nickname__txt">
+                </div>
+                <div class="account-info-gender share-account-info__item">
+                    <span class="account-info-attr">性别</span>
+                    <input type="radio" name="userGender" id="account-info-gender__male">
+                    <label for="userGender">男</label>
+                    <input type="radio" name="userGender" id="account-info-gender__female">
+                    <label for="userGender">女</label>
+                </div>
+                <div class="account-info-phone share-account-info__item">
+                    <span class="account-info-attr">电话号码</span><br>
+                    <input type="text" name="userPhone" id="account-info-phone__txt">
+                </div>
+                <div class="account-info-description share-account-info__item">
+                    <span class="account-info-attr">自我介绍</span><br>
+                    <textarea name="userIntro" id="account-info-description__txt" cols="30" rows="10"></textarea>
+                </div>
+            </div>
+            <div class="share-account-info-btn">
+                <button id="account-info-btn__cancel">返回</button>
+                <button id="account-info-btn__update">更新</button>
+            </div>
         </div>
     </div>
 
@@ -112,7 +144,7 @@
                     </div>
                 </div>
                 <div class="main-head-sort">
-                    <b>排序方式</b>&nbsp;&nbsp;&nbsp;
+                    <b>排序方式</b>&nbsp;&nbsp;
                     <span>按时间排序</span>
                     <span>按距离排序</span>
                 </div>
@@ -421,22 +453,22 @@
                 <!-- example end -->
             </div>
         </div>
-        <div class="l-audit-inform">
+        <div class="l-audit-inform" style="display: none;">
+            <h4 class="audit-inform-list__title">等待审核列表</h4>
             <ul class="audit-list">
-                <h4 class="audit-inform-list__title">等待审核列表</h4>
                 <li class="audit-list__item audit-borrow-req">
                     xxx向你的yyy发起租借请求。是否同意？
-                    <button>同意</button>
-                    <Button>拒绝</Button>
+                    <button class="audit-inform-btn audit-btn__agree">同意</button>
+                    <Button class="audit-inform-btn audit-btn__refuse">拒绝</Button>
                 </li>
                 <li class="audit-list__item audit-return-req">
                     物品zzz是否已被借出者www归还？
-                    <button>已归还</button>
+                    <button class="audit-inform-btn audit-ben__returned">已归还</button>
                 </li>
             </ul>
             <br>
+            <h4 class="audit-inform-list__title">通知列表</h4>
             <ul class="inform-list">
-                <h4 class="audit-inform-list__title">通知列表</h4>
             </ul>
         </div>
         <div class="l-my-like"></div>

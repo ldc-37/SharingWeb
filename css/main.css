@@ -8,6 +8,17 @@ html ::-webkit-input-placeholder {
     font-size: 14px;
 }
 
+button {
+    background: transparent;
+    border: 1px solid #000;
+    cursor: pointer;
+    transition: .2s;
+    outline: none;
+}
+button:hover {
+    background: #000;
+    color: #fff;
+}
 
 /* @temp-end */
 
@@ -105,27 +116,40 @@ html ::-webkit-input-placeholder {
 }
 
 .share-column-list__item {
+    position: relative;
     height: 60px;
     line-height: 60px;
     cursor: pointer;
+    transition: .3s;
 }
-.share-column-list__item:hover {
-    background: #aaa;
+.share-column-list__item:hover::before {
+    content: url('../images/double\ right.png');
+    position: absolute;
+    left: 15px;
+}
+.share-column-list__item:hover::after {
+    content: url('../images/double\ right.png');
+    position: absolute;
+    right: 15px;
+    transform: rotateY(180deg);
 }
 
 .share-column-list__item--act {
     background: #ddd;
 }
 
-/* 注册登录侧边栏 */
-.l-sidebar--account {
+.sidebar-plus {
+    display: none;
     position: absolute;
     width: 100%;
     height: 100%;
+    overflow: auto;
+}
+
+/* 注册登录侧边栏 */
+.l-sidebar--account {
     left: 100%;
     background: #aaa;
-    overflow: auto;
-    /* z-index: 1 !important; */
 }
 
 #share-login-cancel__a {
@@ -214,10 +238,6 @@ html ::-webkit-input-placeholder {
     border-color: red;
 }
 
-.share-account__register {
-    /* text-align: right; */
-}
-
 .account-tips {
     margin-left: 10px;
     font-size: 14px;
@@ -227,6 +247,78 @@ html ::-webkit-input-placeholder {
     content: url('../images/icon-warning.png');
     position: relative;
     top: 2px;
+}
+
+/* 用户信息侧边栏 */
+.l-sidebar--info {
+    padding: 100px 20px 0 50px;
+    background: rgba(0, 0, 0, 0.4);
+    background: rgba(17, 29, 28, 0.75);
+    display: block;
+    z-index: 100;
+    left: 0;
+    color: #90fff9;
+    display: none;
+}
+
+.share-account-info {
+    margin: 0 auto;
+}
+
+.account-info__title {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    padding: 10px; 
+    background: rgba(144, 255, 249, 0.6);
+    color: white;
+    text-align: center;
+    font-size: 30px;
+}
+
+.share-account-info__item {
+    margin: 10px 0;
+}
+
+.account-info-attr {
+    font-size: 20px;
+}
+
+.share-account-info input,
+.share-account-info textarea {
+    margin-top: 5px;
+    padding: 5px 10px;
+    color: white;
+    background: rgba(144, 255, 249, 0.164);
+    border: 2px solid #90fff9;
+    outline: none;
+    transition: .2s;
+}
+.share-account-info input:focus,
+.share-account-info textarea:focus {
+    background: rgba(144, 255, 249, 0.3);
+}
+
+.share-account-info-btn {
+    position: absolute;
+    bottom: 50px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+}
+
+#account-info-btn__cancel,
+#account-info-btn__update {
+    margin-right: 20px;
+    padding: 5px 30px;
+    color: #90fff9;
+    border: 3px solid #90fff9;
+}
+#account-info-btn__cancel:hover,
+#account-info-btn__update:hover {
+    background: rgba(144, 255, 249, 0.6);
+    color: white;
 }
 
 /* 页面右侧内容区 */
@@ -820,8 +912,29 @@ html ::-webkit-input-placeholder {
     padding: 5% 10%;
 }
 
-.audit-list {
+.audit-inform-btn{
+    position: absolute;
+    right: 20px;
+    top: 10px;
+    padding: 4px 10px;
+    border-radius: 5px;
+}
 
+.audit-btn__agree {
+    right: 110px;
+    color: green;
+    border: 1px solid green;
+}
+.audit-btn__agree:hover {
+    background: #005e00;
+}
+.audit-btn__refuse {
+    color: red;
+    right: 16px;
+    border: none;
+}
+.audit-btn__refuse:hover {
+    background: #bb1818;
 }
 
 .audit-inform-list__title {
@@ -830,15 +943,12 @@ html ::-webkit-input-placeholder {
 }
 
 .audit-list__item {
+    position: relative;
     padding: 15px 30px;
     background: #aaa;
 }
 .audit-list__item:nth-child(odd) {
     background: #bbb;
-}
-
-.inform-list {
-    
 }
 
 .inform-list__item {
@@ -848,6 +958,10 @@ html ::-webkit-input-placeholder {
 }
 .inform-list__item:nth-child(odd) {
     background: #bbb;
+}
+
+.inform-list__item--new {
+
 }
 
 /* 背景遮罩（弹窗层以下） */
@@ -872,13 +986,3 @@ html ::-webkit-input-placeholder {
     z-index: 100;
 }
 
-.no-use {
-    background: #c6efcd;
-    background: #feeb9e;
-    background: #ffc9ce;
-    color: #154e1b;
-    color: #715804;
-    color: #cd6473;
-    background: #ffba5f;
-    color: #664f05;
-}

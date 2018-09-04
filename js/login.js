@@ -248,11 +248,11 @@ function Logout ()
 
 function ShowLoginSidebar () {
     $('.l-sidebar--nor').animate({left: '-100%'}, 300);
-    $('.l-sidebar--account').animate({left: '0'}, 300, function () {
+    $('.l-sidebar--account').show().animate({left: '0'}, 300, function () {
         $('#login-account').focus();
     });
 }
 function HideLoginSidebar () {
     $('.l-sidebar--nor').animate({left: '0'}, 300);
-    $('.l-sidebar--account').animate({left: '100%'}, 300);
+    $('.l-sidebar--account').animate({left: '100%'}, 300).hide();
 }
