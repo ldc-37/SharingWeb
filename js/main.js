@@ -129,11 +129,13 @@ $('#share-column-all').click(function () {
 $('#share-column-my-lend').click(function () {
     $('.l-content>div').hide();
     $('.l-my-lend').show();
+    $('#my-lend-type__all').click();
     LoadMyLend ();
 })
 $('#share-column-my-borrow').click(function () {
     $('.l-content>div').hide();
     $('.l-my-borrow').show();
+    $('#my-borrow-type__all').click();
     LoadMyBorrow ();
 })
 $('#share-column-audit-inform').click(function () {
@@ -398,7 +400,7 @@ function FillMain (data)
     });
     //点击租用
     $('.goods-enter').click(function () {
-        LaunchBorrow ()
+        LaunchBorrow (this)
     })
 }
 
@@ -437,14 +439,17 @@ function LoadMain ()
     }, 10);
 }
 
-function LaunchBorrow ()
+function LaunchBorrow (_this)
 {
     if (confirm('确认申请？')) {
-        const id = this.parentNode.parentNode.parentNode.dataset.id;
+        const id = _this.parentNode.parentNode.parentNode.dataset.id;
         $.ajax({
             type: 'POST',
             url: apiBase + '/item/' + id +  '/borrow',
             dataType: 'json',
+            headers: {
+                Authorization: AuthorizationText ()
+            },
             success: function (res) {
                 if (res.code == 0) {
                     alert('成功申请，等待物主审核');
@@ -742,21 +747,32 @@ function LoadMyBorrow ()
 
 function FillInform (data)
 {
-    for (let i = 0; i < data.length; ++i) {
+    $('.inform-list').empty();
+    for (let i = data.length - 1; i >= 0; --i) {
         let sender = data[i].from;
         let timestamp = data[i].timestamp;
         let msg = data[i].message;
-
-        let timeStr = GetTime (timestamp);
+        //此处timestamp单位是秒，js中传入date对象的是毫秒
+        let timeStr = GetTime (timestamp * 1000);
         let listHTML = 
         `<li class="inform-list__item">
             ${timeStr} 
-            【${sender ? '用户' : '系统'}】 
+            [${sender == 0 ? '系统' : '用户'}] <br>
             ${msg}
         </li>`
         $('.inform-list').append(listHTML);
-        if (i > 6) {
-            $('.inform-list').append('<span>仅加载最新6条消息！</span>')
+        const $inform = $('.inform-list__item').last();
+        if ($inform.text().indexOf('请求已被同意') != -1) {
+            console.log($inform)
+            $inform.css('background', '#aedbae');
+        }
+        else if ($inform.text().indexOf('请求被对方拒绝') != -1) {
+            $inform.css('background', '#ffb8b8');
+        }
+
+        //限制长度
+        if (i < data.length - 20) {
+            $('.inform-list').append('<span>仅加载最新20条消息！</span>')
             break;
         }
     }
@@ -783,6 +799,9 @@ function LoadInform ()
 function FillAudit (data)
 {
     $('.audit-list').empty();
+    if (data.length == 0) {
+        $('.audit-list').append('<span>这里空空的，什么也没有~</span>');
+    }
     for (let i = 0; i < data.length; ++i) {
         let listHTML, borrowerName;
         const id = data[i].id,
@@ -806,11 +825,11 @@ function FillAudit (data)
         else if (status == 7) {
             listHTML = `<li class="audit-list__item audit-return-req" data-id=${id}>
                 用户"${borrowerName}"借出的物品${itemName}是否已经被归还？
-                <button class="audit-inform-btn">已归还</button>`;
+                <button class="audit-inform-btn audit-btn__returned">已归还</button>`;
         }
         $('.audit-list').append(listHTML);
     }
-    //按钮
+    //审核按钮
     $('.audit-btn__agree').click(function () {
         const id = this.parentNode.dataset.id;
         SolveApply (id, 0);
@@ -854,7 +873,7 @@ function SolveApply (id, op)
     if (op === 0 || op === 1)
     $.ajax({
         type: 'POST',
-        url: apiBase + `/item/${id}/accept?reject=${op ? 'false' : 'true'}`,
+        url: apiBase + `/item/${id}/accept?reject=${op === 0 ? 'false' : 'true'}`,
         headers: {
             Authorization: AuthorizationText ()
         },
@@ -875,6 +894,7 @@ function SolveApply (id, op)
             },
             success: function () {
                 alert('已确认归还');
+                $('#share-column-audit-inform').click();
             },
             error: function (xhr) {
                 alert('操作失败：' + xhr.status + '错误');

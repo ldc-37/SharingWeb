@@ -239,6 +239,7 @@ button:hover {
 }
 
 .account-tips {
+    display: none;
     margin-left: 10px;
     font-size: 14px;
     color: red;
@@ -832,7 +833,8 @@ button:hover {
     margin-top: 5px;
     padding: 5px 10px;
     border: 2px solid #000;
-    word-break: break-all;
+    word-break: break-word;
+    overflow-y: auto;
 }
 
 .my-item__op {
@@ -909,6 +911,7 @@ button:hover {
 
 /* 通知、审核内容 */
 .l-audit-inform {
+    overflow: auto;
     padding: 5% 10%;
 }
 
@@ -916,7 +919,7 @@ button:hover {
     position: absolute;
     right: 20px;
     top: 10px;
-    padding: 4px 10px;
+    padding: 5px 10px;
     border-radius: 5px;
 }
 
@@ -944,16 +947,23 @@ button:hover {
 
 .audit-list__item {
     position: relative;
+    margin-bottom: 5px;
     padding: 15px 30px;
-    background: #aaa;
-}
-.audit-list__item:nth-child(odd) {
     background: #bbb;
 }
 
+.audit-borrow-req {
+    background: #000;
+    color: white;
+}
+.audit-return-req {
+    background: #222;
+    color: white;
+}
+
 .inform-list__item {
+    margin-bottom: 5px;
     padding: 15px 30px;
-    /* border-bottom: 1px solid #000; */
     background: #ccc;
 }
 .inform-list__item:nth-child(odd) {

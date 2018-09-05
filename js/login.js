@@ -4,7 +4,6 @@
 let isLegalEmail = 0,isLegalPass = 0,isLegalName = 0;
 
 //预处理
-$('.account-tips').hide();
 $('.share-account__register').hide();
 //事件处理
 $('#reg-btn').click(function () {
@@ -174,6 +173,7 @@ function RegisterBtnUnlock ()
 
 function Register (username, password, email)
 {
+    $('#reg-btn').text('注册中...');
     const regInfo = `{
         "username": "${username}",
         "password": "${password}", 
@@ -189,21 +189,23 @@ function Register (username, password, email)
         // processData: false,
         data: regInfo,
         success: function (res) {
-            console.log(res);
+            $('#reg-btn').text('注册');
             if (res.code == 0) {
                 alert('注册成功！请牢记账号密码\n' + '账号：' + username + '\n密码：' + password);
                 Login (username, password);
             }
             else {
+                $('#reg-btn').text('注册');
                 alert(res.data.reason);
             }
         },
-        error: function (xhr) {alert('出现错误，status:' + xhr.status)}
+        error: function (xhr) {alert('注册出现错误，status:' + xhr.status)}
     })
 }
 
 function Login (username, password)
 {
+    $('#login-btn').text('登录中...');
     $.ajax ({
         type: "POST",
         url: apiBase + "/auth/login",
@@ -214,7 +216,7 @@ function Login (username, password)
             "password": "${password}"
         }`,
         success: function (res) {
-            console.log (res);
+            $('#login-btn').text('登录');
             $('#login-tips').hide();
             alert('登陆成功');
             setCookie("accessToken", res.data.accessToken);
@@ -223,6 +225,7 @@ function Login (username, password)
             $('#share-user-info__name').text(username);
         },
         error: function (xhr) {
+            $('#login-btn').text('登录');
             if (xhr.status == 401) {
                 $('#login-tips').html("密码错误<br>");
                 $('#login-tips').show();
