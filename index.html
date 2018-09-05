@@ -22,7 +22,7 @@
             <div class="share-user">
                 <div class="share-sidebar-top-btn">
                     <img src="./images/icon-logout.png" alt="退出登录" id="share-btn-logout" onclick="Logout()">
-                    <img src="./images/icon-setting.png" alt="更改主题" id="share-btn-settings">
+                    <img src="./images/icon-setting.png" alt="更改设置" id="share-btn-settings">
                 </div>
                 <div class="share-user-info">
                     <img src="./images/head.png" alt="头像" id="share-user-info__head">
@@ -34,11 +34,11 @@
             </div>
             <div class="share-column">
                 <ul class="share-column-list">
-                    <li class="share-column-list__item" id="share-column-all">查看全部</li>
+                    <li class="share-column-list__item share-column-list__item--act" id="share-column-all">查看全部</li>
                     <li class="share-column-list__item" id="share-column-my-lend">我的借出</li>
                     <li class="share-column-list__item" id="share-column-my-borrow">我的借入</li>
                     <!-- <li class="share-column-list__item" id="share-column-my-like">我的收藏</li> -->
-                    <li class="share-column-list__item share-column-list__item--act" id="share-column-audit-inform">审核/通知</li>
+                    <li class="share-column-list__item" id="share-column-audit-inform">审核/通知</li>
                     <!-- 交流 -->
                 </ul>
             </div>
@@ -49,17 +49,17 @@
                 <a onclick="HideLoginSidebar()" id="share-login-cancel__a">◀返回</a>
             </div>
             <div class="share-logo">
-                <img src="./images/tmp-logo.png" alt="logo" id="share-logo__img">
+                <img src="./images/logo.png" alt="logo" id="share-logo__img">
             </div>
             <div class="share-choose-login-reg">
-                <span class="share-choose-login-reg__span share-choose-login-reg__span--act" id="share-choose-login">我要登录</span>
-                <span class="share-choose-login-reg__span" id="share-choose-register">我要注册</span>
+                <span class="share-choose-login-reg__span share-choose-login-reg__span--act" id="share-choose-login">登录</span>
+                <span class="share-choose-login-reg__span" id="share-choose-register">注册</span>
             </div>
             <div class="share-account share-account__login">
                 <form>
-                    <input type="text" name="" id="login-account" placeholder="账号/邮箱" required>
+                    <input type="text" id="login-account" placeholder="账号/邮箱" required>
                     <br>
-                    <input type="password" name="" id="login-pass" placeholder="密码" required>
+                    <input type="password" id="login-pass" placeholder="密码" required>
                     <br>
                     <span class="account-tips" id="login-tips"></span>
                     <input type="button" value="登录" id="login-btn" class="share-account__btn">
@@ -67,16 +67,16 @@
             </div>
             <div class="share-account share-account__register">
                 <form>
-                    <input type="text" name="" id="reg-username" placeholder="用户名">
+                    <input type="text" id="reg-username" placeholder="用户名">
                     <br>
                     <span class="account-tips" id="reg-tips__username"></span>
-                    <input type="text" name="" id="reg-email" placeholder="邮箱">
+                    <input type="text" id="reg-email" placeholder="邮箱">
                     <br>
                     <span class="account-tips" id="reg-tips__email"></span>
-                    <input type="password" name="" id="reg-pass" placeholder="密码">
+                    <input type="password" id="reg-pass" placeholder="密码">
                     <br>
                     <span class="account-tips" id="reg-tips__password"></span>
-                    <input type="password" name="" id="reg-pass-2" placeholder="确认密码">
+                    <input type="password" id="reg-pass-2" placeholder="确认密码">
                     <br>
                     <span class="account-tips" id="reg-tips__password2"></span>
                     <input type="button" value="注册" id="reg-btn" class="share-account__btn" disabled>
@@ -137,7 +137,7 @@
                     <input type="text" name="searchBox" id="searchBox" placeholder="请输入物品名称，或输入ID/UID:{id}查看指定物品或用户[算了，有心情在写这个]">
                     <button id="mainSearchBtn">搜索</button>
                 </div>
-                <div class="main-head-qrcode" title="点击访问下载页面">
+                <div class="main-head-qrcode">
                     下载APP!!!
                     <div class="main-head-qrcode__pic">
                         <img src="./images/appQR.png" id="qrcodeAPPDownload">
@@ -209,7 +209,7 @@
                     <i class="goods-like"></i>
                     <div class="goods-item__bd">
                         <div class="goods-item__pic">
-                            <img src="./images/tmp-logo.png" alt="" class="goods-img">
+                            <img src="./images/logo.png" alt="" class="goods-img">
                             <div class="goods-img-intro">HTML5画布Canvas文本填充、线段属性、裁剪、透明度与像..._CSDN博客
                                 2017年1月8日 - HTML5画布Canvas文本填充、线段属性、裁剪、透明度与像素合并方式2017年01月08日 22:56:34 阅读数:3ssd</div>
                         </div>
@@ -476,7 +476,7 @@
                     </div>
                     <div class="lend-launch__item">
                         <label for="lendTime">出租时长</label>
-                        <input type="text" name="lendTime" id="lend-time" placeholder="1-30">天
+                        <input type="text" name="lendTime" id="lend-time" placeholder="1-30" maxlength="2" onkeyup="this.value=this.value.replace(/\D/g,'')">天
                     </div>
                     <div class="lend-launch__item">
                             <label for="place">选择地点(请选点后修改下方文字)</label>
@@ -490,7 +490,7 @@
                         <label for="lendPrice">出租价格</label><br>
                         <input type="radio" name="lendPrice" id="lend-price-free" checked>无偿&nbsp;&nbsp;
                         <input type="radio" name="lendPrice" id="lend-price-charge">有偿&nbsp;<em class="share-rmb">¥</em>
-                        <input type="text" name="lendPrice" id="lend-price" disabled maxlength="6">
+                        <input type="text" name="lendPrice" id="lend-price" disabled maxlength="6" onkeyup="this.value=this.value.replace(/\D/g,'')">
                     </div>
                     <div class="lend-launch__item">
                         <label for="lendDesc">文字描述</label><br>
@@ -498,7 +498,6 @@
                         <span id="lend-left-char">还可以填写<span id="lend-left-char-num">100</span>字</span>
                     </div>
                     <div class="lend-launch__item">
-                        <!-- TODO: more pictures -->
                         <label for="lendPic">添加图片（0~3张）</label><br>
                         <div class="lend-launch-pic dropzone" id="lendPicDropzone"></div>
                     </div>
@@ -516,9 +515,9 @@
     <div class="alert-box prompt-box"></div>
     <div id="body-cover"></div>
 
+    <script src="./js/utils.js"></script>
     <script src="./js/main.js"></script>
     <script src="./js/login.js"></script>
     <script src="./js/alertbox.js"></script>
-    <script src="./js/utils.js"></script>
 </body>
 </html>

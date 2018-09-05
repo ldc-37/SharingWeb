@@ -1,16 +1,18 @@
 'use strict'
 const apiBase = "https://api.hs.rtxux.xyz";
 
-let AuthorizationText = () => { //TODO:test account
-    // return getCookie("tokenType") + " " + getCookie("accessToken");
-    //@test13
-    return "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNTM1NzI3MjUwLCJleHAiOjE1MzYzMzIwNTB9.8hkwYSK8OI72HgCAhzUUHny0TwNSp2vB2BuThgFLnpSw0H54tO5BaUz6UYcJ9InPuZV4Hl0c9j3v3oWsWcHTGA";
+let AuthorizationText = () => {
+    if (location.host == "127.0.0.1:5500") {
+        //@test13
+        return "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNTM1NzI3MjUwLCJleHAiOjE1MzYzMzIwNTB9.8hkwYSK8OI72HgCAhzUUHny0TwNSp2vB2BuThgFLnpSw0H54tO5BaUz6UYcJ9InPuZV4Hl0c9j3v3oWsWcHTGA";
+    }
+    return getCookie("tokenType") + " " + getCookie("accessToken");
 };
 
-/**
- * 跳转及网址传参
- */
 $(function () {
+    /**
+     * 跳转及网址传参
+     */
     if (isMobile ()) {
         $('#body-cover').show().css('opacity', 0.7);
         alert('移动端请暂时使用app');
@@ -23,40 +25,170 @@ $(function () {
         $('#searchBox').val('ID:' + searchWords);
         $('#mainSearchBtn').click();
     }
+
+    /**
+     * Sidebar控制
+     */
+    //用户名
+    $('#share-user-info__name').click(function () {
+        ShowLoginSidebar();
+    });
+    if (AuthorizationText () != " ") {
+        // 尝试Cookie中token登录
+        $.ajax({
+            type: 'GET',
+            url: apiBase + '/user/profile',
+            contentType: 'application/json',
+            dataType: 'json',
+            headers: {
+                Authorization: AuthorizationText ()
+            },
+            success: function (res) {
+                $('#share-user-info__name').text(res.nickName)
+                    .unbind('click')
+                    .click(function () {
+                        $('.l-sidebar--info').fadeIn(500);
+                        $('.l-sidebar--nor').css('filter', 'blur(3px)');
+                        LoadUserInfoEdit ();
+                    });
+            },
+            error: function () {
+                return;
+            }
+        });
+    }
+
+    // 用户选择类型栏
+    $('.share-column-list__item').click(function () {
+        $('.share-column-list__item').removeClass('share-column-list__item--act');
+        $(this).addClass('share-column-list__item--act');
+    })
+    $('#share-column-all').click(function () {
+        $('.l-content>div').hide();
+        $('.l-main').show();
+        LoadMain ();
+    })
+    $('#share-column-my-lend').click(function () {
+        $('.l-content>div').hide();
+        $('.l-my-lend').show();
+        $('#my-lend-type__all').click();
+        LoadMyLend ();
+    })
+    $('#share-column-my-borrow').click(function () {
+        $('.l-content>div').hide();
+        $('.l-my-borrow').show();
+        $('#my-borrow-type__all').click();
+        LoadMyBorrow ();
+    })
+    $('#share-column-audit-inform').click(function () {
+        $('.l-content>div').hide();
+        $('.l-audit-inform').show();
+        LoadAudit ();
+        LoadInform ();
+    });
+
+    /**
+     * Content-main
+     */
+    //head相关
+    $('#searchBox').keypress(function (e) {
+        if (e.keyCode == "13") 
+            $('#mainSearchBtn').click();
+    })
+
+    $('#mainSearchBtn').click(function () {
+        const words = $('#searchBox').val();
+        if (words == "") {
+            $('#searchBox').focus();
+            return;
+        }
+        else if (words.substring(0,3) == 'ID:') {
+            const id = words.substring(3);
+            $.ajax({
+                type: 'GET',
+                url: apiBase + '/item/' + id,
+                headers: {
+                    Authorization: AuthorizationText ()
+                },
+                dataType: 'json',
+                success: function (res) {
+                    FillMain(res);
+                },
+                error: function (xhr) {
+                    if (xhr.status == 404) {
+                        $('.goods-list').text('未找到该id对应物品！');
+                    }
+                    else {
+                        alert('物品id搜索失败：' + xhr.status + '错误');
+                    }
+                }
+            });
+        }
+        else {
+            $.ajax({
+                type: 'GET',
+                url: apiBase + '/item?search=' + words,
+                dataType: 'json',
+                success: function (res) {
+                    if (res.length == 0) {
+                        $('.goods-list').text('未找到相关物品！');
+                    }
+                    else {
+                        FillMain(res);
+                    }
+                },
+                error: function (xhr) {
+                    alert('搜索失败：' + xhr.status + '错误');
+                }
+            });
+        }
+    })
+    //二维码 APP
+    $('.main-head-qrcode').mouseover(function () {
+        $('.main-head-qrcode__pic').slideDown();
+    }).mouseout(function () {
+        $('.main-head-qrcode__pic').slideUp();
+    }).click(function () {
+        window.open("https://xilym.tk/storage/apk/happySharing.apk")
+    });
+
+
+    /**
+     * Content-my-lend
+     */
+    //类别控制
+    $('.my-type__item').click(function () {
+        $('.my-type--act').removeClass('my-type--act');
+        $(this).addClass('my-type--act');
+        $('.my-lend__item').show();
+        $('.my-borrow__item').show();
+    });
+    $('#my-lend-type__waiting').click(function () {
+        $('.my-lend__item:not(.my-lend__item--waiting)').hide();
+    });
+    $('#my-lend-type__lending').click(function () {
+        $('.my-lend__item:not(.my-lend__item--lending)').hide();
+    });
+    $('#my-lend-type__finished').click(function () {
+        $('.my-lend__item:not(.my-lend__item--finished)').hide();
+    });
+
+    /**
+     * Content my-borrow
+     */
+    //类别控制
+    $('#my-borrow-type__auditing').click(function () {
+        $('.my-borrow__item:not(.my-borrow__item--auditing)').hide();
+    });
+    $('#my-borrow-type__borrowed').click(function () {
+        $('.my-borrow__item:not(.my-borrow__item--borrowed)').hide();
+    });
+    $('#my-borrow-type__returned').click(function () {
+        $('.my-borrow__item:not(.my-borrow__item--returned)').hide();
+    });
 })
 
 
-/**
- * Sidebar控制
- */
-//用户名
-$('#share-user-info__name').click(function () {
-    ShowLoginSidebar();
-});
-if (AuthorizationText ()) {
-    // 尝试Cookie中token登录
-    $.ajax({
-        type: 'GET',
-        url: apiBase + '/user/profile',
-        contentType: 'application/json',
-        dataType: 'json',
-        headers: {
-            Authorization: AuthorizationText ()
-        },
-        success: function (res) {
-            $('#share-user-info__name').text(res.nickName)
-                .unbind('click')
-                .click(function () {
-                    $('.l-sidebar--info').fadeIn(500);
-                    $('.l-sidebar--nor').css('filter', 'blur(3px)');
-                    LoadUserInfoEdit ();
-                });
-        },
-        error: function () {
-            return;
-        }
-    });
-}
 
 function LoadUserInfoEdit ()
 {
@@ -116,103 +248,6 @@ function LoadUserInfoEdit ()
     });
 }
 
-// 用户选择类型栏
-$('.share-column-list__item').click(function () {
-    $('.share-column-list__item').removeClass('share-column-list__item--act');
-    $(this).addClass('share-column-list__item--act');
-})
-$('#share-column-all').click(function () {
-    $('.l-content>div').hide();
-    $('.l-main').show();
-    LoadMain ();
-})
-$('#share-column-my-lend').click(function () {
-    $('.l-content>div').hide();
-    $('.l-my-lend').show();
-    $('#my-lend-type__all').click();
-    LoadMyLend ();
-})
-$('#share-column-my-borrow').click(function () {
-    $('.l-content>div').hide();
-    $('.l-my-borrow').show();
-    $('#my-borrow-type__all').click();
-    LoadMyBorrow ();
-})
-$('#share-column-audit-inform').click(function () {
-    $('.l-content>div').hide();
-    $('.l-audit-inform').show();
-    LoadAudit ();
-    LoadInform ();
-});
-
-
-
-/**
- * Content-main
- */
-//head相关
-$('#searchBox').keypress(function (e) {
-    if (e.keyCode == "13") 
-        $('#mainSearchBtn').click();
-})
-
-$('#mainSearchBtn').click(function () {
-    const words = $('#searchBox').val();
-    if (words == "") {
-        $('#searchBox').focus();
-        return;
-    }
-    else if (words.substring(0,3) == 'ID:') {
-        const id = words.substring(3);
-        $.ajax({
-            type: 'GET',
-            url: apiBase + '/item/' + id,
-            headers: {
-                Authorization: AuthorizationText ()
-            },
-            dataType: 'json',
-            success: function (res) {
-                FillMain(res);
-            },
-            error: function (xhr) {
-                if (xhr.status == 404) {
-                    $('.goods-list').text('未找到该id对应物品！');
-                }
-                else {
-                    alert('物品id搜索失败：' + xhr.status + '错误');
-                }
-            }
-        });
-    }
-    else {
-        $.ajax({
-            type: 'GET',
-            url: apiBase + '/item?search=' + words,
-            dataType: 'json',
-            success: function (res) {
-                if (res.length == 0) {
-                    $('.goods-list').text('未找到相关物品！');
-                }
-                else {
-                    FillMain(res);
-                }
-            },
-            error: function (xhr) {
-                alert('搜索失败：' + xhr.status + '错误');
-            }
-        });
-    }
-})
-//二维码 APP
-$('.main-head-qrcode').mouseover(function () {
-    $('.main-head-qrcode__pic').slideDown();
-}).mouseout(function () {
-    $('.main-head-qrcode__pic').slideUp();
-}).click(function () {
-    window.open("https://xilym.tk/storage/apk/happySharing.apk")
-});
-
-//展示item地图
 function ShowItemMap (lon, lat, idx)
 {
     if ($('#goods-map').length) {
@@ -253,46 +288,6 @@ function ShowItemMap (lon, lat, idx)
         });
     });
 }
-
-/**
- * Content-my-lend
- */
-//类别控制
-$('.my-type__item').click(function () {
-    $('.my-type--act').removeClass('my-type--act');
-    $(this).addClass('my-type--act');
-    $('.my-lend__item').show();
-    $('.my-borrow__item').show();
-});
-$('#my-lend-type__waiting').click(function () {
-    $('.my-lend__item:not(.my-lend__item--waiting)').hide();
-});
-$('#my-lend-type__lending').click(function () {
-    $('.my-lend__item:not(.my-lend__item--lending)').hide();
-});
-$('#my-lend-type__finished').click(function () {
-    $('.my-lend__item:not(.my-lend__item--finished)').hide();
-});
-
-/**
- * Content my-borrow
- */
-//类别控制
-$('#my-borrow-type__auditing').click(function () {
-    $('.my-borrow__item:not(.my-borrow__item--auditing)').hide();
-});
-$('#my-borrow-type__borrowed').click(function () {
-    $('.my-borrow__item:not(.my-borrow__item--borrowed)').hide();
-});
-$('#my-borrow-type__returned').click(function () {
-    $('.my-borrow__item:not(.my-borrow__item--returned)').hide();
-});
-
-/**
- * Content audit-inform
- */
-
-
 
 
 function FillMain (data)
@@ -459,7 +454,12 @@ function LaunchBorrow (_this)
                 }
             },
             error: function (xhr) {
-                alert('发起申请失败：' + xhr.status + '错误');
+                if (xhr.status == 400) {
+                    alert ('这是你自己的东西哦');
+                }
+                else {
+                    alert('发起申请失败：' + xhr.status + '错误');
+                }
             }
         });
     }
@@ -569,7 +569,14 @@ function LoadMyLend ()
             FillMyLend (res);
         },
         error: function (xhr) {
-            alert('加载已借出列表失败：' + xhr.status + '错误');
+            if (xhr.status == 401) {
+                alert('请先进行登录~');
+                $('#share-column-all').click();
+                $('#share-user-info__name').click();
+            }
+            else {
+                alert('加载已借出列表失败：' + xhr.status + '错误');
+            }
         }
     });
 }
@@ -740,7 +747,14 @@ function LoadMyBorrow ()
             FillMyBorrow(res);
         },
         error: function (xhr) {
-            alert('加载已借入列表失败：' + xhr.status + '错误');
+            if (xhr.status == 401) {
+                alert('请先进行登录~');
+                $('#share-column-all').click();
+                $('#share-user-info__name').click();
+            }
+            else {
+                alert('加载已借入列表失败：' + xhr.status + '错误');
+            }
         }
     });
 }
@@ -769,6 +783,9 @@ function FillInform (data)
         else if ($inform.text().indexOf('请求被对方拒绝') != -1) {
             $inform.css('background', '#ffb8b8');
         }
+        else if ($inform.text().indexOf('您已请求借用物品') != -1) {
+            $inform.css('background', '#ffff84');
+        }
 
         //限制长度
         if (i < data.length - 20) {
@@ -791,7 +808,14 @@ function LoadInform ()
             FillInform(res);
         },
         error: function (xhr) {
-            alert('加载通知列表失败：' + xhr.status + '错误');
+            if (xhr.status == 401) {
+                alert('请先进行登录~');
+                $('#share-column-all').click();
+                $('#share-user-info__name').click();
+            }
+            else {
+                alert('加载通知列表失败：' + xhr.status + '错误');
+            }
         }
     })
 }
@@ -862,7 +886,9 @@ function LoadAudit ()
             FillAudit (waitingAuditObj);
         },
         error: function (xhr) {
-            alert('加载待审核-未借出列表失败：' + xhr.status + '错误');
+            if (xhr.status != 401) {
+                alert('加载待审核-未借出列表失败：' + xhr.status + '错误');
+            }
         }
     });
 }

@@ -6,6 +6,12 @@
 
 ////发起借出弹窗
 $('#share-require__btn').click(function () {
+    if (!AuthorizationText () == " ") {
+        alert('登陆以后才能发布哦！');
+        $('#share-column-all').click();
+        $('#share-user-info__name').click();
+        return;
+    }
     $('.alert-box-lend').eq(0).show();
     $('#body-cover').show();
     $('.l-content, .l-sidebar').css('filter', 'blur(5px)');

@@ -1,11 +1,8 @@
-//  http://api.hs.rtxux.xyz:8080
 "use strict";
 
 let isLegalEmail = 0,isLegalPass = 0,isLegalName = 0;
 
-//预处理
-$('.share-account__register').hide();
-//事件处理
+//注册登录按钮
 $('#reg-btn').click(function () {
         //no data-checking here
         const username = $('#reg-username').val();
@@ -64,6 +61,21 @@ $('#share-choose-register').click(function () {
     $('#reg-username').focus();
     $('#share-choose-register').addClass('share-choose-login-reg__span--act');
     $('#share-choose-login').removeClass('share-choose-login-reg__span--act');
+})
+
+//确认键登录/注册
+$('#login-pass').keypress(function (e) {
+    if (e.keyCode == "13") 
+        $('#login-btn').click();
+});
+$('#reg-pass-2').keypress(function (e) {
+    if (e.keyCode == "13") 
+        $('#reg-btn').click();
+});
+
+//登录提示文字消除
+$('.share-account__login').click(function () {
+    $('#login-tips').hide();
 })
 
 
@@ -257,5 +269,7 @@ function ShowLoginSidebar () {
 }
 function HideLoginSidebar () {
     $('.l-sidebar--nor').animate({left: '0'}, 300);
-    $('.l-sidebar--account').animate({left: '100%'}, 300).hide();
+    $('.l-sidebar--account').animate({left: '100%'}, 300, function () {
+        $('.l-sidebar--account').hide();
+    });
 }
