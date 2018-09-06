@@ -110,7 +110,7 @@ function CheckUsername (username)
                 $('#reg-tips__username').show();
             }
             else {
-                alert('其他错误，status:' + xhr.status)
+                swal("未知错误", xhr.status+ "错误", "error");
             }
         }
     })
@@ -149,7 +149,7 @@ function CheckEmail (email)
                 $('#reg-tips__email').show();
         	}
         	else {
-	        	alert('其他错误，status:' + xhr.status)
+                swal("未知错误", xhr.status+ "错误", "error");                
         	}
         }
     })
@@ -203,15 +203,17 @@ function Register (username, password, email)
         success: function (res) {
             $('#reg-btn').text('注册');
             if (res.code == 0) {
-                alert('注册成功！请牢记账号密码\n' + '账号：' + username + '\n密码：' + password);
+                swal("注册成功", `账号:${username}\n密码:${password}\n请牢记`, "success", {});
                 Login (username, password);
             }
             else {
                 $('#reg-btn').text('注册');
-                alert(res.data.reason);
+                swal("出现错误", res.data.reason, "error");
             }
         },
-        error: function (xhr) {alert('注册出现错误，status:' + xhr.status)}
+        error: function (xhr) {
+            swal("注册失败", xhr.status + "错误", "error");            
+        }
     })
 }
 
@@ -228,9 +230,12 @@ function Login (username, password)
             "password": "${password}"
         }`,
         success: function (res) {
+            swal("登陆成功", "欢迎" + username, "success", {
+                timer: 1800,
+                buttons: false
+            });
             $('#login-btn').text('登录');
             $('#login-tips').hide();
-            alert('登陆成功');
             setCookie("accessToken", res.data.accessToken);
             setCookie("tokenType", res.data.tokenType);
             HideLoginSidebar ();

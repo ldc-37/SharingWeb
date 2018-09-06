@@ -1,9 +1,10 @@
 'use strict'
 const apiBase = "https://api.hs.rtxux.xyz";
 
+//惰性计算
 let AuthorizationText = () => {
     if (location.host == "127.0.0.1:5500") {
-        //@test13
+        //LiveServer调试 @test13
         return "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNTM1NzI3MjUwLCJleHAiOjE1MzYzMzIwNTB9.8hkwYSK8OI72HgCAhzUUHny0TwNSp2vB2BuThgFLnpSw0H54tO5BaUz6UYcJ9InPuZV4Hl0c9j3v3oWsWcHTGA";
     }
     return getCookie("tokenType") + " " + getCookie("accessToken");
@@ -119,7 +120,7 @@ $(function () {
                         $('.goods-list').text('未找到该id对应物品！');
                     }
                     else {
-                        alert('物品id搜索失败：' + xhr.status + '错误');
+                        swal('物品id搜索失败', xhr.status + '错误', 'error');
                     }
                 }
             });
@@ -138,7 +139,7 @@ $(function () {
                     }
                 },
                 error: function (xhr) {
-                    alert('搜索失败：' + xhr.status + '错误');
+                    swal('搜索失败', xhr.status + '错误', 'error');
                 }
             });
         }
@@ -199,7 +200,7 @@ function LoadUserInfoEdit ()
             Authorization: AuthorizationText ()
         },
         success: function (res) {
-            $('#account-info-id__txt').val(res.user_id);
+            $('#account-info-id__txt').text(res.user_id);
             $('#account-info-nickname__txt').val(res.nickName);
             $('#account-info-phone__txt').val(res.phone);
             $('#account-info-description__txt').val(res.description);
@@ -210,8 +211,8 @@ function LoadUserInfoEdit ()
                 $('#account-info-gender__female').attr('checked', true);
             }
         },
-        error: function () {
-            alert('加载当前用户信息失败！');
+        error: function (xhr) {
+            swal('加载当前用户信息失败', xhr.status + '错误', 'error');
         }
     });
     $('#account-info-btn__cancel').click(function () {
@@ -235,14 +236,14 @@ function LoadUserInfoEdit ()
             }`,
             success: function (res) {
                 if (res.code == 0) {
-                    alert ('信息更新成功！');
+                    swal('信息更新成功', '', 'success');                    
                 }
                 else {
-                    alert('信息更新失败！')
+                    swal('信息更新失败', xhr.status + '错误', 'error');                    
                 }
             },
             error: function (xhr) {
-                alert('信息更新失败：' + xhr.status + '错误');
+                swal('信息更新失败', xhr.status + '错误', 'error');
             }
         });
     });
@@ -414,7 +415,7 @@ function LoadMain ()
             async: false,
             success: function (res) {
                 // FillMain (res);
-                if (res.status == 0 || res.status == 1) // 可租借
+                if (res.status == 1) // 可租借
                     data.push(res);
             },
             error: function (xhr) {
@@ -436,33 +437,47 @@ function LoadMain ()
 
 function LaunchBorrow (_this)
 {
-    if (confirm('确认申请？')) {
-        const id = _this.parentNode.parentNode.parentNode.dataset.id;
-        $.ajax({
-            type: 'POST',
-            url: apiBase + '/item/' + id +  '/borrow',
-            dataType: 'json',
-            headers: {
-                Authorization: AuthorizationText ()
-            },
-            success: function (res) {
-                if (res.code == 0) {
-                    alert('成功申请，等待物主审核');
+    swal('确认申请？', '', 'info', {
+        buttons: ['先等等', '就是它'],
+        // buttons: {
+        //     cancel: {
+        //         text: '先等等',
+        //         closeModal: false
+        //     },
+        //     confirm: {
+        //         text: '就是它',
+        //         closeModal: false
+        //     }
+        // }
+    }).then((value) => {
+        if (value) {
+            const id = _this.parentNode.parentNode.parentNode.dataset.id;
+            $.ajax({
+                type: 'POST',
+                url: apiBase + '/item/' + id +  '/borrow',
+                dataType: 'json',
+                headers: {
+                    Authorization: AuthorizationText ()
+                },
+                success: function (res) {
+                    if (res.code == 0) {
+                        swal('申请成功', '请等待物主审核', 'success');
+                    }
+                    else {
+                        swal('申请不成功', '错误代码:' + res.code, 'error');
+                    }
+                },
+                error: function (xhr) {
+                    if (xhr.status == 400) {
+                        swal('发起申请失败', '这是你自己的东西哦', 'warning');
+                    }
+                    else {
+                        swal('发起申请失败', xhr.status + '错误', 'error');
+                    }
                 }
-                else {
-                    alert('申请失败，错误：' + res.code);
-                }
-            },
-            error: function (xhr) {
-                if (xhr.status == 400) {
-                    alert ('这是你自己的东西哦');
-                }
-                else {
-                    alert('发起申请失败：' + xhr.status + '错误');
-                }
-            }
-        });
-    }
+            });
+        }
+    })
 }
 
 function FillMyLend (data)
@@ -570,12 +585,10 @@ function LoadMyLend ()
         },
         error: function (xhr) {
             if (xhr.status == 401) {
-                alert('请先进行登录~');
-                $('#share-column-all').click();
-                $('#share-user-info__name').click();
+                PromptLogin ();
             }
             else {
-                alert('加载已借出列表失败：' + xhr.status + '错误');
+                swal('加载已借出列表失败', xhr.status + '错误', 'error');
             }
         }
     });
@@ -743,17 +756,14 @@ function LoadMyBorrow ()
             Authorization: AuthorizationText ()
         },
         success: function (res) {
-            console.log(res);
             FillMyBorrow(res);
         },
         error: function (xhr) {
             if (xhr.status == 401) {
-                alert('请先进行登录~');
-                $('#share-column-all').click();
-                $('#share-user-info__name').click();
+                PromptLogin ();
             }
             else {
-                alert('加载已借入列表失败：' + xhr.status + '错误');
+                swal('加载已借入列表失败', xhr.status + '错误', 'error');
             }
         }
     });
@@ -777,7 +787,6 @@ function FillInform (data)
         $('.inform-list').append(listHTML);
         const $inform = $('.inform-list__item').last();
         if ($inform.text().indexOf('请求已被同意') != -1) {
-            console.log($inform)
             $inform.css('background', '#aedbae');
         }
         else if ($inform.text().indexOf('请求被对方拒绝') != -1) {
@@ -804,17 +813,14 @@ function LoadInform ()
             Authorization: AuthorizationText ()
         },
         success: function (res) {
-            console.log(res);
             FillInform(res);
         },
         error: function (xhr) {
             if (xhr.status == 401) {
-                alert('请先进行登录~');
-                $('#share-column-all').click();
-                $('#share-user-info__name').click();
+                PromptLogin ();
             }
             else {
-                alert('加载通知列表失败：' + xhr.status + '错误');
+                swal('加载通知列表失败', xhr.status + '错误', 'error');
             }
         }
     })
@@ -887,7 +893,7 @@ function LoadAudit ()
         },
         error: function (xhr) {
             if (xhr.status != 401) {
-                alert('加载待审核-未借出列表失败：' + xhr.status + '错误');
+                swal('加载物品列表失败', xhr.status + '错误', 'error');
             }
         }
     });
@@ -896,21 +902,30 @@ function LoadAudit ()
 //@param id, operator(0:agree, 1:refuse, 2:returned)
 function SolveApply (id, op)
 {
-    if (op === 0 || op === 1)
-    $.ajax({
-        type: 'POST',
-        url: apiBase + `/item/${id}/accept?reject=${op === 0 ? 'false' : 'true'}`,
-        headers: {
-            Authorization: AuthorizationText ()
-        },
-        success: function (res) {
-            if (res.code == 0)
-                alert(op === 0 ? '已同意借出' : '已拒绝借出');
-        },
-        error: function (xhr) {
-            alert('操作失败：' + xhr.status + '错误');
-        }
-    });
+    if (op === 0 || op === 1) {        
+        $.ajax({
+            type: 'POST',
+            url: apiBase + `/item/${id}/accept?reject=${op === 0 ? 'false' : 'true'}`,
+            headers: {
+                Authorization: AuthorizationText ()
+            },
+            success: function (res) {
+                if (res.code == 0) {
+                    if (op == 0) {
+                        swal('操作成功', '已同意借出', "success");
+                        $('#share-column-audit-inform').click();
+                    }
+                    else {
+                        swal('操作成功', '已拒绝借出', "info");
+                        $('#share-column-audit-inform').click();
+                    }
+                }
+            },
+            error: function (xhr) {
+                swal('操作失败', xhr.status + '错误', "error");
+            }
+        });
+    }
     else if (op === 2) {
         $.ajax({
             type: 'POST',
@@ -919,11 +934,11 @@ function SolveApply (id, op)
                 Authorization: AuthorizationText ()
             },
             success: function () {
-                alert('已确认归还');
+                swal('操作成功', '已确认归还', "success");
                 $('#share-column-audit-inform').click();
             },
             error: function (xhr) {
-                alert('操作失败：' + xhr.status + '错误');
+                swal('操作失败', xhr.status + '错误', "error");
             }
         })
     }
@@ -964,8 +979,23 @@ function GetItemInfo (id)
             data = res;
         },
         error: function (xhr) {
-            alert('加载指定用户信息失败：' + xhr.status + '错误');
+            swal('加载指定用户信息失败', xhr.status + '错误', 'error');
         }
     });
     return data;
+}
+
+function PromptLogin ()
+{
+    swal({
+        title: "还未登陆",
+        text: "请先登录后才能查看哦", 
+        icon: "error",
+        buttons: ["再看看", "去登陆!"]
+    }).then((value) => {
+        if (value) {
+            $('#share-column-all').click();
+            $('#share-user-info__name').click();
+        }
+    });
 }

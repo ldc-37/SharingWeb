@@ -866,7 +866,7 @@ button:disabled:hover {
     padding: 5px 10px;
     border: 1.5px solid #555;
     word-break: break-word;
-    overflow-y: auto;
+    overflow: auto;
 }
 
 .my-item__op {
@@ -995,7 +995,7 @@ button:disabled:hover {
 }
 .audit-list__item:hover {
     opacity: .8;
-    box-shadow: 2px 2px 5px #bbb;
+    box-shadow: 0 0 8px 0 #bbb;
 }
 
 .inform-list__item {

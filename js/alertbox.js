@@ -6,10 +6,8 @@
 
 ////发起借出弹窗
 $('#share-require__btn').click(function () {
-    if (!AuthorizationText () == " ") {
-        alert('登陆以后才能发布哦！');
-        $('#share-column-all').click();
-        $('#share-user-info__name').click();
+    if (AuthorizationText () == " ") {
+        PromptLogin ();
         return;
     }
     $('.alert-box-lend').eq(0).show();
@@ -116,7 +114,7 @@ Dropzone.options.lendPicDropzone = {
     // maxfilesreached: function () {
     // },
     maxfilesexceeded: function (file) {
-        alert('图片数量超限');
+        swal("图片数量超限", "有效图片不得多于3张", "warning");        
         this.removeFile(file);
     },
     // error: function (file, msg) {
@@ -134,16 +132,16 @@ Dropzone.options.lendPicDropzone = {
                 },
                 success: function (res) {
                     if (res.code == 0) {
-                        alert('借出请求已发布');
+                        swal("完成", "借出请求已发布", "success");
                         $('#lend-launch__hd button').click();
                     }
                     else {
-                        alert('图片上传失败，错误代码：' + res.code);
+                        swal("图片上传失败", "错误代码：" + res.code, "error");
                     }
                 },
                 error: function (xhr) {
+                    swal("发布失败", xhr.status + "错误", "error");
                     $('#lend-submit').text('提交');
-                    alert('发布失败：' + xhr.status + "错误");
                 }
             })
         }
@@ -180,46 +178,47 @@ $('#lend-submit').click(function () {
         return;
     }
     else if (imgDataObj.files) {
-        if (confirm('真的不上传一张图片让大家看看？\n【点确认返回上传图片，点取消继续】')) {
-            return;
-        }
+        swal('没有图片', '真的不上传一张图片让大家看看？', 'info', {
+            buttons: ['丑拒', '好吧']
+        }).then((value) => {
+            if (!value) {
+                const itemName = $('#lend-item-name').val();
+                const itemTime = $('#lend-time').val() * 60 * 60 * 24;
+                const itemDescription = $('#lend-description').val();
+                const locationText = $('#lend-map-position-txt').val();
+                const itemPrice = $('#lend-price').attr('disabled') ? 0 : parseFloat($('#lend-price').val());
+                const lendLocationJson = `{
+                    "longitude": "${g_longitude}",
+                    "latitude": "${g_latitude}",
+                    "locationDescription": "${locationText}"
+                }`;
+                const lendItemJson = `{
+                    "name": "${itemName}",
+                    "duration": ${itemTime},
+                    "description": "${itemDescription}",
+                    "price": ${itemPrice},
+                    "location": ${lendLocationJson}
+                }`;
+                $('#lend-submit').text('发布中...');
+                $.ajax({
+                    type: "POST",
+                    url: apiBase + "/item",
+                    headers: {
+                        Authorization: AuthorizationText ()
+                    },
+                    contentType: "application/json",
+                    data: lendItemJson,
+                    success: function (res) {
+                        //上传图片
+                        uploadItemId = res.id;
+                        imgDataObj.processQueue();
+                    },
+                    error: function (xhr) {
+                        swal("提交失败", xhr.status + "错误", "error");
+                        $('#lend-submit').text('提交');
+                    }
+                })
+            }
+        });
     }
-
-    const itemName = $('#lend-item-name').val();
-    const itemTime = $('#lend-time').val() * 60 * 60 * 24;
-    const itemDescription = $('#lend-description').val();
-    const locationText = $('#lend-map-position-txt').val();
-    const itemPrice = $('#lend-price').attr('disabled') ? 0 : parseFloat($('#lend-price').val());
-    const lendLocationJson = `{
-        "longitude": "${g_longitude}",
-        "latitude": "${g_latitude}",
-        "locationDescription": "${locationText}"
-    }`;
-    const lendItemJson = `{
-        "name": "${itemName}",
-        "duration": ${itemTime},
-        "description": "${itemDescription}",
-        "price": ${itemPrice},
-        "location": ${lendLocationJson}
-    }`;
-    $('#lend-submit').text('发布中...');
-    $.ajax({
-        type: "POST",
-        url: apiBase + "/item",
-        headers: {
-            Authorization: AuthorizationText ()
-        },
-        contentType: "application/json",
-        data: lendItemJson,
-        success: function (res) {
-            console.log (res);
-            //上传图片
-            uploadItemId = res.id;
-            imgDataObj.processQueue();
-        },
-        error: function (xhr) {
-            alert('提交失败：' + xhr.status + "错误");
-            $('#lend-submit').text('提交');
-        }
-    })
 });
