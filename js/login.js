@@ -2,6 +2,20 @@
 
 let isLegalEmail = 0,isLegalPass = 0,isLegalName = 0;
 
+//退出登录按钮
+$('#share-btn-logout').click(() => {
+    swal('确认退出？', '退出了你在本网站啥也干不了呢', 'info', {
+        buttons: ['留下', '退出'],
+        dangerMode: true
+    }).then((value) => {
+        if (value) {
+            setCookie("accessToken", "");
+            setCookie("tokenType", "");
+            location.reload();
+        }
+    })
+})
+
 //注册登录按钮
 $('#reg-btn').click(function () {
         //no data-checking here
@@ -129,7 +143,6 @@ function CheckEmail (email)
         //@any problems above?
         dataType: "json",
         success: function (res) {
-            console.log(res);
             if (res.code == 0) {
             	isLegalEmail = 1;
                 $('#reg-email').css("border", "2px solid green");
@@ -145,7 +158,6 @@ function CheckEmail (email)
         	if (xhr.status == 500) {
                 isLegalEmail = 0;
                 $('#reg-tips__email').html('邮箱地址格式有误<br>');
-                debugger;
                 $('#reg-tips__email').show();
         	}
         	else {
@@ -239,7 +251,13 @@ function Login (username, password)
             setCookie("accessToken", res.data.accessToken);
             setCookie("tokenType", res.data.tokenType);
             HideLoginSidebar ();
-            $('#share-user-info__name').text(username);
+            $('#share-user-info__name').text(username)
+                .unbind('click')
+                .click(function () {
+                    $('.l-sidebar--info').fadeIn(500);
+                    $('.l-sidebar--nor').css('filter', 'blur(3px)');
+                    LoadUserInfoEdit ();
+                });
         },
         error: function (xhr) {
             $('#login-btn').text('登录');
@@ -257,13 +275,6 @@ function Login (username, password)
             }
         }
     })
-}
-
-function Logout ()
-{
-    setCookie("accessToken", "");
-    setCookie("tokenType", "");
-    location.reload();
 }
 
 function ShowLoginSidebar () {

@@ -1,7 +1,7 @@
 'use strict'
 const apiBase = "https://api.hs.rtxux.xyz";
 
-//惰性计算
+//惰性计算authorization
 let AuthorizationText = () => {
     if (location.host == "127.0.0.1:5500") {
         //LiveServer调试 @test13
@@ -96,7 +96,7 @@ $(function () {
         if (e.keyCode == "13") 
             $('#mainSearchBtn').click();
     })
-
+    //搜索按钮
     $('#mainSearchBtn').click(function () {
         const words = $('#searchBox').val();
         if (words == "") {
@@ -144,10 +144,12 @@ $(function () {
             });
         }
     })
-    //二维码 APP
+    //二维码 APP下载
     $('.main-head-qrcode').mouseover(function () {
+        $('.main-head-qrcode__pic').stop(true);
         $('.main-head-qrcode__pic').slideDown();
     }).mouseout(function () {
+        $('.main-head-qrcode__pic').stop(true);
         $('.main-head-qrcode__pic').slideUp();
     }).click(function () {
         window.open("https://xilym.tk/storage/apk/happySharing.apk")
@@ -236,7 +238,9 @@ function LoadUserInfoEdit ()
             }`,
             success: function (res) {
                 if (res.code == 0) {
-                    swal('信息更新成功', '', 'success');                    
+                    swal('信息更新成功', '', 'success', {
+                        timer: 1500
+                    });                    
                 }
                 else {
                     swal('信息更新失败', xhr.status + '错误', 'error');                    
@@ -569,6 +573,16 @@ function FillMyLend (data)
         $newItem.find('.my-lend-item-price__txt').text(price + ' 元');
         $newItem.find('.my-lend-item-duration__txt').text(duration / 86400 + '天');
         $newItem.find('.my-lend-item-publish-id__txt').text(itemId);
+        
+        //建设中
+        $newItem.find('.my-item-btn').click(() => {
+            swal({
+                text: 'Sorry,建设中……',
+                button: false,
+                className: 'red-bg',
+                timer: 1000
+            });
+        });
     }
 }
 

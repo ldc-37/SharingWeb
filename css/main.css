@@ -36,7 +36,6 @@ button:disabled:hover {
     display: inline-block;
     width: 25%;
     height: 100%;
-    overflow: hidden;
     transition: filter .1s linear;
 }
 
@@ -117,7 +116,7 @@ button:disabled:hover {
 
 /* 功能选择 */
 .share-column {
-    margin: 5%;
+    margin: 5% 5% 0;
     padding: 5% 15%;
     text-align: center;
     background: #bbb;
@@ -354,15 +353,14 @@ button:disabled:hover {
 /* 主内容顶部 */
 .main__hd {
     display: flex;
-    padding: 5px 0 5px 50px;
+    padding: 5px 0 5px 25px;
     height: 80px;
     background-color: #0093E9;
     background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);
-
 }
 
 .main-head-search {
-    width: 55%;
+    width: 53%;
     height: 50%;
 }
 
@@ -374,20 +372,41 @@ button:disabled:hover {
 #searchBox {
     width: 85%;
     height: 100%;
+    border: transparent;
+    border-radius: 0 3px 3px 0;
+    background: rgba(255, 255, 255, 0.7);
+    transition: .1s;
+}
+#searchBox:focus {
+    width: 88%;
+    background: rgba(255, 255, 255, 0.9);
 }
 
 #mainSearchBtn {
+    position: relative;
+    top: 1px;
+    right: 10%;
     width: 10%;
-    height: 100%;
+    height: calc(100% + 1px);
+    border: none;
+    border-radius: 0 3px 3px 0;
+    background: #0784ce;
+    color: rgba(242, 242, 242, .95);
+}
+
+#mainSearchBtn:hover {
+    background: #1979b3;
+    color: #f5f5f5;
+}
+
+#mainSearchBtn:active {
+    background: #166799;
 }
 
 .main-head-qrcode {
-    margin-left: 2%;
     line-height: 80px;
-    text-decoration: underline;
     cursor: pointer;
-    font-size: 20px;
-    color: #b61212;
+    font-size: 22px;
 }
 
 .main-head-qrcode__pic {
@@ -1028,8 +1047,8 @@ button:disabled:hover {
     opacity: .5;
 }
 
-/* 通用提示（顶层） */
-.prompt-box {
+/* 通用提示（顶层）@弃用 */
+/* .prompt-box {
     position: fixed;
     width: 200px;
     height: 50px;
@@ -1038,4 +1057,23 @@ button:disabled:hover {
     color: white;
     text-align: center;
     z-index: 100;
+} */
+
+/* 未完 */
+.swal-modal.red-bg {
+    background: rgba(255, 0, 0, 0.388);
+}
+
+.red-bg .swal-text {
+    font-size: 24px;
+    color: #fff;
+}
+
+/* 抄的 */
+.text-effect-flame{
+    display: block;
+    color: #fff;
+    text-align: center;
+    text-shadow: 0px -1px 4px white, 0px -2px 10px yellow, 0px -10px 20px #ff8000, 0px -18px 40px red;
+    position: relative;
 }
