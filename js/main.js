@@ -5,10 +5,14 @@ const apiBase = "https://api.hs.rtxux.xyz";
 let AuthorizationText = () => {
     if (location.host == "127.0.0.1:5500") {
         //LiveServer调试 @test13
-        return "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNTM1NzI3MjUwLCJleHAiOjE1MzYzMzIwNTB9.8hkwYSK8OI72HgCAhzUUHny0TwNSp2vB2BuThgFLnpSw0H54tO5BaUz6UYcJ9InPuZV4Hl0c9j3v3oWsWcHTGA";
+        return "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNTM2MzQwNjI4LCJleHAiOjE1MzY5NDU0Mjh9.nWkkqF0vDoKxAgHXRkpBfWiLazrwExkkm4SSGQgyfRvOk7k04I8SEB4pPrLsiaTOckNt4v_LlaH7iiPzOxWoiw";
     }
     return getCookie("tokenType") + " " + getCookie("accessToken");
 };
+
+window.onload = () => {
+    $('#share-column-all').click();
+}
 
 $(function () {
     /**
@@ -147,10 +151,10 @@ $(function () {
     //二维码 APP下载
     $('.main-head-qrcode').mouseover(function () {
         $('.main-head-qrcode__pic').stop(true);
-        $('.main-head-qrcode__pic').slideDown();
+        $('.main-head-qrcode__pic').slideDown('fast');
     }).mouseout(function () {
         $('.main-head-qrcode__pic').stop(true);
-        $('.main-head-qrcode__pic').slideUp();
+        $('.main-head-qrcode__pic').slideUp('fast');
     }).click(function () {
         window.open("https://xilym.tk/storage/apk/happySharing.apk")
     });

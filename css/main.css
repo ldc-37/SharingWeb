@@ -34,7 +34,7 @@ button:disabled:hover {
 .l-sidebar {
     position: fixed;
     display: inline-block;
-    width: 25%;
+    width: 24%;
     height: 100%;
     transition: filter .1s linear;
 }
@@ -43,7 +43,7 @@ button:disabled:hover {
     position: absolute;
     width: 100%;
     height: 100%;
-    background: #ddd;
+    background: #3d485d;
     overflow: auto;
 }
 
@@ -76,6 +76,7 @@ button:disabled:hover {
 /* 头像etc. */
 .share-user {
     margin-top: 2%;
+    margin-bottom: 10%;
 }
 
 .share-user-info {
@@ -84,42 +85,49 @@ button:disabled:hover {
     width: 90%;
     margin: 0 5%;
     padding: 15% 0;
-    background: #bbb;
+    background: #354052;
 
 }
 #share-user-info__head {
     margin: 5% auto;
 }
 #share-user-info__name {
+    color: #f2f2f2;
     text-align: center;
-    font-size: 22px;
+    font-size: 26px;
     cursor: pointer;
+    transition: .2s;
 }
 #share-user-info__name:hover {
     text-decoration: underline;
+    text-shadow: 0 0 6px #bbb;
 }
 
 /* 借入发起按钮 */
 .share-require {
     display: flex;
-    padding: 2% 10%;
+    padding: 0 10%;
     width: 90%;
     margin: 5%;
-    background: #bbb;
+    /* background: #354052; */
 }
 
 #share-require__btn {
-    font-size: 25px;
-    padding: 5px 50px;
+    padding: 10px 70px;
     margin: 0 auto;
+    color: #fff;
+    background: rgb(53, 204, 250);
+    border: none;
+    font-size: 25px;
 }
 
 /* 功能选择 */
 .share-column {
-    margin: 5% 5% 0;
-    padding: 5% 15%;
+    margin: 0 5%;
+    padding: 5% 0;
+    color: #aaa;
     text-align: center;
-    background: #bbb;
+    /* background: #354052; */
     font-size: 30px;
 }
 
@@ -130,20 +138,28 @@ button:disabled:hover {
     cursor: pointer;
     transition: .3s;
 }
+.share-column-list__item:hover:not(.share-column-list__item--act) {
+    background-image: linear-gradient(rgba(255, 255, 255, .05), rgba(255, 255, 255, .1));
+}
 .share-column-list__item:hover::before {
-    content: url('../images/double\ right.png');
+    content: url(../images/double-right.png);
     position: absolute;
-    left: 15px;
+    left: 50px;
 }
 .share-column-list__item:hover::after {
-    content: url('../images/double\ right.png');
+    content: url(../images/double-right.png);
     position: absolute;
-    right: 15px;
+    right: 50px;
     transform: rotateY(180deg);
 }
 
 .share-column-list__item--act {
-    background: #ddd;
+    width: 100%;
+    color: #F5F9FF;
+    background: #4F5F79 url(../images/list-selected.png) no-repeat;
+    font-weight: bold;
+    z-index: 1;
+    transform: scale(1.1);
 }
 
 .sidebar-plus {
@@ -178,7 +194,7 @@ button:disabled:hover {
 .share-choose-login-reg {
     display: flex;
     justify-content: space-between;
-    padding: 10px 40px;
+    padding: 10px 50px;
     width: 80%;
     margin: 0 auto;
     background: #888;
@@ -257,7 +273,7 @@ button:disabled:hover {
     color: red;
 }
 .account-tips::before {
-    content: url('../images/icon-warning.png');
+    content: url(../images/icon-warning.png);
     position: relative;
     top: 2px;
 }
@@ -265,8 +281,8 @@ button:disabled:hover {
 /* 用户信息侧边栏 */
 .l-sidebar--info {
     padding: 100px 20px 0 50px;
-    background: rgba(0, 0, 0, 0.4);
-    background: rgba(17, 29, 28, 0.75);
+    background: rgba(0, 0, 0, .4);
+    background: rgba(17, 29, 28, .75);
     display: block;
     z-index: 100;
     left: 0;
@@ -338,7 +354,7 @@ button:disabled:hover {
 .l-content {
     position: fixed;
     right: 0;
-    width: 75%;
+    width: 74%;
     height: 100%;
     background: #f5f5f5;
     transition: filter .1s linear;
@@ -740,7 +756,7 @@ button:disabled:hover {
     font-size: 14px;
 }
 .lend-tips::before {
-    content: url('../images/icon-warning.png');
+    content: url(../images/icon-warning.png);
     position: relative;
     top: 3px;
 }
@@ -786,12 +802,15 @@ button:disabled:hover {
     transform: scale(1.2);
 }
 
-.my-type--act {
+div.my-type--act {
     font-weight: bold;
+    /* background-image: linear-gradient(rgba(0, 0, 0, .04), rgba(0, 0, 255, .08)); */
+    /* border: 3px solid #fff; */
+    box-shadow: 0 0 15px 1px #555;
 }
 
 #my-lend-type__all, #my-borrow-type__all {
-    background: #feb890;
+    background-color: #feb890;
     color: #724730;
 }
 .my-lend-color-waiting, 
@@ -1059,7 +1078,7 @@ button:disabled:hover {
     z-index: 100;
 } */
 
-/* 未完 */
+/* sweetAlert */
 .swal-modal.red-bg {
     background: rgba(255, 0, 0, 0.388);
 }
@@ -1067,6 +1086,15 @@ button:disabled:hover {
 .red-bg .swal-text {
     font-size: 24px;
     color: #fff;
+}
+
+.swal-button--confirm:hover {
+    background: #4bbbf0;
+}
+
+.swal-button--cancel:hover {
+    color: #333;
+    background: #d5d5d5;
 }
 
 /* 抄的 */
