@@ -39,8 +39,9 @@ $(function () {
     $('#share-user-info__name').click(function () {
         ShowLoginSidebar();
     });
+    
+    // 尝试Cookie中token登录
     if (AuthorizationText () != " ") {
-        // 尝试Cookie中token登录
         $.ajax({
             type: 'GET',
             url: apiBase + '/user/profile',

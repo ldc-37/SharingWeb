@@ -65,16 +65,16 @@ $('#reg-email').blur(function () {
 $('#share-choose-login').click(function () {
     $('.share-account__register').fadeOut(200, () => {
         $('.share-account__login').fadeIn(200);
+        $('#login-account').focus();
     });
-    $('#login-account').focus();
     $('#share-choose-login').addClass('share-choose-login-reg__item--act');
     $('#share-choose-register').removeClass('share-choose-login-reg__item--act');
 })
 $('#share-choose-register').click(function () {
     $('.share-account__login').fadeOut(200, () => {
         $('.share-account__register').fadeIn(200);
+        $('#reg-username').focus();
     });
-    $('#reg-username').focus();
     $('#share-choose-register').addClass('share-choose-login-reg__item--act');
     $('#share-choose-login').removeClass('share-choose-login-reg__item--act');
 })
@@ -279,15 +279,21 @@ function Login (username, password)
     })
 }
 
+let logoCycle;
 function ShowLoginSidebar () {
     $('.l-sidebar--nor').animate({left: '-100%'}, 300);
     $('.l-sidebar--account').show().animate({left: '0'}, 300, function () {
         $('#login-account').focus();
     });
+    let i = 0;
+    logoCycle = setInterval(() => {
+        $('#share-logo__img').css('transform', 'rotate(' + i++ + 'deg)');
+    }, 50);
 }
 function HideLoginSidebar () {
     $('.l-sidebar--nor').animate({left: '0'}, 300);
     $('.l-sidebar--account').animate({left: '100%'}, 300, function () {
         $('.l-sidebar--account').hide();
     });
+    clearInterval(logoCycle);
 }
