@@ -10,6 +10,7 @@ let AuthorizationText = () => {
     return getCookie("tokenType") + " " + getCookie("accessToken");
 };
 
+//自动加载主页
 window.onload = () => {
     $('#share-column-all').click();
 }
@@ -244,14 +245,19 @@ function LoadUserInfoEdit ()
                 if (res.code == 0) {
                     swal('信息更新成功', '', 'success', {
                         timer: 1500
-                    });                    
+                    });
+                    $('#account-info-btn__update').text('更新');
                 }
                 else {
-                    swal('信息更新失败', xhr.status + '错误', 'error');                    
+                    swal('信息更新失败', '错误代码:' + res.code, 'error').then(() => {
+                        $('#account-info-btn__update').text('更新');
+                    });
                 }
             },
             error: function (xhr) {
-                swal('信息更新失败', xhr.status + '错误', 'error');
+                swal('信息更新失败', xhr.status + '错误', 'error').then(() => {
+                    $('#account-info-btn__update').text('更新');
+                });
             }
         });
     });
@@ -340,7 +346,7 @@ function FillMain (data)
             </div>
         </div>
         <div class="goods-item__enter">
-            <button class="goods-enter">租用</button>
+            <button class="goods-enter" title="租用">✚</button>
         </div>
         <div class="position-map goods-position-map"></div>
     </div>`;
@@ -402,9 +408,21 @@ function FillMain (data)
         let lat = this.parentNode.parentNode.parentNode.parentNode.dataset.lat;
         ShowItemMap(lon, lat, idx);
     });
-    //点击租用
+    //点击图片放大
+    $('.goods-img').click(function () {
+        $('#body-cover').fadeIn(300);
+        $('#body-cover').one('click', function () {
+            $('#body-cover').fadeOut(300).empty();
+        });
+        const $newImgContainer = $('<div class="full-screen-container"></div>')
+        const $newImg = $('<img>');
+        $newImg.attr('src', this.src);
+        $newImgContainer.append($newImg);
+        $('#body-cover').append($newImgContainer);
+    });
+    //点击租用按钮
     $('.goods-enter').click(function () {
-        LaunchBorrow (this)
+        LaunchBorrow (this);
     })
 }
 
@@ -577,7 +595,19 @@ function FillMyLend (data)
         $newItem.find('.my-lend-item-price__txt').text(price + ' 元');
         $newItem.find('.my-lend-item-duration__txt').text(duration / 86400 + '天');
         $newItem.find('.my-lend-item-publish-id__txt').text(itemId);
-        
+        //图片点击放大
+        $('.my-item__pic').click(function () {
+            $('#body-cover').fadeIn(300);
+            $('#body-cover').one('click', function () {
+                $('#body-cover').fadeOut(300).empty();
+            });
+            const $newImgContainer = $('<div class="full-screen-container"></div>')
+            const $newImg = $('<img>');
+            $newImg.attr('src', this.children[0].src);
+            $newImgContainer.append($newImg);
+            $('#body-cover').append($newImgContainer);
+        });
+
         //建设中
         $newItem.find('.my-item-btn').click(() => {
             swal({
@@ -753,6 +783,18 @@ function FillMyBorrow (data)
         $newItem.find('.my-borrow-item-publish-id__txt').text(itemId);
         $newItem.find('.my-borrow-item-owner-id__txt').text(ownerId);
         $newItem.find('.my-borrow-item-position__txt').text(positionText);
+        //图片点击放大
+        $('.my-item__pic').click(function () {
+            $('#body-cover').fadeIn(300);
+            $('#body-cover').one('click', function () {
+                $('#body-cover').fadeOut(300).empty();
+            });
+            const $newImgContainer = $('<div class="full-screen-container"></div>')
+            const $newImg = $('<img>');
+            $newImg.attr('src', this.children[0].src);
+            $newImgContainer.append($newImg);
+            $('#body-cover').append($newImgContainer);
+        });
     }
 
     //加载完成后，点击地址

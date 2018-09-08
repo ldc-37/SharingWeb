@@ -11,7 +11,9 @@ $('#share-require__btn').click(function () {
         return;
     }
     $('.alert-box-lend').eq(0).show();
-    $('#body-cover').show();
+    $('#body-cover').one('click', function () {
+        $('#lend-launch-close').click();
+    }).show();
     $('.l-content, .l-sidebar').css('filter', 'blur(5px)');
     var map = new AMap.Map('lend-map',{
         zoom:16,
@@ -34,7 +36,7 @@ $('#share-require__btn').click(function () {
             $('#lend-map-position-txt').val(positionResult.address);
         });
     });
-    $('#lend-launch__hd button').click(function () {
+    $('#lend-launch-close').click(function () {
         $('.l-content, .l-sidebar').css('filter', '')
         $('#body-cover').hide();
         $('#lend-map-position-txt').css('color', '');    
@@ -133,7 +135,7 @@ Dropzone.options.lendPicDropzone = {
                 success: function (res) {
                     if (res.code == 0) {
                         swal("完成", "借出请求已发布", "success");
-                        $('#lend-launch__hd button').click();
+                        $('#lend-launch-close').click();
                     }
                     else {
                         swal("图片上传失败", "错误代码：" + res.code, "error");

@@ -63,18 +63,20 @@ $('#reg-email').blur(function () {
 
 // 注册登录选择切换
 $('#share-choose-login').click(function () {
-    $('.share-account__register').hide();
-    $('.share-account__login').show();
+    $('.share-account__register').fadeOut(200, () => {
+        $('.share-account__login').fadeIn(200);
+    });
     $('#login-account').focus();
-    $('#share-choose-login').addClass('share-choose-login-reg__span--act');
-    $('#share-choose-register').removeClass('share-choose-login-reg__span--act');
+    $('#share-choose-login').addClass('share-choose-login-reg__item--act');
+    $('#share-choose-register').removeClass('share-choose-login-reg__item--act');
 })
 $('#share-choose-register').click(function () {
-    $('.share-account__register').show();
-    $('.share-account__login').hide();
+    $('.share-account__login').fadeOut(200, () => {
+        $('.share-account__register').fadeIn(200);
+    });
     $('#reg-username').focus();
-    $('#share-choose-register').addClass('share-choose-login-reg__span--act');
-    $('#share-choose-login').removeClass('share-choose-login-reg__span--act');
+    $('#share-choose-register').addClass('share-choose-login-reg__item--act');
+    $('#share-choose-login').removeClass('share-choose-login-reg__item--act');
 })
 
 //确认键登录/注册

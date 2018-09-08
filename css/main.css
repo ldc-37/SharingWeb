@@ -65,7 +65,7 @@ button:disabled:hover {
 
 #share-btn-logout,
 #share-btn-settings {
-    opacity: .5;
+    opacity: .8;
 }
 
 #share-btn-logout:hover,
@@ -85,16 +85,19 @@ button:disabled:hover {
     width: 90%;
     margin: 0 5%;
     padding: 15% 0;
-    background: #354052;
-
+    background-color: #3c498e;
+    background-image: linear-gradient(0deg, #3c498e 0%, #465269 46%);
 }
 #share-user-info__head {
     margin: 5% auto;
 }
 #share-user-info__name {
+    width: 80%;
+    margin-left: 10%;
     color: #f2f2f2;
     text-align: center;
     font-size: 26px;
+    letter-spacing: 1px;
     cursor: pointer;
     transition: .2s;
 }
@@ -103,22 +106,34 @@ button:disabled:hover {
     text-shadow: 0 0 6px #bbb;
 }
 
+.account-info__title::before {
+    content: url(../images/icon-person.png);
+    position: absolute;
+    left: 30px;
+    top: 15px;
+}
+
 /* 借入发起按钮 */
 .share-require {
     display: flex;
     padding: 0 10%;
     width: 90%;
     margin: 5%;
-    /* background: #354052; */
 }
 
 #share-require__btn {
     padding: 10px 70px;
     margin: 0 auto;
     color: #fff;
-    background: rgb(53, 204, 250);
+    background: rgba(53, 204, 250, .85);
     border: none;
     font-size: 25px;
+}
+#share-require__btn:hover {
+    background: #35ccfa;
+}
+#share-require__btn:active {
+    background: #42b6da;
 }
 
 /* 功能选择 */
@@ -127,7 +142,6 @@ button:disabled:hover {
     padding: 5% 0;
     color: #aaa;
     text-align: center;
-    /* background: #354052; */
     font-size: 30px;
 }
 
@@ -155,7 +169,7 @@ button:disabled:hover {
 
 .share-column-list__item--act {
     width: 100%;
-    color: #F5F9FF;
+    color: yellow;
     background: #4F5F79 url(../images/list-selected.png) no-repeat;
     font-weight: bold;
     z-index: 1;
@@ -167,19 +181,21 @@ button:disabled:hover {
     position: absolute;
     width: 100%;
     height: 100%;
+    z-index: 1;
     overflow: auto;
 }
 
 /* 注册登录侧边栏 */
 .l-sidebar--account {
     left: 100%;
-    background: #aaa;
+    background: #3d485d;
 }
 
 #share-login-cancel__a {
     display: block;
     margin: 3% 0 3% 3%;
-    font-size: 25px;
+    color: yellow;
+    font-size: 20px;
     cursor: pointer;
 }
 
@@ -194,29 +210,36 @@ button:disabled:hover {
 .share-choose-login-reg {
     display: flex;
     justify-content: space-between;
-    padding: 10px 50px;
     width: 80%;
+    height: 60px;
     margin: 0 auto;
-    background: #888;
-    font-size: 28px;
+    color: #ccc;
+    font-size: 24px;
     cursor: default;
 }
 
-.share-choose-login-reg__span {
+.share-choose-login-reg__item {
+    width: 50%;
+    padding: 10px 0;
+    border-bottom: 2px solid transparent;
+    text-align: center;
     cursor: pointer;
 }
-.share-choose-login-reg__span:hover {
-    color: #333;
-    text-decoration: underline;
+.share-choose-login-reg__item:hover:not(.share-choose-login-reg__item--act) {
+    border-bottom: 2px solid #999;
 }
 
-.share-choose-login-reg__span--act {
-    color: #111;
+.share-choose-login-reg__item--act {
+    width: 65%;
+    border-bottom: 2px solid #fff;
+    color: #fff;
+    font-size: 28px;
+    transition: .3s;
 }
 
 /* 登录注册信息框 */
 .share-account {
-    background: #888;
+    background: #88888888;
     width: 80%;
     margin: 5% 10%;
     padding: 5%;
@@ -255,15 +278,15 @@ button:disabled:hover {
     background: transparent;
     color: white;
     cursor: pointer;
+    transition: .3s;
 }
 .share-account__btn:hover {
-    transition: .3s;
     background: #183d69;
 }
 .share-account__btn:disabled {
     background: #ff3a3a;
     cursor: default;
-    border-color: red;
+    border-color: transparent;
 }
 
 .account-tips {
@@ -354,10 +377,15 @@ button:disabled:hover {
 .l-content {
     position: fixed;
     right: 0;
-    width: 74%;
+    width: 76%;
     height: 100%;
     background: #f5f5f5;
     transition: filter .1s linear;
+}
+
+.share-rmb {
+    font-family: "Arial";
+    font-style: normal;
 }
 
 /* 主内容 */
@@ -376,7 +404,7 @@ button:disabled:hover {
 }
 
 .main-head-search {
-    width: 53%;
+    width: 55%;
     height: 50%;
 }
 
@@ -386,12 +414,12 @@ button:disabled:hover {
 }
 
 #searchBox {
-    width: 85%;
+    width: 83%;
     height: 100%;
     border: transparent;
     border-radius: 0 3px 3px 0;
     background: rgba(255, 255, 255, 0.7);
-    transition: .1s;
+    transition: .2s;
 }
 #searchBox:focus {
     width: 88%;
@@ -448,7 +476,7 @@ button:disabled:hover {
     position: relative;
     width: 100%;
     height: 90%;
-    padding: 1%;
+    padding: 1% 2%;
 }
 
 /* 单个物品信息 */
@@ -494,6 +522,7 @@ button:disabled:hover {
 .goods-img {
     width: 100%;
     height: 100%;
+    cursor: pointer;
 }
 
 .goods-img-intro {
@@ -541,6 +570,11 @@ button:disabled:hover {
     cursor: pointer;
     word-break: break-all;
 }
+.position-txt::before {
+    content: url(../images/icon-location.png);
+    position: relative;
+    top: 2px;
+}
 .position-txt:hover {
     text-decoration: underline;
     color: blue;
@@ -584,23 +618,26 @@ button:disabled:hover {
 .goods-item__enter {
     position: absolute;
     top: 60px;
-    right: 8px;
+    right: -20px;
 }
 
 .goods-enter {
-    width: 60px;
-    height: 35px;
-    border-radius: 4px;
-    border: 2px solid #2db7f5;
-    color: #00b0ff;
+    width: 40px;
+    height: 40px;
+    background: #52c3f8;
+    color: white;
+    border: 2px solid #6161ff;
+    border-radius: 100%;
+    font-size: 18px;
+    transition: .3s;
 }
 .goods-enter:hover {
-    color: #008bcc;
-    background: #fff;
-    box-shadow: 0px 0px 5px 0px;
+    background: #2db7f5;
+    box-shadow: 0 0 10px 0 blue;
+    transform: scale(1.1);
 }
 .goods-enter:active {
-    background: #ddd;
+    background: #2594c7;
 }
 
 
@@ -614,7 +651,7 @@ button:disabled:hover {
     bottom: 0;
     margin: auto;
     background: rgba(255, 255, 255, 0.8);
-    z-index: 1;
+    z-index: 3;
 }
 
 /* 发起借出弹窗 */
@@ -662,7 +699,7 @@ button:disabled:hover {
     color: #eee;
 }
 
-#lend-launch__hd button {
+#lend-launch-close {
     float: right;
     height: 20px;
     width: 20px;
@@ -674,7 +711,7 @@ button:disabled:hover {
     cursor: pointer;
 }
 
-#lend-launch__hd button:hover {
+#lend-launch-close:hover {
     color: #fff;
     text-shadow: 3px -2px 2px #000;
 }
@@ -863,6 +900,7 @@ div.my-type--act {
     position: relative;
     width: 20%;
     text-align: center;
+    cursor: pointer;
 }
 
 .my-item__pic img{
@@ -903,7 +941,8 @@ div.my-type--act {
     margin-top: 5px;
     padding: 5px 10px;
     border: 1.5px solid #555;
-    word-break: break-word;
+    word-wrap: break-word;
+    word-break: break-all;
     overflow: auto;
 }
 
@@ -1062,8 +1101,21 @@ div.my-type--act {
     position: fixed;
     width: 100%;
     height: 100%;
-    background: #000;
-    opacity: .5;
+    background: rgba(0, 0, 0, .5);
+    z-index: 2;
+}
+
+.full-screen-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+.full-screen-container img {
+    max-width: 80%;
+    max-width: 80%;
 }
 
 /* 通用提示（顶层）@弃用 */
@@ -1095,6 +1147,10 @@ div.my-type--act {
 .swal-button--cancel:hover {
     color: #333;
     background: #d5d5d5;
+}
+
+.swal-button--danger:hover {
+    background: #df271e;
 }
 
 /* 抄的 */
