@@ -502,6 +502,9 @@ button:disabled:hover {
     /* z-index: 1; */
     background: #ddecec;
 }
+div.goods-list__item {
+    animation-duration: .5s;
+}
 
 .goods-item__hd {
     display: flex;
@@ -524,6 +527,7 @@ button:disabled:hover {
     float: left;
     width: 40%;
     height: 100%;
+    overflow: hidden;
 }
 
 .goods-img {
@@ -882,6 +886,8 @@ div.my-type--act {
     padding: 2% 10%;
     background: #f5f5f5;
     overflow-y: auto;
+    /* 动画需要 */
+    overflow-x: hidden;
 }
 
 .my-lend__item {
@@ -949,7 +955,7 @@ div.my-type--act {
     padding: 5px 10px;
     border: 1.5px solid #555;
     word-wrap: break-word;
-    word-break: break-all;
+    /* word-break: break-all; */
     overflow: auto;
 }
 
@@ -1089,14 +1095,13 @@ div.my-type--act {
     color: #2d2d2d;
     border-radius: 5px;
 }
+li.inform-list__item,
+li.audit-list__item {
+    animation-duration: .5s;
+}
 /* .inform-list__item:nth-child(odd) {
     background: #bbb;
 } */
-.inform-list__item:hover {
-    color: #000;
-    opacity: .8;
-    box-shadow: 2px 2px 5px #bbb;
-}
 
 .inform-list__item--new {
     /* TODO: */

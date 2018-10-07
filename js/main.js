@@ -5,14 +5,14 @@ const apiBase = "https://api.hs.rtxux.xyz";
 let AuthorizationText = () => {
     if (location.host == "127.0.0.1:5500") {
         //LiveServer调试 @test13
-        return "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNTM2MzQwNjI4LCJleHAiOjE1MzY5NDU0Mjh9.nWkkqF0vDoKxAgHXRkpBfWiLazrwExkkm4SSGQgyfRvOk7k04I8SEB4pPrLsiaTOckNt4v_LlaH7iiPzOxWoiw";
+        return "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNTM4ODgzOTQwLCJleHAiOjE1Mzk0ODg3NDB9.m6JPaI_iR9ZnDDnqtNDtR9Pw_3f67eLqU9UiEPISMHrMFZW3fiIpxqMqeBugvO6Ogx6viSqxp95HsCEHu0eLTA";
     }
     return getCookie("tokenType") + " " + getCookie("accessToken");
 };
 
 //自动加载主页
 window.onload = () => {
-    $('#share-column-all').click();
+    $('#share-column-all').click();    
 }
 
 $(function () {
@@ -21,7 +21,8 @@ $(function () {
      */
     if (isMobile ()) {
         $('#body-cover').show().css('opacity', 0.7);
-        alert('移动端请暂时使用app');
+        alert('移动端请暂时使用app，即将跳转下载页面');
+        location.href = "https://copy.im/a/xjfx34";
         // document.execCommand("stop");
         // window.stop();
 
@@ -158,7 +159,8 @@ $(function () {
         $('.main-head-qrcode__pic').stop(true);
         $('.main-head-qrcode__pic').slideUp('fast');
     }).click(function () {
-        window.open("https://xilym.tk/storage/apk/happySharing.apk")
+        // window.open("https://xilym.tk/storage/apk/happySharing.apk");
+        window.open("https://copy.im/a/xjfx34");
     });
 
 
@@ -390,7 +392,10 @@ function FillMain (data)
         $newItem.find('.goods-id__txt').text(id);
         $newItem.find('.goods-date__txt').text('17-12-22');
         if (imgId.length) {
-            $newItem.find('.goods-img').attr('src', apiBase + '/image/' + imgId[0]); //@temp
+            $newItem.find('.goods-img').attr('src', apiBase + '/image/' + imgId[0]);
+            for (let i = 1; i < imgId.length; ++i) {
+                $newItem.find('.goods-img').last().after($('<img alt="物品图片" class="goods-img">').attr('src', apiBase + '/image/' + imgId[i]));
+            }
         }
         $newItem.find('.goods-img-intro').text(desc);
         $newItem.find('.goods-name__txt').text(name);
@@ -424,7 +429,9 @@ function FillMain (data)
     //点击租用按钮
     $('.goods-enter').click(function () {
         LaunchBorrow (this);
-    })
+    });
+    //加载后动画
+    $('.goods-list__item').addClass('animated zoomIn');
 }
 
 function LoadMain ()
@@ -465,17 +472,7 @@ function LoadMain ()
 function LaunchBorrow (_this)
 {
     swal('确认申请？', '', 'info', {
-        buttons: ['先等等', '就是它'],
-        // buttons: {
-        //     cancel: {
-        //         text: '先等等',
-        //         closeModal: false
-        //     },
-        //     confirm: {
-        //         text: '就是它',
-        //         closeModal: false
-        //     }
-        // }
+        buttons: ['先等等', '就是它']
     }).then((value) => {
         if (value) {
             const id = _this.parentNode.parentNode.parentNode.dataset.id;
@@ -619,6 +616,11 @@ function FillMyLend (data)
             });
         });
     }
+    //加载后动画
+        $('.my-lend__item').addClass('animated flipInX')
+            .on('animationend', function () {
+                $(this).removeClass('animated flipInX');
+            });
 }
 
 function LoadMyLend ()
@@ -797,7 +799,6 @@ function FillMyBorrow (data)
             $('#body-cover').append($newImgContainer);
         });
     }
-
     //加载完成后，点击地址
     //TODO:闭包？
     $('.my-borrow-item-position__txt').click(function () {
@@ -806,6 +807,11 @@ function FillMyBorrow (data)
         let lat = this.parentNode.parentNode.dataset.lat;
         ShowMyBorrowMap(lon, lat, idx);
     });
+    //加载后动画
+    $('.my-borrow__item').addClass('animated flipInX')
+        .on('animationend', function () {
+            $(this).removeClass('animated flipInX');
+        });
 }
 
 function LoadMyBorrow ()
@@ -847,6 +853,7 @@ function FillInform (data)
         </li>`
         $('.inform-list').append(listHTML);
         const $inform = $('.inform-list__item').last();
+        $inform.hide();
         if ($inform.text().indexOf('请求已被同意') != -1) {
             $inform.css('background', '#aedbae');
         }
@@ -858,11 +865,22 @@ function FillInform (data)
         }
 
         //限制长度
-        if (i < data.length - 20) {
-            $('.inform-list').append('<span>仅加载最新20条消息！</span>')
+        if (i < data.length - 20)
             break;
-        }
     }
+    //完成后动画
+    // $('.inform-list__item').addClass('animated zoomIn')
+    // .on('animationend', function () {
+    //     $(this).removeClass('animated zoomIn');
+    // });
+    let animateCount = 0;
+    const cycle = setInterval(() => {
+        if (animateCount >= 10) {
+            clearInterval(cycle);
+            $('.inform-list').append('<span>仅显示最新20条消息！</span>');
+        }
+        $('.inform-list__item').eq(animateCount++).show().addClass('animated zoomIn');
+    }, 100);
 }
 
 function LoadInform ()
@@ -919,6 +937,7 @@ function FillAudit (data)
                 <button class="audit-inform-btn audit-btn__returned">已归还</button>`;
         }
         $('.audit-list').append(listHTML);
+        $('.audit-list__item').css('visibility', 'hidden');
     }
     //审核按钮
     $('.audit-btn__agree').click(function () {
@@ -933,6 +952,13 @@ function FillAudit (data)
         const id = this.parentNode.dataset.id;
         SolveApply (id, 2);
     })
+    //加载后动画
+    let animateCount = 0;
+    const cycle = setInterval(() => {
+        if (animateCount == $('.audit-list__item').length) 
+            clearInterval(cycle);
+        $('.audit-list__item').eq(animateCount++).css('visibility', 'initial').addClass('animated zoomIn');
+    }, 100);
 }
 
 function LoadAudit ()
