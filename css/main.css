@@ -561,6 +561,10 @@ div.goods-list__item {
     word-break: break-all;
 }
 
+.goods-like {
+    
+}
+
 .goods-item__info {
     float: right;
     position: relative;
@@ -669,7 +673,9 @@ div.goods-list__item {
 .alert-box-lend {
     width: 800px;
     height: 550px;
-    border-radius: 15px;
+    border-radius: 10px;
+    transform: scale(0);
+    transition: transform .3s;
 }
 
 .alert-box-lend label {
@@ -702,8 +708,8 @@ div.goods-list__item {
 #lend-launch__hd {
     width: 100%;
     height: 80px;
-    background: #888;
-    box-shadow: 0 5px 15px 3px rgba(0,0,0,0.5);
+    background: #2354bc;
+    box-shadow: 0 5px 15px 3px #2354bc6e;
     font-size: 40px;
     line-height: 80px;
     text-align: center;

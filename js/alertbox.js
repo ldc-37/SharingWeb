@@ -11,6 +11,10 @@ $('#share-require__btn').click(function () {
         return;
     }
     $('.alert-box-lend').eq(0).show();
+    //transition disappear if no setTimeout
+    setTimeout(() => {
+        $('.alert-box-lend').eq(0).css('transform', 'scale(1)');
+    }, 0);
     $('#body-cover').one('click', function () {
         $('#lend-launch-close').click();
     }).show();
@@ -40,7 +44,10 @@ $('#share-require__btn').click(function () {
         $('.l-content, .l-sidebar').css('filter', '')
         $('#body-cover').hide();
         $('#lend-map-position-txt').css('color', '');    
-        $('.alert-box-lend').eq(0).hide();
+        $('.alert-box-lend').eq(0).css('transform', 'scale(0)');
+        setTimeout(() => {
+            $('.alert-box-lend').eq(0).hide();       
+        }, 500);
         map.destroy();
     })
 })

@@ -1,7 +1,7 @@
 'use strict'
 const apiBase = "https://api.hs.rtxux.xyz";
 
-//惰性计算authorization
+//惰性求值
 let AuthorizationText = () => {
     if (location.host == "127.0.0.1:5500") {
         //LiveServer调试 @test13
@@ -23,9 +23,6 @@ $(function () {
         $('#body-cover').show().css('opacity', 0.7);
         alert('移动端请暂时使用app，即将跳转下载页面');
         location.href = "https://copy.im/a/xjfx34";
-        // document.execCommand("stop");
-        // window.stop();
-
     }
     const searchWords = GetQueryVariable ("s");
     if (searchWords) {
@@ -323,7 +320,7 @@ function FillMain (data)
             <span class="goods-date__txt"></span>
         </span>
     </div>
-    <i class="goods-like"></i>
+    <i class="goods-like fa fa-heart"></i>
     <div class="goods-item__bd">
         <div class="goods-item__pic">
             <img src="./images/no-picture.jpg" alt="物品图片" class="goods-img">
