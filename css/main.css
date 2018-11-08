@@ -403,42 +403,57 @@ button:disabled:hover {
 
 /* 主内容顶部 */
 .main__hd {
-    display: flex;
+    position: relative;
     padding: 5px 0 5px 25px;
     height: 80px;
     background-color: #A9C9FF;
     background-image: linear-gradient(90deg, #A9C9FF 0%, #FFBBEC 100%);
 }
 
-.main-head-search {
-    width: 55%;
-    height: 50%;
+.main-head-hot {
+    height: 24px;
 }
 
-.main-head-hot span:hover{
+.main-head-hot__words:hover{
     text-decoration: underline;
     cursor: pointer;
 }
 
-#searchBox {
-    width: 83%;
-    height: 100%;
-    border: transparent;
-    border-radius: 0 3px 3px 0;
-    background: rgba(255, 255, 255, 0.7);
+.main-head-search {
+    display: inline-block;
+    position: relative;
+    width: 45%;
+    max-width: 600px;
+    height: 50%;
     transition: .2s;
 }
+
+#searchBox {
+    width: 100%;
+    height: 100%;
+    border: none;
+    border-radius: 0 3px 3px 0;
+    background: rgba(255, 255, 255, 0.7);
+}
 #searchBox:focus {
-    width: 88%;
     background: rgba(255, 255, 255, 0.9);
 }
 
+#clearSearch {
+    position: absolute;
+    right: 75px;
+    top: 80%;
+    font-size: 20px;
+    color: gray;
+    cursor: pointer;
+}
+
 #mainSearchBtn {
-    position: relative;
-    top: 1px;
-    right: 10%;
-    width: 10%;
-    height: calc(100% + 1px);
+    position: absolute;
+    top: 24px;
+    right: 0;
+    width: 70px;
+    height: 100%;
     border: none;
     border-radius: 0 3px 3px 0;
     background: #0784ce;
@@ -455,7 +470,10 @@ button:disabled:hover {
 }
 
 .main-head-qrcode {
-    line-height: 80px;
+    display: inline-block;
+    position: absolute;
+    right: 390px;
+    line-height: 75px;
     cursor: pointer;
     font-size: 22px;
 }
@@ -471,6 +489,7 @@ button:disabled:hover {
 }
 
 .main-head-sort {
+    display: inline-block;
     position: absolute;
     right: 30px;
     line-height: 75px;
@@ -489,6 +508,7 @@ button:disabled:hover {
 /* 单个物品信息 */
 .goods-list__item {
     display: inline-block;
+    position: relative;
     width: 46%;
     height: 200px;
     background: #fff;
@@ -562,7 +582,21 @@ div.goods-list__item {
 }
 
 .goods-like {
-    
+    position: absolute;
+    right: 3px;
+    top: 33px;
+    font-size: 25px;
+    color: #aaa;
+    transition: .2s;
+    cursor: pointer;
+    z-index: 1;
+}
+.goods-like:hover {
+    transform: scale(1.1);
+}
+
+.goods-like--marked {
+    color: red;
 }
 
 .goods-item__info {
@@ -1136,7 +1170,7 @@ li.audit-list__item {
     max-width: 80%;
 }
 
-/* 通用提示（顶层）@弃用 */
+/* 通用提示（顶层）@弃用，改用swal */
 /* .prompt-box {
     position: fixed;
     width: 200px;
@@ -1173,9 +1207,7 @@ li.audit-list__item {
 
 /* 抄的 */
 .text-effect-flame{
-    display: block;
     color: #fff;
     text-align: center;
     text-shadow: 0px -1px 4px white, 0px -2px 10px yellow, 0px -10px 20px #ff8000, 0px -18px 40px red;
-    position: relative;
 }

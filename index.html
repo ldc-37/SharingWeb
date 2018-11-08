@@ -24,8 +24,8 @@
         <div class="l-sidebar--nor">
             <div class="share-user">
                 <div class="share-sidebar-top-btn">
-                    <img src="./images/icon-logout.png" alt="退出登录" id="share-btn-logout">
-                    <img src="./images/icon-setting.png" alt="更改设置" id="share-btn-settings">
+                    <img src="./images/icon-logout.png" alt="退出登录" title="退出登录" id="share-btn-logout">
+                    <img src="./images/icon-setting.png" alt="设置" title="设置" id="share-btn-settings">
                 </div>
                 <div class="share-user-info">
                     <img src="./images/head.png" alt="头像" id="share-user-info__head">
@@ -40,9 +40,8 @@
                     <li class="share-column-list__item share-column-list__item--act" id="share-column-all">查看全部</li>
                     <li class="share-column-list__item" id="share-column-my-lend">我的借出</li>
                     <li class="share-column-list__item" id="share-column-my-borrow">我的借入</li>
-                    <!-- <li class="share-column-list__item" id="share-column-my-like">我的收藏</li> -->
                     <li class="share-column-list__item" id="share-column-audit-inform">审核/通知</li>
-                    <!-- 交流 -->
+                    <li class="share-column-list__item" id="share-column-chat">消息</li>
                 </ul>
             </div>
         </div>
@@ -136,11 +135,14 @@
                         <span class="main-head-hot__words">热水壶</span>
                         <span class="main-head-hot__words">雨伞</span>
                     </div>
-                    <!-- TODO:清空按钮 -->
-                    <input type="text" name="searchBox" id="searchBox" placeholder="请输入物品名称，或输入ID/UID:{id}查看指定物品或用户[算了，有心情在写这个]">
+                    <input type="text" name="searchBox" id="searchBox" 
+                        onfocus="$('.main-head-search').css('width', '48%')" 
+                        onblur="$('.main-head-search').css('width', '45%')" 
+                        placeholder="请输入物品名称，或输入ID/UID:{id}查看指定物品或用户">
                     <button id="mainSearchBtn">搜索</button>
+                    <a onclick="$('#searchBox').val('');" id="clearSearch">×</a>
                 </div>
-                <div class="text-effect-flame main-head-qrcode">
+                <div class="main-head-qrcode text-effect-flame">
                     &nbsp;下载APP
                     <div class="main-head-qrcode__pic">
                         <img src="./images/appQR.png" id="qrcodeAPPDownload">
@@ -180,6 +182,9 @@
             <br>
             <h4 class="audit-inform-list__title">通知列表</h4>
             <ul class="inform-list">加载中...</ul>
+        </div>
+        <div class="l-chat" style="display: none;">
+        
         </div>
         <div class="l-my-like"></div>
     </div>
@@ -237,7 +242,6 @@
     </div>
     <div id="body-cover"></div>
     <!-- <div class="alert-box prompt-box"></div> -->
-    <!-- <iframe src="https://socket-io-chat.now.sh/" width="30%" height="360px" scrolling="no" class="iframe-class" frameborder="0" style="position: fixed;right: 0;bottom: 0;"></iframe> -->
     <script src="./js/utils.js"></script>
     <script src="./js/main.js"></script>
     <script src="./js/login.js"></script>

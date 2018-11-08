@@ -254,6 +254,7 @@ function Login (username, password)
             setCookie("tokenType", res.data.tokenType);
             HideLoginSidebar ();
             $('#share-user-info__name').text(username)
+                .attr('title', '查看/修改用户信息')
                 .unbind('click')
                 .click(function () {
                     $('.l-sidebar--info').fadeIn(500);

@@ -5,7 +5,8 @@ const apiBase = "https://api.hs.rtxux.xyz";
 let AuthorizationText = () => {
     if (location.host == "127.0.0.1:5500") {
         //LiveServer调试 @test13
-        return "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNTM4ODgzOTQwLCJleHAiOjE1Mzk0ODg3NDB9.m6JPaI_iR9ZnDDnqtNDtR9Pw_3f67eLqU9UiEPISMHrMFZW3fiIpxqMqeBugvO6Ogx6viSqxp95HsCEHu0eLTA";
+        return "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNTQxNTc5MDUwLCJleHAiOjE1NDIxODM4NTB9.FVp2AlMjrBT1-cTdEfXVjMdl_XkXVSjDHL5eVpQmMEHIWIuIRQsGLFgB-UXEFT1HgqCOl3vooUbiT3BrCsqvfA";
+        ;
     }
     return getCookie("tokenType") + " " + getCookie("accessToken");
 };
@@ -90,6 +91,11 @@ $(function () {
         $('.l-audit-inform').show();
         LoadAudit ();
         LoadInform ();
+    });
+    $('#share-column-chat').click(function () { 
+        $('.l-content>div').hide();
+        $('.l-chat').show();
+        
     });
 
     /**
@@ -320,7 +326,7 @@ function FillMain (data)
             <span class="goods-date__txt"></span>
         </span>
     </div>
-    <i class="goods-like fa fa-heart"></i>
+    <i class="goods-like fa fa-heart" style="position:absolute" title="收藏"></i>
     <div class="goods-item__bd">
         <div class="goods-item__pic">
             <img src="./images/no-picture.jpg" alt="物品图片" class="goods-img">
@@ -423,12 +429,19 @@ function FillMain (data)
         $newImgContainer.append($newImg);
         $('#body-cover').append($newImgContainer);
     });
+    //点击收藏
+    $('.goods-like').click(function () {
+        ToggleLike (this);
+    })
     //点击租用按钮
     $('.goods-enter').click(function () {
         LaunchBorrow (this);
     });
     //加载后动画
-    $('.goods-list__item').addClass('animated zoomIn');
+    $('.goods-list__item').addClass('animated zoomIn')
+    .on('animationend', function () {
+        $(this).removeClass('animated zoomIn');
+    });
 }
 
 function LoadMain ()
@@ -876,7 +889,11 @@ function FillInform (data)
             clearInterval(cycle);
             $('.inform-list').append('<span>仅显示最新20条消息！</span>');
         }
-        $('.inform-list__item').eq(animateCount++).show().addClass('animated zoomIn');
+        $('.inform-list__item').eq(animateCount++).show()
+        .addClass('animated zoomIn')
+        .on('animationend', function () {
+            $(this).removeClass('animated zoomIn');
+        });
     }, 100);
 }
 
@@ -954,7 +971,12 @@ function FillAudit (data)
     const cycle = setInterval(() => {
         if (animateCount == $('.audit-list__item').length) 
             clearInterval(cycle);
-        $('.audit-list__item').eq(animateCount++).css('visibility', 'initial').addClass('animated zoomIn');
+        $('.audit-list__item').eq(animateCount++)
+        .css('visibility', 'initial')
+        .addClass('animated zoomIn')
+        .on('animationend', function () {
+            $(this).removeClass('animated zoomIn');
+        });
     }, 100);
 }
 
@@ -1082,4 +1104,19 @@ function PromptLogin ()
             $('#share-user-info__name').click();
         }
     });
+}
+
+function ToggleLike (el)
+{
+    const id = el.parentNode.dataset.id;
+    console.log(id);
+    if ($(el).hasClass('goods-like--marked')) {
+        $(el).removeClass('goods-like--marked');
+    }
+    else {
+        $(el).addClass('goods-like--marked animated bounceIn');
+        setTimeout(() => {
+            $(el).removeClass('animated bounceIn');
+        }, 1000);
+    }
 }
