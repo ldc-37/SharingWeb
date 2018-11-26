@@ -130,8 +130,7 @@ function FormatTime(timeStamp = undefined, auto = 0) {
     else {
         now = new Date();
     }
-    // let y = now.getFullYear(),
-    let y = '',
+    let y = now.getFullYear(),
         m = ("0" + (now.getMonth() + 1)).slice(-2),
         d = ("0" + now.getDate()).slice(-2);
     function SameDay(compDate) {
@@ -139,6 +138,6 @@ function FormatTime(timeStamp = undefined, auto = 0) {
         return today.toDateString() == compDate.toDateString();
     }
     return !auto || !SameDay(now) 
-        ? y + "-" + m + "-" + d + " " + now.toTimeString().substr(0, 8)
+        ? m + "-" + d + " " + now.toTimeString().substr(0, 8)
         : now.toTimeString().substr(0, 8);
 }

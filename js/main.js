@@ -13,7 +13,7 @@ let AuthorizationText = () => {
 
 //自动加载主页
 window.onload = () => {
-    $('#share-column-chat').click();    
+    $('#share-column-all').click();    
 }
 
 $(function () {
@@ -93,11 +93,72 @@ $(function () {
         LoadAudit ();
         LoadInform ();
     });
-    $('#share-column-chat').click(function () { 
-        $('.l-content>div').hide();
-        $('.l-chat').show();
-        
-    });
+
+    //点击聊天按钮
+    const chatHTML = `
+        <div class="chat-contacts"></div>
+        <div class="chat-main">
+            <div class="chat-main-title">
+                <p class="chatter-name"></p>
+            </div>
+            <div class="chat-history">
+                <!-- TODO:<div class="history-tips"></div> -->
+            </div>
+            <div class="chat-toolbar">
+                <button class="chat-btn__mid" id="chatEmoji" title="添加表情">
+                    <i class="fa fa-smile-o" aria-hidden="true"></i>
+                </button>
+                <button class="chat-btn__mid" id="chatImage" title="发送图片">
+                    <i class="fa fa-picture-o" aria-hidden="true"></i>
+                </button>
+                <button class="chat-btn__mid" id="chatEraseRecord" title="清空历史记录">
+                    <i class="fa fa-times" aria-hidden="true"></i>
+                </button>
+            </div>
+            <div class="chat-message">
+                <textarea id="chatMessage" spellcheck="false" maxlength="165"></textarea>
+            </div>
+            <div class="chat-msg-ctrl">
+                <button class="chat-btn__bottom" id="chatClear">清除</button>
+                <button class="chat-btn__bottom" id="chatSend">发送</button>
+            </div>
+        </div>
+        <div class="chat-assist">
+            <div class="chat-detail">
+                <div class="chat-detail__title">出借人信息</div>
+                <div class="chat-detail__cont">
+
+                </div>
+            </div>
+            <div class="chat-renter-goods">
+                <div class="chat-renter-goods__title">出借人物品</div>
+                <div class="chat-renter-goods__cont">
+
+                </div>
+            </div>
+        </div>`
+    $('.button-chat').click(function () {
+        $(this).addClass('animated bounceOutRight').on('animationend', function () {
+            $(this).hide().removeClass('animated bounceOutRight');
+        });
+        layer.open({
+            type: 1,
+            skin: 'layui-layer-rim',
+            area: ['80%', '90%'],
+            title: '聊天',
+            resize: false,
+            shadeClose: true,
+            content: chatHTML,
+            success: function () {
+                ChatInit();
+            },
+            cancel: function () {
+                $('.button-chat').show().addClass('animated bounceInRight').on('animationend', function () {
+                    $(this).removeClass('animated bounceInRight').show();
+                });
+            }
+          });
+    })
 
     /**
      * Content-main
