@@ -18,7 +18,7 @@ $('#share-require__btn').click(function () {
     $('#body-cover').one('click', function () {
         $('#lend-launch-close').click();
     }).show();
-    $('.l-content, .l-sidebar').css('filter', 'blur(5px)');
+    $('.l-content, .l-sidebar').css('filter', 'blur(3px)');
     var map = new AMap.Map('lend-map',{
         zoom:16,
     });
@@ -47,8 +47,8 @@ $('#share-require__btn').click(function () {
         $('.alert-box-lend').eq(0).css('transform', 'scale(0)');
         setTimeout(() => {
             $('.alert-box-lend').eq(0).hide();       
-        }, 500);
-        map.destroy();
+            map.destroy();
+        }, 1000);
     })
 })
 
@@ -218,9 +218,11 @@ $('#lend-submit').click(function () {
                     contentType: "application/json",
                     data: lendItemJson,
                     success: function (res) {
+                        //TODO: no /publish?!
                         //上传图片
                         uploadItemId = res.id;
                         imgDataObj.processQueue();
+                        $('#lend-submit').text('提交');
                     },
                     error: function (xhr) {
                         swal("提交失败", xhr.status + "错误", "error");

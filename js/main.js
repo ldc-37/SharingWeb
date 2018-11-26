@@ -5,7 +5,7 @@ const apiBase = "https://api.hs.rtxux.xyz";
 let AuthorizationText = () => {
     if (location.host == "127.0.0.1:5500") {
         //LiveServer调试 @test13
-        return "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI5IiwiaWF0IjoxNTQxNTc5MDUwLCJleHAiOjE1NDIxODM4NTB9.FVp2AlMjrBT1-cTdEfXVjMdl_XkXVSjDHL5eVpQmMEHIWIuIRQsGLFgB-UXEFT1HgqCOl3vooUbiT3BrCsqvfA";
+        return "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNTQyOTc1OTg2LCJleHAiOjE1NDM1ODA3ODZ9.wBQXYHHfnd0-lGvzUB754kD4IjA5c9nO7wNKqFWCRKTbiVbwNXhHMd8JdFHqLgwjq5tIhZXMrQPdfsgFVx8-EA";
         ;
     }
     return getCookie("tokenType") + " " + getCookie("accessToken");
@@ -13,7 +13,7 @@ let AuthorizationText = () => {
 
 //自动加载主页
 window.onload = () => {
-    $('#share-column-all').click();    
+    $('#share-column-chat').click();    
 }
 
 $(function () {
@@ -58,8 +58,9 @@ $(function () {
                         LoadUserInfoEdit ();
                     });
             },
-            error: function () {
-                return;
+            error: function (xhr) {
+                setCookie("accessToken", "");
+                setCookie("tokenType", "");
             }
         });
     }
@@ -442,6 +443,23 @@ function FillMain (data)
     .on('animationend', function () {
         $(this).removeClass('animated zoomIn');
     });
+    //加载收藏状态
+    $.ajax({
+        type: 'GET',
+        url: apiBase + '/user/favorite/',
+        headers: {
+            Authorization: AuthorizationText ()
+        },
+        success: function (res) {
+            for (let i in res) {
+                $('.goods-list__item[data-id=' + res[i].id + ']').find('.goods-like')
+                    .addClass('goods-like--marked');
+            }
+        },
+        error: function (xhr) {
+            swal('读取收藏列表失败', xhr.status + '错误', 'error');
+        }
+    });
 }
 
 function LoadMain ()
@@ -464,14 +482,12 @@ function LoadMain ()
             },
             error: function (xhr) {
                 // alert('加载主页失败：' + xhr.status + '错误');
-                endFlag += 1;
+                // endFlag += 1;
+                clearInterval(interval);
+                FillMain (data);
                 return;
             }
         });
-        if (endFlag == 2) {
-            clearInterval(interval);
-            FillMain (data);
-        }
         if (i == 100) {
             clearInterval(interval);
             return;
@@ -851,10 +867,14 @@ function FillInform (data)
     $('.inform-list').empty();
     for (let i = data.length - 1; i >= 0; --i) {
         let sender = data[i].from;
+        if (sender != 0) {
+            //非系统通知
+            continue;
+        }
         let timestamp = data[i].timestamp;
         let msg = data[i].message;
         //此处timestamp单位是秒，js中传入date对象的是毫秒
-        let timeStr = GetTime (timestamp * 1000);
+        let timeStr = FormatTime (timestamp * 1000);
         let listHTML = 
         `<li class="inform-list__item">
             ${timeStr} 
@@ -929,7 +949,7 @@ function FillAudit (data)
         let listHTML, borrowerName;
         const id = data[i].id,
             itemName = data[i].name,
-            duration = data[i].duration,
+            duration = data[i].duration / 86400,
             item = GetItemInfo (data[i].id);
             status = data[i].status;
         try {
@@ -1108,15 +1128,32 @@ function PromptLogin ()
 
 function ToggleLike (el)
 {
+    const liked = $(el).hasClass('goods-like--marked');
     const id = el.parentNode.dataset.id;
-    console.log(id);
-    if ($(el).hasClass('goods-like--marked')) {
-        $(el).removeClass('goods-like--marked');
-    }
-    else {
-        $(el).addClass('goods-like--marked animated bounceIn');
-        setTimeout(() => {
-            $(el).removeClass('animated bounceIn');
-        }, 1000);
-    }
+    $.ajax({
+        type: liked ? 'DELETE' : 'POST',
+        // type: 'DELETE',
+        url: apiBase + '/user/favorite/' + id,
+        headers: {
+            Authorization: AuthorizationText ()
+        },
+        success: function (res) {
+            if (liked) {
+                $(el).removeClass('goods-like--marked');
+            }
+            else {
+                $(el).addClass('goods-like--marked animated bounceIn');
+                setTimeout(() => {
+                    $(el).removeClass('animated bounceIn');
+                }, 1000);
+            }
+        },
+        error: function (xhr) {
+            swal(xhr.status + '错误', '', 'error');
+        }
+    });
 }
+
+
+
+

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-cn">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,6 +11,8 @@
     <script src="./js/dropzone.min.js"></script>
     <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
     <script src="https://use.fontawesome.com/8fa88e0f89.js"></script>
+    <script src="https://cdn.jsdelivr.net/sockjs/1.1.2/sockjs.min.js"></script>
+    <script src="https://cdn.bootcss.com/stomp.js/2.3.3/stomp.js"></script>
     <link rel="stylesheet" href="./css/reset.css">
     <link rel="stylesheet" href="./css/scrollbar.css">
     <link rel="stylesheet" href="./css/main.css">
@@ -184,7 +186,49 @@
             <ul class="inform-list">加载中...</ul>
         </div>
         <div class="l-chat" style="display: none;">
-        
+            <div class="chat-contacts"></div>
+            <div class="chat-main">
+                <div class="chat-main-title">
+                    <p class="chatter-name"></p>
+                </div>
+                <div class="chat-history">
+                    <!-- TODO:<div class="history-tips"></div> -->
+                </div>
+                <div class="chat-toolbar">
+                    <button class="chat-btn__mid" id="chatEmoji" title="添加表情">
+                        <i class="fa fa-smile-o" aria-hidden="true"></i>
+                    </button>
+                    <button class="chat-btn__mid" id="chatImage" title="发送图片">
+                        <i class="fa fa-picture-o" aria-hidden="true"></i>
+                    </button>
+                    <button class="chat-btn__mid" id="chatEraseRecord" title="清空历史记录">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </button>
+                </div>
+                <div class="chat-message">
+                    <textarea id="chatMessage" spellcheck="false" maxlength="165"></textarea>
+                </div>
+                <div class="chat-msg-ctrl">
+                    <button class="chat-btn__bottom" id="chatClear">清除</button>
+                    <button class="chat-btn__bottom" id="chatSend">发送</button>
+                </div>
+            </div>
+            <div class="chat-assist">
+                <div class="chat-detail">
+                    <div class="chat-detail__title">出借人信息</div>
+                    <div class="chat-detail__cont">
+
+                    </div>
+                </div>
+                <div class="chat-renter-goods">
+                    <div class="chat-renter-goods__title">出借人物品</div>
+                    <div class="chat-renter-goods__cont">
+
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="chat-renter-goods">
+            </div> -->
         </div>
         <div class="l-my-like"></div>
     </div>
@@ -245,6 +289,7 @@
     <script src="./js/utils.js"></script>
     <script src="./js/main.js"></script>
     <script src="./js/login.js"></script>
+    <script src="./js/chat.js"></script>
     <script src="./js/alertbox.js"></script>
 </body>
 </html>

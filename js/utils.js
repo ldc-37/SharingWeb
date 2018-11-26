@@ -121,17 +121,24 @@ function ParseBitSet (bitSet, bit)
 }
 
 //获取timestamp对应时间，格式yyyy-mm-dd hh:mm:ss
-//https://www.cnblogs.com/lmyt/p/6013097.html
-function GetTime(timeStamp = undefined) {
-    var now;
+//如果auto == 1，则当日的时间隐藏日期，其他时间完整显示
+function FormatTime(timeStamp = undefined, auto = 0) {
+    let now;
     if (timeStamp) {
         now = new Date(timeStamp);
     }
     else {
         now = new Date();
     }
-    var y = now.getFullYear(),
+    // let y = now.getFullYear(),
+    let y = '',
         m = ("0" + (now.getMonth() + 1)).slice(-2),
         d = ("0" + now.getDate()).slice(-2);
-    return y + "-" + m + "-" + d + " " + now.toTimeString().substr(0, 8);
+    function SameDay(compDate) {
+        let today = new Date();
+        return today.toDateString() == compDate.toDateString();
+    }
+    return !auto || !SameDay(now) 
+        ? y + "-" + m + "-" + d + " " + now.toTimeString().substr(0, 8)
+        : now.toTimeString().substr(0, 8);
 }

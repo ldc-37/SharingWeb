@@ -217,8 +217,9 @@ function Register (username, password, email)
         success: function (res) {
             $('#reg-btn').text('注册');
             if (res.code == 0) {
-                swal("注册成功", `账号:${username}\n密码:${password}\n请牢记`, "success", {});
-                Login (username, password);
+                swal("注册成功", `账号:${username}\n密码:${password}\n请牢记`, "success").then(() => {
+                    Login (username, password);
+                })
             }
             else {
                 $('#reg-btn').text('注册');
