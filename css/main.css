@@ -66,12 +66,12 @@ button:disabled:hover {
 }
 
 #share-btn-logout,
-#share-btn-settings {
+#button-setting {
     opacity: .8;
 }
 
 #share-btn-logout:hover,
-#share-btn-settings:hover {
+#button-setting:hover {
     opacity: 1;
 }
 
@@ -1194,18 +1194,18 @@ li.audit-list__item {
     display: inline-block;
     width: 20%;
     height: 99%;
-    background: #bbb;
+    background: #ddd;
 }
 
 .chat-contacts__item {
     height: 80px;
     padding-top: 10px;
-    background: #ccc;
-    border-bottom: 1px solid #000;
+    background: #eee;
     cursor: pointer;
 }
+.chat-contacts__item--focus,
 .chat-contacts__item:hover {
-    background: #ddd;
+    background: #cdcdcd;
 }
 .chat-contacts__item:hover .chat-contacts-head {
     transform: scale(.9);

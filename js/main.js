@@ -1,6 +1,10 @@
 'use strict'
 const apiBase = "https://api.hs.rtxux.xyz";
 
+let settings= {};
+//新消息弹窗消失延迟时长(ms)
+settings.chatAlertDismiss = 10000;
+
 //惰性求值
 let AuthorizationText = () => {
     if (location.host == "127.0.0.1:5500") {
@@ -34,10 +38,25 @@ $(function () {
     /**
      * Sidebar控制
      */
-    //用户名
+    //点击用户名
     $('#share-user-info__name').click(function () {
         ShowLoginSidebar();
     });
+
+    // 点击设置
+    $('#button-setting').click(function () {
+        swal('设置', '新消息提醒自动关闭时间', {
+            content: {
+                element: "input",
+                attributes: {
+                  placeholder: settings.chatAlertDismiss / 1000,
+                  type: "text",
+                },
+            },
+        }).then((value) => {
+            if (value) settings.chatAlertDismiss = parseInt(value) * 1000;
+        })
+    })
     
     // 尝试Cookie中token登录
     if (AuthorizationText () != " ") {
@@ -152,7 +171,7 @@ $(function () {
             success: function () {
                 ChatInit();
             },
-            cancel: function () {
+            end: function () {
                 $('.button-chat').show().addClass('animated bounceInRight').on('animationend', function () {
                     $(this).removeClass('animated bounceInRight').show();
                 });
@@ -1131,8 +1150,8 @@ function SolveApply (id, op)
     }
 }
 
-
-function GetUserInfo (userId)
+//@param userID:没有该参数则为自己的信息
+function GetUserInfo (userId = '')
 {
     let data;
     $.ajax({
@@ -1192,8 +1211,8 @@ function ToggleLike (el)
     const liked = $(el).hasClass('goods-like--marked');
     const id = el.parentNode.dataset.id;
     $.ajax({
-        type: liked ? 'DELETE' : 'POST',
-        // type: 'DELETE',
+        // type: liked ? 'DELETE' : 'POST',
+        type: 'DELETE',
         url: apiBase + '/user/favorite/' + id,
         headers: {
             Authorization: AuthorizationText ()
