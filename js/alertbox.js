@@ -233,3 +233,189 @@ $('#lend-submit').click(function () {
         });
     }
 });
+
+
+function ItemAlertInit (itemId, uid)
+{
+    const itemInfo = GetItemInfo(itemId);
+
+    if (itemInfo.images.length) {
+        $('#popupItemImg').attr('src', apiBase + '/image/' + itemInfo.images[0]);
+        for (let i = 0; i < itemInfo.images.length; i++) {
+            const $li = $('<li>').addClass('pop-item-pics');
+            if (i == 0) $li.addClass('pop-item-pics--focus');
+            const $img = $('<img>').attr('src', apiBase + '/image/' + itemInfo.images[i]);
+            $li.append($img);
+            $li.click(function () {
+                $('.pop-item-pics--focus').removeClass('pop-item-pics--focus');
+                $(this).addClass('pop-item-pics--focus');
+                $('#popupItemImg').attr('src', $(this).children('img').attr('src'));
+            })
+            $('.pop-item-image-thumb').append($li);
+        }
+    }
+    else {
+        $('#popupItemImg').attr('src', '../images/no-picture.jpg');
+        const $li = $('<li>').addClass('pop-item-pics').addClass('pop-item-pics--focus');
+        const $img = $('<img>').attr('src', '../images/no-picture.jpg');
+        $li.append($img);
+        $('.pop-item-image-thumb').append($li);
+    }
+    $('#popupItemImg').click(function () {
+        // $('#body-cover').fadeIn(300);
+        // $('#body-cover').one('click', function () {
+        //     $('#body-cover').fadeOut(300).empty();
+        // });
+        // const $newImgContainer = $('<div class="full-screen-container"></div>')
+        // const $newImg = $('<img>');
+        // $newImg.attr('src', this.src);
+        // $newImgContainer.append($newImg);
+        // $('#body-cover').append($newImgContainer);
+    })
+    $('#panelName').text(itemInfo.name);
+    $('#panelDescription').text(itemInfo.description);
+    $('#panelPrice').text(itemInfo.price == 0 ? '免费' : '¥' + itemInfo.price);
+    $('#panelDuration').text(itemInfo.duration / 86400 + '天');
+    $('#panelOwner').text(GetUserInfo(itemInfo.owner_id).nickName);
+    $('#panelLocation').text(itemInfo.location.locationDescription);
+
+    //按钮
+    $('#panelChat').click(() => {
+        swal('', '打个招呼吧？例如：用途、自我介绍等等', {
+            content: {
+                element: "input",
+                attributes: {
+                  type: "text",
+                },
+            },
+        }).then((value) => {
+            if (value) {
+                if (client.connected) {
+                    let chatBody = {
+                        to: uid,
+                        message: value,
+                        associatedItemId: itemId
+                    };
+                    client.send('/chat/send', {}, JSON.stringify(chatBody));
+                    //@此处暂时不申请，只交流
+                    // LaunchBorrow (itemId);
+                }
+                else {
+                    swal('发送失败', '聊天连接异常断开，请刷新重试', 'error');
+                }
+            }
+        })
+    })
+    $('#panelApply').click(() => {
+        swal('确认直接申请？', '', 'info', {
+            buttons: ['先交流', '确认']
+        }).then((value) => {
+            if (value) LaunchBorrow (itemId);
+        })
+    });
+
+
+    //处理地图
+    const lon = itemInfo.location.longitude;
+    const lat = itemInfo.location.latitude;
+    var mapObj = new AMap.Map('panel-map-container', {
+        zoom: 16,
+        center: [lon, lat],
+        dragEnable: false,
+        scrollWheel: false
+    });
+    //地图坐标标记
+    var marker = new AMap.Marker({
+        position: [lon, lat]
+    })
+    mapObj.add(marker);
+    //地图控制条
+    mapObj.plugin(["AMap.ToolBar"],function(){
+        var tool = new AMap.ToolBar({
+            liteStyle: true,
+            // locate: true,
+        });
+        mapObj.addControl(tool);    
+    });
+    mapObj.on('complete', function () {
+        console.log('itemAlert地图加载完成');
+        $('.popup-shade').hide();
+    });
+
+    //加载评论
+    LoadRemark (itemId);
+}
+
+function LoadRemark (itemId)
+{
+    $.ajax({
+        type: 'GET',
+        url: apiBase + '/item/' + itemId + '/comment?page=0&num=100',
+        headers: {
+            Authorization: AuthorizationText ()
+        },
+        success: function (res) {
+            FillRemark (res);
+        },
+        error: function (xhr) {
+            swal('获取评论失败', xhr.status + '错误', 'error');
+        }
+    });
+
+    function FillRemark (data)
+    {
+        if (data.length == 0) {
+            $('.popup-item-panel__ft').append('<span class="remark-none">没有评论</span>')
+            return;
+        }
+        const myUid = GetUserInfo().user_id;
+        const remarkHTML = `
+        <div class="panel-remark__hd">
+            <img src="" alt="">
+            <span class="remark-username"></span>
+            <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+        </div>
+        <p class="remark-body"></p>
+        <div class="remark-op">
+            <span class="remark-op__item remark-report">举报</span>
+        </div>`;
+        for (let i = 0; i < data.length; i++) {
+            const $li = $('<li>').addClass('panel-remark');
+            $li.html(remarkHTML);
+            $li.data('rid', data[i].id);
+            $li.find('.remark-username').text(GetUserInfo(data[i].userId).nickName);
+            $li.find('.remark-body').text(data[i].content);
+            if (data[i].userId == myUid) {
+                $li.addClass('panel-remark--me');
+                $li.find('.remark-op').empty().html('<span class="remark-op__item remark-delete">删除</span>');
+            }
+            $('.popup-item-panel__ft').append($li);
+        }
+        if (data.length >= 2) {
+            $('.popup-item-panel__ft').append('<a class="remark-more">查看更多</a>');
+        }
+        $('.remark-delete').click(function () {
+            const rid = $(this.parentNode.parentNode).data('rid');
+            DeleteRemark (itemId, rid);
+        })
+    }
+
+    function DeleteRemark (itemId, rid)
+    {
+        $.ajax({
+            type: 'DELETE',
+            url: `${apiBase}/item/${itemId}/comment/${rid}`,
+            headers: {
+                Authorization: AuthorizationText ()
+            },
+            success: function (res) {
+                layer.msg('删除评论成功', {
+                    time: 2000
+                });
+            },
+            error: function (xhr) {
+                swal('删除评论失败', xhr.status + '错误', 'error');
+            }
+        })
+    }
+}

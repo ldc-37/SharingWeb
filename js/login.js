@@ -289,8 +289,8 @@ function ShowLoginSidebar () {
     });
     let i = 0;
     logoCycle = setInterval(() => {
-        $('#share-logo__img').css('transform', 'rotate(' + i++ + 'deg)');
-    }, 50);
+        $('#share-logo__img').css('transform', 'rotate3d(0, 1, 0, ' + i++ + 'deg)');
+    }, 30);
 }
 function HideLoginSidebar () {
     $('.l-sidebar--nor').animate({left: '0'}, 300);

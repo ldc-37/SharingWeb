@@ -34,7 +34,7 @@ button:disabled:hover {
 .l-sidebar {
     position: fixed;
     display: inline-block;
-    width: 24%;
+    width: 20%;
     height: 100%;
     transition: filter .1s linear;
 }
@@ -388,7 +388,7 @@ button:disabled:hover {
 .l-content {
     position: fixed;
     right: 0;
-    width: 76%;
+    width: 80%;
     height: 100%;
     background: #f5f5f5;
     transition: filter .1s linear;
@@ -400,16 +400,17 @@ button:disabled:hover {
 }
 
 /* 主内容 */
-/* .l-main { */
-.l-content > * {
+.l-content > div {
     height: 100%;
 }
 
 /* 主内容顶部 */
 .main__hd {
-    position: relative;
-    padding: 5px 0 5px 25px;
-    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 10px 0 25px;
+    height: 70px;
+    line-height: 70px;
     background-color: #A9C9FF;
     background-image: linear-gradient(270deg, #A9C9FF 0%, #3367d6 100%);
 }
@@ -424,19 +425,21 @@ button:disabled:hover {
 }
 
 .main-head-search {
-    display: inline-block;
-    position: relative;
-    width: 45%;
+    width: 50%;
     max-width: 600px;
-    height: 50%;
+}
+
+.main-head-search__item {
+    width: 90%;
+    height: 35px;
     transition: .2s;
 }
 
 #searchBox {
-    width: 100%;
+    width: calc(100% - 70px);
     height: 100%;
     border: none;
-    border-radius: 0 3px 3px 0;
+    border-radius: 3px 0 0 3px;
     background: rgba(255, 255, 255, 0.7);
 }
 #searchBox:focus {
@@ -445,19 +448,18 @@ button:disabled:hover {
 
 #clearSearch {
     position: absolute;
-    right: 75px;
-    top: 80%;
+    margin-left: -25px;
     font-size: 20px;
     color: gray;
     cursor: pointer;
 }
 
 #mainSearchBtn {
-    position: absolute;
-    top: 24px;
-    right: 0;
+    position: relative;
+    top: 1.2px;
     width: 70px;
     height: 100%;
+    margin-left: -5px;
     border: none;
     border-radius: 0 3px 3px 0;
     background: #0784ce;
@@ -473,13 +475,53 @@ button:disabled:hover {
     background: #166799;
 }
 
-.main-head-qrcode {
-    display: inline-block;
-    position: absolute;
-    right: 390px;
-    line-height: 75px;
+.main-head-favorite {
+    position: relative;
+    width: 200px;
+}
+
+.main-head-favorite-text {
+    color: white;
+    text-align: center;
     cursor: pointer;
-    font-size: 22px;
+}
+.main-head-favorite-text:hover .fa-sort-desc {
+    transform: rotate(180deg);
+    transform-origin: 50% 70% 0;
+}
+
+.main-head-favorite .fa-sort-desc {
+    position: relative;
+    top: -3px;
+    transition: .3s;
+}
+
+.favorite-container {
+    display: none;
+    position: relative;
+    height: 200px;
+    width: 200px;
+    top: -10px;
+    background: #fff;
+    z-index: 2;
+    transition: opacity .5s;
+}
+
+.favorite-container::before {
+    content: '';
+    position: absolute;
+    left: 92.5px;
+    top: -7px;
+    background: #fff;
+    width: 15px;
+    height: 15px;
+    transform: rotate(45deg);
+}
+
+
+.main-head-qrcode {
+    cursor: pointer;
+    font-size: 20px;
 }
 
 .main-head-qrcode__pic {
@@ -493,10 +535,6 @@ button:disabled:hover {
 }
 
 .main-head-sort {
-    display: inline-block;
-    position: absolute;
-    right: 30px;
-    line-height: 75px;
     font-size: 20px;
 }
 
@@ -556,7 +594,8 @@ div.goods-list__item {
 
 .goods-img {
     width: 100%;
-    height: 100%;
+    /* height: 100%; */
+    /* TODO:due to different long-width ratio */
     cursor: pointer;
 }
 
@@ -577,7 +616,7 @@ div.goods-list__item {
     transition: .1s;
 }
 .goods-img-intro:hover {
-    height: 100%;
+    height: 60%;
     padding: 5px 3%;
     line-height: initial;
     overflow: auto;
@@ -600,7 +639,7 @@ div.goods-list__item {
 }
 
 .goods-like--marked {
-    color: red;
+    color: #ff5685;
 }
 
 .goods-item__info {
@@ -686,12 +725,12 @@ div.goods-list__item {
 }
 .goods-enter:hover {
     background: #2db7f5;
-    box-shadow: 0 0 10px 0 blue;
-    transform: scale(1.1);
+    box-shadow: 0 0 15px 0 #6161ff;
+    /* transform: scale(1.1); */
 }
-.goods-enter:active {
+/* .goods-enter:active {
     background: #2594c7;
-}
+} */
 
 
 /* 通用弹窗 */
@@ -939,7 +978,7 @@ div.my-type--act {
     height: 165px;
     margin-bottom: 30px;
     background: #d6d6d6;
-    box-shadow: -6px 6px 10px 2px #bbb;
+    box-shadow: -3px 3px 10px 0px #bbb;
     transition: .3s;
 }
 .my-lend__item:hover {
@@ -1159,18 +1198,18 @@ li.audit-list__item {
     bottom: 50px;
     width: 50px;
     height: 50px;
-    background: #000;
+    background: #0183d6;
     border-radius: 50%;
     z-index: 2;
     transition: .3s;
 }
 .button-chat:hover {
-    background: #222;
-    box-shadow: 0px 0px 20px 0px black;
+    background: #008be2;
+    box-shadow: 0px 0px 20px 0px #008be2;
     cursor: pointer;
 }
 .button-chat:active {
-    background: #010101;
+    background: #006aac;
 }
 
 .button-chat i {
@@ -1181,32 +1220,35 @@ li.audit-list__item {
     color: white;
 }
 
-/* .l-chat {
-    position: absolute;
-    margin: 5% 10%;
-    width: 80%;
-    height: 90%;
-    background: #fff;
-    z-index: 4;
-} */
+.chat-container {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: 100%;
+    background: #f2f2f2;
+    padding: 1.5% 1%;
+}
 
 .chat-contacts {
     display: inline-block;
     width: 20%;
-    height: 99%;
-    background: #ddd;
+    height: 100%;
+    background: white;
 }
 
 .chat-contacts__item {
     height: 80px;
     padding-top: 10px;
-    background: #eee;
     cursor: pointer;
 }
-.chat-contacts__item--focus,
 .chat-contacts__item:hover {
-    background: #cdcdcd;
+    /* background: #eee; */
 }
+
+.chat-contacts__item--focus {
+    background: #d4eeff;
+}
+
 .chat-contacts__item:hover .chat-contacts-head {
     transform: scale(.9);
 }
@@ -1245,33 +1287,24 @@ li.audit-list__item {
 
 .chat-main {
     display: inline-block;
-    width: 60%;
-    height: 99%;
-    padding: 12px;
-    background: #dedede;
+    width: 58%;
+    height: 100%;
     vertical-align: top;
 }
 
 .chat-assist {
     display: inline-block;
     width: 19%;
-    height: 99%;
-    background: #ccc;
+    height: 100%;
     vertical-align: top;
 }
 
-/* .chat-renter-goods {
-    display: inline-block;
-    width: 22%;
-    height: 44%;
-    background: #bbb;
-    border-top: 1px solid #000;
-} */
-
 .chat-main-title {
     position: relative;
-    height: 35px;
+    height: 50px;
+    line-height: 55px;
     width: 100%;
+    background: #d4eeff;
 }
 
 .chatter-name {
@@ -1286,14 +1319,16 @@ li.audit-list__item {
     bottom: 0;
     left: 0;
     width: 100%;
-    border-bottom: 1px solid #052135;
+    border-bottom: 1px solid #5c7a8f;
 }
 
 .chat-history {
-    height: 65%;
+    height: 80%;
     padding: 12px;
+    background: white;
     overflow-y: auto;
     line-break: loose;
+    padding-bottom: 15px;
 }
 
 .history-line {
@@ -1323,10 +1358,11 @@ li.audit-list__item {
 }
 
 .history-body--me {
-    background: #61c0e0;
+    background: #3798DD;
     border: 1px solid #218eff;
     border-radius: 20px 20px 4px 20px;
     float: right;
+    color: white;
 }
 
 .history-content {
@@ -1334,27 +1370,17 @@ li.audit-list__item {
     word-break: break-all;
 }
 
-.chat-toolbar {
-    height: 30px;
-    padding-top: 3px;
-    border-top: 1px solid #000;
-    background: #fff;
-}
-
-.chat-btn__mid {
-    width: 25px;
-    height: 25px;
-    margin: 0 5px;
-    border: none;
-}
-
 .chat-message {
-    height: 20%;
+    position: relative;
+    height: calc(18% - 50px);
+    margin-top: 2%;
+    background: white;
 }
 
 #chatMessage {
-    width: 100%;
-    height: 95%;
+    display: block;
+    width: 90%;
+    height: 100%;
     padding: 4px 12px;
     word-break: break-all;
     line-break: loose;
@@ -1363,23 +1389,45 @@ li.audit-list__item {
     resize: none;
 }
 
-.chat-msg-ctrl {
-    height: 30px;
-    float: right;
+.chat-msg-btn {
+    position: absolute;
+    top: 20%;
+    right: 8px;
+    height: 60%;
+    width: 10%;
+    border: 2px solid #3498d9;
+    color: #3498d9;
+    border-radius: 50px;
+}
+.chat-msg-btn:hover {
+    background: #3498d9;
+    color: white;
 }
 
-.chat-btn__bottom {
-    height: 100%;
-    width: 70px;
-    margin: 0 5px;
+.chat-assist__title {
+    height: 40px;
+    line-height: 40px;
+    font-size: 20px;
+    text-align: center;
+    background: #d4eeff;
 }
 
 .chat-detail {
-    height: 50%;
+    height: 48%;
+    background: white;
+    overflow: auto;
+    line-height: 1.5;
+    word-break: break-all;
+}
+
+.chat-detail__cont {
+    padding: 5px 10px;
 }
 
 .chat-renter-goods {
-    height: 50%;
+    height: 48%;
+    background: white;
+    margin-top: 10%;
 }
 
 
@@ -1421,6 +1469,10 @@ li.audit-list__item {
     text-align: center;
     z-index: 100;
 } */
+
+.bold {
+    font-weight: bold;
+}
 
 /* sweetAlert */
 .swal-modal.red-bg {

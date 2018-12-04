@@ -17,6 +17,7 @@
     <script src="./js/snarl.min.js"></script>
     <link rel="stylesheet" href="./css/reset.css">
     <link rel="stylesheet" href="./css/scrollbar.css">
+    <link rel="stylesheet" href="./css/alertbox.css">
     <link rel="stylesheet" href="./css/main.css">
     <link rel="stylesheet" href="./css/dropzone.css">
     <link rel="stylesheet" href="./css/animate.min.css">
@@ -133,18 +134,29 @@
             <!-- 排序方式、搜索框、全局公告 -->
             <div class="main__hd">
                 <div class="main-head-search">
-                    <div class="main-head-hot">
+                    <!-- <div class="main-head-hot">
                         <b>热门搜索：</b>
                         <span class="main-head-hot__words">充电宝</span>
                         <span class="main-head-hot__words">热水壶</span>
                         <span class="main-head-hot__words">雨伞</span>
+                    </div> -->
+                    <div class="main-head-search__item">
+                        <input type="text" name="searchBox" id="searchBox" 
+                            onfocus="$('.main-head-search__item').css('width', '100%')" 
+                            onblur="$('.main-head-search__item').css('width', '90%')" 
+                            placeholder="请输入物品名称，或输入ID/UID:{id}查看指定物品或用户">
+                        <a onclick="$('#searchBox').val('');" id="clearSearch">×</a>
+                        <button id="mainSearchBtn">搜索</button>
                     </div>
-                    <input type="text" name="searchBox" id="searchBox" 
-                        onfocus="$('.main-head-search').css('width', '48%')" 
-                        onblur="$('.main-head-search').css('width', '45%')" 
-                        placeholder="请输入物品名称，或输入ID/UID:{id}查看指定物品或用户">
-                    <button id="mainSearchBtn">搜索</button>
-                    <a onclick="$('#searchBox').val('');" id="clearSearch">×</a>
+                </div>
+                <div class="main-head-favorite">
+                    <div class="main-head-favorite-text">
+                        我的收藏
+                        <i class="fa fa-sort-desc" aria-hidden="true"></i>
+                    </div>
+                    <div class="favorite-container">
+                        123456
+                    </div>
                 </div>
                 <div class="main-head-qrcode text-effect-flame">
                     &nbsp;下载APP
@@ -154,8 +166,8 @@
                 </div>
                 <div class="main-head-sort">
                     <b>排序方式</b>&nbsp;&nbsp;
-                    <span>按时间排序</span>
-                    <span>按距离排序</span>
+                    <span>按时间</span>
+                    <span>按距离</span>
                 </div>
             </div>  
             <div class="goods-list">
@@ -189,7 +201,7 @@
         </div>
     </div>
 
-    <!-- 聊天按钮及窗口 -->
+    <!-- 聊天按钮 -->
     <div class="button-chat">
         <i class="fa fa-comments-o" aria-hidden="true"></i>
     </div>
@@ -245,8 +257,81 @@
             </form>
         </div>
     </div>
+
     <div id="body-cover"></div>
-    <!-- <div class="alert-box prompt-box"></div> -->
+
+    <!-- 物品详情弹窗 -->
+    <div id="itemAlert" style="display: none">
+        <div class="popup-shade">加载中……</div>
+        <div class="popup-item__l">
+            <div class="pop-item-image">
+                <img src="" alt="" id="popupItemImg">
+            </div>
+            <ul class="pop-item-image-thumb"></ul>
+        </div>
+        <div class="popup-item__r">
+            <div class="popup-item-panel__top">
+                <span id="panelName">好东西</span>
+                <p id="panelDescription">就是一个好东西，别问，问就是……</p>
+                <div class="panel-btns">
+                    <button id="panelChat">交流</button>
+                    <button id="panelApply">租借</button>
+                </div>
+            </div>
+            <hr>
+            <ul class="popup-item-panel__bd">
+                <div class="panel-main__l">
+                    <li class="panel-row">
+                        <span class="panel-attr">价格</span>
+                        <span id="panelPrice" class="share-rmb">¥123</span>
+                    </li>
+                    <li class="panel-row">
+                        <span class="panel-attr">租期</span>
+                        <span id="panelDuration">45天</span>
+                    </li>
+                    <li class="panel-row">
+                        <span class="panel-attr">出借人</span>
+                        <span id="panelOwner">不知道</span>
+                    </li>
+                    <li class="panel-row">
+                        <span class="panel-attr">租还地址</span>
+                        <span id="panelLocation">不知道</span>
+                    </li>
+                </div>
+                <div class="panel-main__r">
+                    <span style="position:absolute;margin: 10px 0 0 20px;">地图位置</span>
+                    <div id="panel-map-container"></div>
+                </div>
+            </ul>
+            <div class="popup-item-panel__ft">
+                <div class="remark-title">评论留言</div>
+                <!-- <li class="panel-remark panel-remark--me" data-rid="1">
+                    <div class="panel-remark__hd">
+                        <img src="" alt="">
+                        <span class="remark-username">test13</span>
+                        <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+                    </div>
+                    <p class="remark-body">这确实是一个好东西</p>
+                    <div class="remark-op">
+                        <span class="remark-op__item remark-report">举报</span>
+                        <span class="remark-op__item remark-delete">删除</span>
+                    </div>
+                </li>
+                <li class="panel-remark panel-remark--me" data-rid="1">
+                    <img src="" alt="">
+                    <span class="remark-username">test13</span>
+                    <i class="fa fa-thumbs-o-up" aria-hidden="true"></i>
+                    <p class="remark-body">这确实是一个好东西</p>
+                    <div class="remark-op">
+                        <span class="remark-op__item" id="remarkReport">举报</span>
+                        <span class="remark-op__item" id="remarkDelete">删除</span>
+                    </div>
+                </li> -->
+                <!-- <a class="remark-more">查看更多</a> -->
+            </div>
+        </div>
+    </div>
+    
     <script src="./js/utils.js"></script>
     <script src="./js/main.js"></script>
     <script src="./js/login.js"></script>

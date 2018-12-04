@@ -3,6 +3,7 @@
 let client, nowChatter;
 
 $(function () {
+    //连接聊天ws
     const header = {
         login: '',
         passcode: '',
@@ -62,7 +63,6 @@ function ChatInit ()
             $('#chatSend').click()
         }
     })
-    
     $('#chatSend').click(() => {
         if (client.connected) {
             let chatBody = () => ({
@@ -86,8 +86,9 @@ function ChatInit ()
             swal('发送失败', '聊天连接异常断开，请刷新重试', 'error');
         }
     })
-
     LoadContactList ();
+
+
 }
 
 function LoadContactList ()
@@ -150,8 +151,9 @@ function FillContactList (data)
         $(this).addClass('chat-contacts__item--focus');
         $('.chatter-name').text(GetUserInfo(nowChatter).nickName);
         $('.chat-history').empty();
-        $('#chatMessage').empty();
-        LoadChatHistory(nowChatter);
+        $('#chatMessage').val('');
+        LoadChatHistory (nowChatter);
+        LoadChatAssist (nowChatter);
     })
     $('.chat-contacts__item').first().click();
 }
@@ -223,8 +225,35 @@ function FillNewMsg (data, p)
     //收到新消息
 }
 
-function LoadChatAssist ()
+function LoadChatAssist (uid)
 {
+    $('.chat-detail__cont').empty();
+    let userInfo = GetUserInfo(uid);
+    //出借人信息
+    // const li = document.createElement('li');
+    // li.innerHTML = '<span class="bold">性别：</span>' + userInfo.nickName == 'male' ? '男' : '女';
+    // $('.chat-detail__cont').append(li);
+    // li.innerHTML = '<span class="bold">手机号码：</span>' + userInfo.phone;
+    // $('.chat-detail__cont').append(li);
+    // li.innerHTML = '<span class="bold">电子邮箱：</span>' + userInfo.email;
+    // $('.chat-detail__cont').append(li);
+    // li.innerHTML = '<span class="bold">自我介绍：</span>' + userInfo.description;
+    // $('.chat-detail__cont').append(li);
+
+    let $li = $('<li><span class="bold">昵称：</span>' + userInfo.nickName + '</li>');
+    $('.chat-detail__cont').append($li);
+    $li = $('<li><span class="bold">用户ID：</span>' + userInfo.user_id + '</li>');
+    $('.chat-detail__cont').append($li);
+    $li = $(`<li><span class="bold">性别：</span>${userInfo.gender == 'male' ? '男' : '女'}</li>`);
+    $('.chat-detail__cont').append($li);
+    $li = $('<li><span class="bold">手机号码：</span>' + userInfo.phone + '</li>');
+    $('.chat-detail__cont').append($li);
+    $li = $('<li><span class="bold">电子邮箱：</span>' + userInfo.email + '</li>');
+    $('.chat-detail__cont').append($li);
+    $li = $('<li><span class="bold">自我介绍：</span>' + userInfo.description + '</li>');
+    $('.chat-detail__cont').append($li);
+
+    //出借人物品信息
 
 }
 

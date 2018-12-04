@@ -9,7 +9,7 @@ settings.chatAlertDismiss = 10000;
 let AuthorizationText = () => {
     if (location.host == "127.0.0.1:5500") {
         //LiveServer调试 @test13
-        return "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNTQyOTc1OTg2LCJleHAiOjE1NDM1ODA3ODZ9.wBQXYHHfnd0-lGvzUB754kD4IjA5c9nO7wNKqFWCRKTbiVbwNXhHMd8JdFHqLgwjq5tIhZXMrQPdfsgFVx8-EA";
+        return "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNTQzNTgzOTE2LCJleHAiOjE1NDQxODg3MTZ9.lUAU--t404NDygg0OOH-WnVF0UlzAGqgNd_BoQuN9Yw08xd6SUb---AW5_4KFUnCpCEw5q__4PGGsz4QGGSJIg";
         ;
     }
     return getCookie("tokenType") + " " + getCookie("accessToken");
@@ -17,7 +17,7 @@ let AuthorizationText = () => {
 
 //自动加载主页
 window.onload = () => {
-    $('#share-column-all').click();    
+    $('#share-column-all').click();
 }
 
 $(function () {
@@ -26,7 +26,7 @@ $(function () {
      */
     if (isMobile ()) {
         $('#body-cover').show().css('opacity', 0.7);
-        alert('移动端请暂时使用app，即将跳转下载页面');
+        alert('移动端请使用app，即将跳转下载页面');
         location.href = "https://copy.im/a/xjfx34";
     }
     const searchWords = GetQueryVariable ("s");
@@ -55,7 +55,7 @@ $(function () {
             },
         }).then((value) => {
             if (value) settings.chatAlertDismiss = parseInt(value) * 1000;
-        })
+        });
     })
     
     // 尝试Cookie中token登录
@@ -115,48 +115,35 @@ $(function () {
 
     //点击聊天按钮
     const chatHTML = `
-        <div class="chat-contacts"></div>
-        <div class="chat-main">
-            <div class="chat-main-title">
-                <p class="chatter-name"></p>
-            </div>
-            <div class="chat-history">
-                <!-- TODO:<div class="history-tips"></div> -->
-            </div>
-            <div class="chat-toolbar">
-                <button class="chat-btn__mid" id="chatEmoji" title="添加表情">
-                    <i class="fa fa-smile-o" aria-hidden="true"></i>
-                </button>
-                <button class="chat-btn__mid" id="chatImage" title="发送图片">
-                    <i class="fa fa-picture-o" aria-hidden="true"></i>
-                </button>
-                <button class="chat-btn__mid" id="chatEraseRecord" title="清空历史记录">
-                    <i class="fa fa-times" aria-hidden="true"></i>
-                </button>
-            </div>
-            <div class="chat-message">
-                <textarea id="chatMessage" spellcheck="false" maxlength="165"></textarea>
-            </div>
-            <div class="chat-msg-ctrl">
-                <button class="chat-btn__bottom" id="chatClear">清除</button>
-                <button class="chat-btn__bottom" id="chatSend">发送</button>
-            </div>
-        </div>
-        <div class="chat-assist">
-            <div class="chat-detail">
-                <div class="chat-detail__title">出借人信息</div>
-                <div class="chat-detail__cont">
-
+        <div class="chat-container">
+            <div class="chat-contacts"></div>
+            <div class="chat-main">
+                <div class="chat-main-title">
+                    <p class="chatter-name"></p>
+                </div>
+                <div class="chat-history">
+                    <!-- TODO:<div class="history-tips"></div> -->
+                </div>
+                <div class="chat-message">
+                    <textarea id="chatMessage" spellcheck="false" maxlength="165"></textarea>
+                    <button class="chat-msg-btn" id="chatSend">发送</button>
                 </div>
             </div>
-            <div class="chat-renter-goods">
-                <div class="chat-renter-goods__title">出借人物品</div>
-                <div class="chat-renter-goods__cont">
-
+            <div class="chat-assist">
+                <div class="chat-detail">
+                    <div class="chat-assist__title">出借人信息</div>
+                    <div class="chat-detail__cont"></div>
+                </div>
+                <div class="chat-renter-goods">
+                    <div class="chat-assist__title">出借人物品</div>
+                    <div class="chat-renter-goods__cont"></div>
                 </div>
             </div>
         </div>`
     $('.button-chat').click(function () {
+        if (AuthorizationText () == "") {
+            PromptLogin ();
+        }
         $(this).addClass('animated bounceOutRight').on('animationend', function () {
             $(this).hide().removeClass('animated bounceOutRight');
         });
@@ -168,16 +155,15 @@ $(function () {
             resize: false,
             shadeClose: true,
             content: chatHTML,
-            success: function () {
-                ChatInit();
-            },
+            success: ChatInit,
             end: function () {
                 $('.button-chat').show().addClass('animated bounceInRight').on('animationend', function () {
                     $(this).removeClass('animated bounceInRight').show();
                 });
             }
           });
-    })
+    });
+
 
     /**
      * Content-main
@@ -246,6 +232,13 @@ $(function () {
         // window.open("https://xilym.tk/storage/apk/happySharing.apk");
         window.open("https://copy.im/a/xjfx34");
     });
+    //用户收藏
+    $('.main-head-favorite-text, .favorite-container').mouseover(function () {
+        $('.favorite-container').show();
+    }).mouseout(function () {
+        $('.favorite-container').hide();
+    });
+    $('.favorite-container').text('物品');
 
 
     /**
@@ -397,7 +390,7 @@ function FillMain (data)
     $('.goods-list').empty();
     const itemHTML = 
     `<div class="goods-item__hd">
-        <span class="goods-owner">物主UID:
+        <span class="goods-owner">物主:
             <span class="goods-owner__name"></span>
         </span>
         <span class="goods-id">物品ID:
@@ -438,7 +431,7 @@ function FillMain (data)
         <div class="position-map goods-position-map"></div>
     </div>`;
     //TODO:better parse single object
-    let name, price, desc, positionText, time, imgId, ownerId, id, lon , lat;
+    let name, price, desc, positionText, time, imgId, uid, owner, id, lon , lat;
     for (let i = 0; i < (data.length ? data.length : 1); ++i) {
         if (data.length == undefined) {
             //传入的是单个item的对象
@@ -448,8 +441,9 @@ function FillMain (data)
             desc = data.description;
             positionText = data.location.locationDescription;
             time = data.duration;
-            imgId = data.images; //@temp
-            ownerId = data.owner_id;
+            imgId = data.images;
+            uid = data.owner_id;
+            owner = GetUserInfo(uid).nickName;
             lon = data.location.longitude;
             lat = data.location.latitude;
         }
@@ -460,8 +454,9 @@ function FillMain (data)
             desc = data[i].description;
             positionText = data[i].location.locationDescription;
             time = data[i].duration;
-            imgId = data[i].images; //@temp
-            ownerId = data[i].owner_id;
+            imgId = data[i].images;
+            uid = data[i].owner_id;
+            owner = GetUserInfo(uid).nickName;            
             lon = data[i].location.longitude;
             lat = data[i].location.latitude;
         }
@@ -472,14 +467,15 @@ function FillMain (data)
         $newItem.attr('data-lon', lon);
         $newItem.attr('data-lat', lat);
         $newItem.attr('data-id', id);
-        $newItem.find('.goods-owner__name').text(ownerId);
+        $newItem.attr('data-uid', uid);
+        $newItem.find('.goods-owner__name').text(owner);
         $newItem.find('.goods-id__txt').text(id);
         $newItem.find('.goods-date__txt').text('17-12-22');
         if (imgId.length) {
             $newItem.find('.goods-img').attr('src', apiBase + '/image/' + imgId[0]);
-            for (let i = 1; i < imgId.length; ++i) {
-                $newItem.find('.goods-img').last().after($('<img alt="物品图片" class="goods-img">').attr('src', apiBase + '/image/' + imgId[i]));
-            }
+            // for (let i = 1; i < imgId.length; ++i) {
+            //     $newItem.find('.goods-img').last().after($('<img alt="物品图片" class="goods-img">').attr('src', apiBase + '/image/' + imgId[i]));
+            // }
         }
         $newItem.find('.goods-img-intro').text(desc);
         $newItem.find('.goods-name__txt').text(name);
@@ -516,7 +512,19 @@ function FillMain (data)
     })
     //点击租用按钮
     $('.goods-enter').click(function () {
-        LaunchBorrow (this);
+        const id = this.parentNode.parentNode.parentNode.dataset.id;
+        const uid = this.parentNode.parentNode.parentNode.dataset.uid;
+        layer.open({
+            type: 1,
+            skin: 'layui-layer-rim',
+            area: ['70%', '90%'],
+            title: '物品详情',
+            resize: false,
+            shadeClose: true,
+            zIndex: 1,
+            content: $('#itemAlert'),
+            success: ItemAlertInit(id, uid)
+        })
     });
     //加载后动画
     $('.goods-list__item').addClass('animated zoomIn')
@@ -544,70 +552,49 @@ function FillMain (data)
 
 function LoadMain ()
 {
-    let i = 0, endFlag = 0;
-    let data = [];
-    let interval = setInterval (function () {
-        $.ajax({
-            type: 'GET',
-            url: apiBase + '/item/' + ++i,
-            dataType: 'json',
-            headers: {
-                Authorization: AuthorizationText ()
-            },
-            async: false,
-            success: function (res) {
-                // FillMain (res);
-                if (res.status == 1) // 可租借
-                    data.push(res);
-            },
-            error: function (xhr) {
-                // alert('加载主页失败：' + xhr.status + '错误');
-                // endFlag += 1;
-                clearInterval(interval);
-                FillMain (data);
-                return;
-            }
-        });
-        if (i == 100) {
-            clearInterval(interval);
-            return;
+    const RANDOM_NUM = 10;
+    $.ajax({
+        type: 'GET',
+        url: apiBase + '/item?random=' + RANDOM_NUM,
+        dataType: 'json',
+        headers: {
+            Authorization: AuthorizationText ()
+        },
+        success: function (res) {
+            FillMain (res);
+        },
+        error: function (xhr) {
+            swal('加载主页失败', xhr.status + '错误', 'error');
         }
-    }, 10);
+    });
 }
 
-function LaunchBorrow (_this)
+function LaunchBorrow (id)
 {
-    swal('确认申请？', '', 'info', {
-        buttons: ['先等等', '就是它']
-    }).then((value) => {
-        if (value) {
-            const id = _this.parentNode.parentNode.parentNode.dataset.id;
-            $.ajax({
-                type: 'POST',
-                url: apiBase + '/item/' + id +  '/borrow',
-                dataType: 'json',
-                headers: {
-                    Authorization: AuthorizationText ()
-                },
-                success: function (res) {
-                    if (res.code == 0) {
-                        swal('申请成功', '请等待物主审核', 'success');
-                    }
-                    else {
-                        swal('申请不成功', '错误代码:' + res.code, 'error');
-                    }
-                },
-                error: function (xhr) {
-                    if (xhr.status == 400) {
-                        swal('发起申请失败', '这是你自己的东西哦', 'warning');
-                    }
-                    else {
-                        swal('发起申请失败', xhr.status + '错误', 'error');
-                    }
-                }
-            });
+    $.ajax({
+        type: 'POST',
+        url: apiBase + '/item/' + id +  '/borrow',
+        dataType: 'json',
+        headers: {
+            Authorization: AuthorizationText ()
+        },
+        success: function (res) {
+            if (res.code == 0) {
+                swal('申请成功', '请等待物主审核', 'success');
+            }
+            else {
+                swal('申请不成功', '错误代码:' + res.code, 'error');
+            }
+        },
+        error: function (xhr) {
+            if (xhr.status == 400) {
+                swal('发起申请失败', '这是你自己的东西，或是已被锁定哦', 'warning');
+            }
+            else {
+                swal('发起申请失败', xhr.status + '错误', 'error');
+            }
         }
-    })
+    });
 }
 
 function FillMyLend (data)
@@ -1211,8 +1198,7 @@ function ToggleLike (el)
     const liked = $(el).hasClass('goods-like--marked');
     const id = el.parentNode.dataset.id;
     $.ajax({
-        // type: liked ? 'DELETE' : 'POST',
-        type: 'DELETE',
+        type: liked ? 'DELETE' : 'POST',
         url: apiBase + '/user/favorite/' + id,
         headers: {
             Authorization: AuthorizationText ()
@@ -1220,12 +1206,18 @@ function ToggleLike (el)
         success: function (res) {
             if (liked) {
                 $(el).removeClass('goods-like--marked');
+                layer.msg('取消收藏', {
+                    time: 1000
+                });
             }
             else {
                 $(el).addClass('goods-like--marked animated bounceIn');
                 setTimeout(() => {
                     $(el).removeClass('animated bounceIn');
                 }, 1000);
+                layer.msg('收藏成功', {
+                    time: 1000
+                });
             }
         },
         error: function (xhr) {
