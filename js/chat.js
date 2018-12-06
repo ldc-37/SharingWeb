@@ -50,6 +50,13 @@ $(function () {
         }
     }
     client.connect(header, () => {
+        Snarl.editNotification(chatFirstSnarlId, {
+            title: '聊天连接已建立',
+            text: '可以实时与其他用户聊天了！',
+            icon: '<i class="fa fa-check"></i>',
+            timeout: 3000,
+        });
+        $('.button-chat--waiting').removeClass('button-chat--waiting');
         client.subscribe('/user/queue/message', MsgCallback);
         // client.unsubscribe();
     });

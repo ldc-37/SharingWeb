@@ -299,6 +299,9 @@ function ItemAlertInit (itemId, uid)
                     client.send('/chat/send', {}, JSON.stringify(chatBody));
                     //@此处暂时不申请，只交流
                     // LaunchBorrow (itemId);
+                    layer.msg('已发送消息，请等待对方回复', {
+                        time: 2500
+                    });
                 }
                 else {
                     swal('发送失败', '聊天连接异常断开，请刷新重试', 'error');
@@ -348,6 +351,10 @@ function ItemAlertInit (itemId, uid)
 
 function LoadRemark (itemId)
 {
+    $('#panelSendRemark').click(() => {
+        if ($('#panelAddRemark').val().trim() != '')
+            SendRemark($('#panelAddRemark').val());
+    });
     $.ajax({
         type: 'GET',
         url: apiBase + '/item/' + itemId + '/comment?page=0&num=100',
@@ -379,29 +386,60 @@ function LoadRemark (itemId)
         <div class="remark-op">
             <span class="remark-op__item remark-report">举报</span>
         </div>`;
-        for (let i = 0; i < data.length; i++) {
+
+        function AddRemark (i) {
             const $li = $('<li>').addClass('panel-remark');
             $li.html(remarkHTML);
             $li.data('rid', data[i].id);
             $li.find('.remark-username').text(GetUserInfo(data[i].userId).nickName);
             $li.find('.remark-body').text(data[i].content);
             if (data[i].userId == myUid) {
+                const $deleteBtn = $('<span class="remark-op__item remark-delete">删除</span>').click(function () {
+                    DeleteRemark (itemId, $(this.parentNode.parentNode));
+                });
                 $li.addClass('panel-remark--me');
-                $li.find('.remark-op').empty().html('<span class="remark-op__item remark-delete">删除</span>');
+                $li.find('.remark-op').empty().html($deleteBtn);
             }
+            $li.find('.remark-report').click(function () {
+                localStorage.setItem('reportRemark',  $(this.parentNode.parentNode).data('rid'));
+                alert('举报成功');//@玩梗
+            })
             $('.popup-item-panel__ft').append($li);
+        }
+
+        function ExpandRemarkBox () {
+            $(this).remove();
+            $('.popup-item-panel__ft').addClass('popup-item-panel__ft--open');
+            for (let i = 2; i < data.length; i++) {
+                AddRemark (i);
+            }
+            //close button
+            const $close = $('<span>[x]</span>');
+            $close.css({'position': 'absolute', 'right': '15px', 'cursor': 'pointer'})
+                .click(function () {
+                    $(this).remove();
+                    $('.popup-item-panel__ft--open').removeClass('popup-item-panel__ft--open');
+                    $('.panel-remark').remove();
+                    AddRemark (0);AddRemark (1);
+                    $('.popup-item-panel__ft').append('<a class="remark-more">查看更多</a>');
+                    $('.remark-more').click(ExpandRemarkBox);
+                });
+            $('.remark-title').append($close);
+        }
+
+        for (let i = 0; i < (data.length < 2 ? data.length : 2); i++) {
+            AddRemark (i);
         }
         if (data.length >= 2) {
             $('.popup-item-panel__ft').append('<a class="remark-more">查看更多</a>');
+            $('.remark-more').click(ExpandRemarkBox);
         }
-        $('.remark-delete').click(function () {
-            const rid = $(this.parentNode.parentNode).data('rid');
-            DeleteRemark (itemId, rid);
-        })
     }
-
-    function DeleteRemark (itemId, rid)
+    
+    function DeleteRemark (itemId, $remarkEle)
     {
+        const rid = $remarkEle.data('rid');
+        console.log(rid)
         $.ajax({
             type: 'DELETE',
             url: `${apiBase}/item/${itemId}/comment/${rid}`,
@@ -409,12 +447,48 @@ function LoadRemark (itemId)
                 Authorization: AuthorizationText ()
             },
             success: function (res) {
-                layer.msg('删除评论成功', {
-                    time: 2000
-                });
+                if (res.code == 0) {
+                    $remarkEle.remove();
+                    layer.msg('删除评论成功', {
+                        time: 2000
+                    });
+                }
+                else {
+                    swal('删除评论失败', '服务器内部错误', 'error');
+                }
             },
             error: function (xhr) {
                 swal('删除评论失败', xhr.status + '错误', 'error');
+            }
+        })
+    }
+
+    function SendRemark (remark)
+    {
+        $.ajax({
+            type: 'POST',
+            url: `${apiBase}/item/${itemId}/comment/`,
+            headers: {
+                Authorization: AuthorizationText ()
+            },
+            contentType: 'application/json',
+            data: JSON.stringify({content: remark}),
+            success: function (res) {
+                if (res.code == 0) {
+                    layer.msg('发布评论成功', {
+                        time: 1500
+                    });
+                    $('.panel-remark').remove();
+                    $('popup-item-panel__ft').append($('.remark-more'));
+                    LoadRemark (itemId);
+                    $('#panelAddRemark').val('');
+                }
+                else {
+                    swal('发布评论失败', '服务器内部错误', 'error');
+                }
+            },
+            error: function (xhr) {
+                swal('发布评论失败', xhr.status + '错误', 'error');
             }
         })
     }

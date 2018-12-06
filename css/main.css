@@ -296,7 +296,7 @@ button:disabled:hover {
 }
 .share-account__btn:disabled {
     background: #ff3a3a;
-    cursor: default;
+    cursor: no-drop;
     border-color: transparent;
 }
 
@@ -555,7 +555,7 @@ button:disabled:hover {
     height: 200px;
     background: #fff;
     margin: 1.5%;
-    box-shadow: -6px 5px 10px 2px #bbb;
+    box-shadow: -3px 3px 10px 1px #bbb;
     transition: .3s;
 }
 .goods-list__item:hover {
@@ -1201,15 +1201,24 @@ li.audit-list__item {
     background: #0183d6;
     border-radius: 50%;
     z-index: 2;
+    cursor: pointer;
     transition: .3s;
 }
 .button-chat:hover {
     background: #008be2;
     box-shadow: 0px 0px 20px 0px #008be2;
-    cursor: pointer;
 }
 .button-chat:active {
     background: #006aac;
+}
+
+.button-chat--waiting {
+    background: #999;
+    cursor: wait;
+}
+.button-chat--waiting:hover {
+    background: #999;
+    box-shadow: none;
 }
 
 .button-chat i {

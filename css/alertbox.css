@@ -3,6 +3,7 @@
     width: 100%;
     height: 100%;
     padding: 20px;
+    overflow: hidden;
 }
 #itemAlert * {
     /* border: 1px solid #000; */
@@ -160,14 +161,15 @@
 
 
 .popup-item-panel__ft {
-
+    transition: .5s;
 }
 
 .popup-item-panel__ft--open {
     position: relative;
     height: 100%;
-    margin-top: -70%;
+    margin-top: calc(-70% + 28px);
     background: white;
+    overflow: auto;
     z-index: 200;
 }
 
@@ -181,6 +183,24 @@
     background: #ddd;
     font-size: 20px;
     text-align: center;
+}
+
+.remark-add {
+    width: 80%;
+    height: 25px;
+    margin: 5px 10%;
+}
+
+#panelAddRemark {
+    width: 80%;
+    height: 100%;
+}
+
+#panelSendRemark {
+    position: relative;
+    top: 1px;
+    width: 15%;
+    height: 100%;
 }
 
 .panel-remark i {

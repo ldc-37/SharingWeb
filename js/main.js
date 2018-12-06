@@ -1,9 +1,14 @@
 'use strict'
 const apiBase = "https://api.hs.rtxux.xyz";
-
-let settings= {};
-//新消息弹窗消失延迟时长(ms)
-settings.chatAlertDismiss = 10000;
+let info = {
+    uid: 0,
+    nickname: ''
+}
+let settings = {
+    //新消息弹窗消失延迟时长(ms)
+    chatAlertDismiss: 10000
+};
+let chatFirstSnarlId;
 
 //惰性求值
 let AuthorizationText = () => {
@@ -15,9 +20,15 @@ let AuthorizationText = () => {
     return getCookie("tokenType") + " " + getCookie("accessToken");
 };
 
-//自动加载主页
+//自动加载主页及通知
 window.onload = () => {
     $('#share-column-all').click();
+
+    chatFirstSnarlId = Snarl.addNotification({
+        title: '正在建立聊天连接...',
+        timeout: 10000,
+        icon: '<i class="fa fa-refresh fa-spin"></i>'
+    });
 }
 
 $(function () {
@@ -141,8 +152,9 @@ $(function () {
             </div>
         </div>`
     $('.button-chat').click(function () {
-        if (AuthorizationText () == "") {
+        if (AuthorizationText () == ' ') {
             PromptLogin ();
+            return;
         }
         $(this).addClass('animated bounceOutRight').on('animationend', function () {
             $(this).hide().removeClass('animated bounceOutRight');
@@ -154,6 +166,7 @@ $(function () {
             title: '聊天',
             resize: false,
             shadeClose: true,
+            zIndex: 5,
             content: chatHTML,
             success: ChatInit,
             end: function () {
@@ -512,6 +525,58 @@ function FillMain (data)
     })
     //点击租用按钮
     $('.goods-enter').click(function () {
+        const itemHTML = `
+        <div id="itemAlert">
+            <div class="popup-shade">加载中……</div>
+            <div class="popup-item__l">
+                <div class="pop-item-image">
+                    <img src="" alt="" id="popupItemImg">
+                </div>
+                <ul class="pop-item-image-thumb"></ul>
+            </div>
+            <div class="popup-item__r">
+                <div class="popup-item-panel__top">
+                    <span id="panelName"></span>
+                    <p id="panelDescription"></p>
+                    <div class="panel-btns">
+                        <button id="panelChat">交流</button>
+                        <button id="panelApply">租借</button>
+                    </div>
+                </div>
+                <hr>
+                <ul class="popup-item-panel__bd">
+                    <div class="panel-main__l">
+                        <li class="panel-row">
+                            <span class="panel-attr">价格</span>
+                            <span id="panelPrice" class="share-rmb"></span>
+                        </li>
+                        <li class="panel-row">
+                            <span class="panel-attr">租期</span>
+                            <span id="panelDuration"></span>
+                        </li>
+                        <li class="panel-row">
+                            <span class="panel-attr">出借人</span>
+                            <span id="panelOwner"></span>
+                        </li>
+                        <li class="panel-row">
+                            <span class="panel-attr">租还详细地址</span>
+                            <span id="panelLocation"></span>
+                        </li>
+                    </div>
+                    <div class="panel-main__r">
+                        <span style="position:absolute;margin: 10px 0 0 20px;">地图位置</span>
+                        <div id="panel-map-container"></div>
+                    </div>
+                </ul>
+                <div class="popup-item-panel__ft">
+                    <div class="remark-title">评论留言</div>
+                    <div class="remark-add">
+                        <input type="text" id="panelAddRemark" placeholder="在此处留下评论...">
+                        <input type="button" id="panelSendRemark" value="发送">
+                    </div>
+                </div>
+            </div>
+        </div>`
         const id = this.parentNode.parentNode.parentNode.dataset.id;
         const uid = this.parentNode.parentNode.parentNode.dataset.uid;
         layer.open({
@@ -522,8 +587,10 @@ function FillMain (data)
             resize: false,
             shadeClose: true,
             zIndex: 1,
-            content: $('#itemAlert'),
-            success: ItemAlertInit(id, uid)
+            content: itemHTML,
+            success: () => {
+                ItemAlertInit(id, uid);
+            }
         })
     });
     //加载后动画
@@ -532,22 +599,24 @@ function FillMain (data)
         $(this).removeClass('animated zoomIn');
     });
     //加载收藏状态
-    $.ajax({
-        type: 'GET',
-        url: apiBase + '/user/favorite/',
-        headers: {
-            Authorization: AuthorizationText ()
-        },
-        success: function (res) {
-            for (let i in res) {
-                $('.goods-list__item[data-id=' + res[i].id + ']').find('.goods-like')
-                    .addClass('goods-like--marked');
+    if (AuthorizationText () != ' ') {
+        $.ajax({
+            type: 'GET',
+            url: apiBase + '/user/favorite/',
+            headers: {
+                Authorization: AuthorizationText ()
+            },
+            success: function (res) {
+                for (let i in res) {
+                    $('.goods-list__item[data-id=' + res[i].id + ']').find('.goods-like')
+                        .addClass('goods-like--marked');
+                }
+            },
+            error: function (xhr) {
+                swal('读取收藏列表失败', xhr.status + '错误', 'error');
             }
-        },
-        error: function (xhr) {
-            swal('读取收藏列表失败', xhr.status + '错误', 'error');
-        }
-    });
+        });
+    }
 }
 
 function LoadMain ()
@@ -1221,7 +1290,10 @@ function ToggleLike (el)
             }
         },
         error: function (xhr) {
-            swal(xhr.status + '错误', '', 'error');
+            if (xhr.status == '401') {
+                swal('登陆后才可以收藏！', '', 'error');
+            }
+            swal('收藏失败', xhr.status + '错误', 'error');
         }
     });
 }
