@@ -31,10 +31,11 @@
             <div class="share-user">
                 <div class="share-sidebar-top-btn">
                     <img src="./images/icon-logout.png" alt="退出登录" title="退出登录" id="share-btn-logout">
+                    <span id="certificationState"></span>
                     <img src="./images/icon-setting.png" alt="设置" title="设置" id="button-setting">
                 </div>
                 <div class="share-user-info">
-                    <img src="./images/head.png" alt="头像" id="share-user-info__head">
+                    <img src="./images/head_white.png" alt="头像" id="share-user-info__head">
                     <span id="share-user-info__name">点击登录/注册</span>
                 </div>
             </div>
@@ -64,28 +65,48 @@
             </div>
             <div class="share-account share-account__login">
                 <form>
-                    <input type="text" id="login-account" placeholder="账号/邮箱" required>
+                    <div class="account-input-group">
+                        <span class="account-input-addon"><i class="fa fa-envelope-o fa-fw"></i></span>
+                        <input type="text" id="login-account" class="account-input" placeholder="账号/邮箱" required>
+                    </div>
                     <br>
-                    <input type="password" id="login-pass" placeholder="密码" required>
+                    <div class="account-input-group">
+                        <span class="account-input-addon"><i class="fa fa-key fa-fw"></i></span>
+                        <input type="password" id="login-pass" class="account-input" placeholder="密码" required>
+                    </div>
                     <br>
                     <span class="account-tips" id="login-tips"></span>
+                    <span class="account-forget">忘记密码</span>
+                    <br>
                     <input type="button" value="登录" id="login-btn" class="share-account__btn">
                 </form>
             </div>
             <div class="share-account share-account__register">
                 <form>
-                    <input type="text" id="reg-username" placeholder="用户名">
-                    <br>
+                    <div class="account-input-group">
+                        <span class="account-input-addon"><i class="fa fa-user-o fa-fw"></i></span>
+                        <input type="text" id="reg-username" class="account-input" placeholder="用户名">
+                    </div>
                     <span class="account-tips" id="reg-tips__username"></span>
-                    <input type="text" id="reg-email" placeholder="邮箱">
                     <br>
+                    <div class="account-input-group">
+                        <span class="account-input-addon"><i class="fa fa-envelope-o fa-fw"></i></span>
+                        <input type="text" id="reg-email" class="account-input" placeholder="邮箱">
+                    </div>
                     <span class="account-tips" id="reg-tips__email"></span>
-                    <input type="password" id="reg-pass" placeholder="密码">
                     <br>
+                    <div class="account-input-group">
+                        <span class="account-input-addon"><i class="fa fa-key fa-fw"></i></span>
+                        <input type="password" id="reg-pass" class="account-input" placeholder="密码">
+                    </div>
                     <span class="account-tips" id="reg-tips__password"></span>
-                    <input type="password" id="reg-pass-2" placeholder="确认密码">
                     <br>
+                    <div class="account-input-group">
+                        <span class="account-input-addon"><i class="fa fa-repeat fa-fw"></i></span>
+                        <input type="password" id="reg-pass-2" class="account-input" placeholder="确认密码">
+                    </div>
                     <span class="account-tips" id="reg-tips__password2"></span>
+                    <br>
                     <input type="button" value="注册" id="reg-btn" class="share-account__btn" disabled>
                 </form>
             </div>
@@ -166,12 +187,15 @@
                 </div>
                 <div class="main-head-sort">
                     <b>排序方式</b>&nbsp;&nbsp;
-                    <span>按时间</span>
-                    <span>按距离</span>
+                    <span class="sort-way" id="sortByTime">按时间</span>
+                    <span class="sort-way" id="sortByDist">按距离</span>
                 </div>
             </div>  
             <div class="goods-list">
-                <b style="font-size: 30px;">主页加载中，请稍后……</b>
+                <div class="main-loading">
+                    <i class="fa fa-spinner fa-spin"></i>
+                    加载中
+                </div>
             </div>
         </div>
         <div class="l-my-lend" style="display: none;">
@@ -194,10 +218,10 @@
         </div>
         <div class="l-audit-inform" style="display: none;">
             <h4 class="audit-inform-list__title">等待审核列表</h4>
-            <ul class="audit-list">加载中...</ul>
+            <ul class="audit-list"><i class="fa fa-spinner fa-spin"></i>加载中...</ul>
             <br>
             <h4 class="audit-inform-list__title">通知列表</h4>
-            <ul class="inform-list">加载中...</ul>
+            <ul class="inform-list"><i class="fa fa-spinner fa-spin"></i>加载中...</ul>
         </div>
     </div>
 
@@ -260,58 +284,7 @@
 
     <div id="body-cover"></div>
 
-    <!-- 物品详情弹窗 -->
-    <!-- <div id="itemAlert" style="display: none;">
-        <div class="popup-shade">加载中……</div>
-        <div class="popup-item__l">
-            <div class="pop-item-image">
-                <img src="" alt="" id="popupItemImg">
-            </div>
-            <ul class="pop-item-image-thumb"></ul>
-        </div>
-        <div class="popup-item__r">
-            <div class="popup-item-panel__top">
-                <span id="panelName">好东西</span>
-                <p id="panelDescription">就是一个好东西，别问，问就是……</p>
-                <div class="panel-btns">
-                    <button id="panelChat">交流</button>
-                    <button id="panelApply">租借</button>
-                </div>
-            </div>
-            <hr>
-            <ul class="popup-item-panel__bd">
-                <div class="panel-main__l">
-                    <li class="panel-row">
-                        <span class="panel-attr">价格</span>
-                        <span id="panelPrice" class="share-rmb">¥123</span>
-                    </li>
-                    <li class="panel-row">
-                        <span class="panel-attr">租期</span>
-                        <span id="panelDuration">45天</span>
-                    </li>
-                    <li class="panel-row">
-                        <span class="panel-attr">出借人</span>
-                        <span id="panelOwner">不知道</span>
-                    </li>
-                    <li class="panel-row">
-                        <span class="panel-attr">租还地址</span>
-                        <span id="panelLocation">不知道</span>
-                    </li>
-                </div>
-                <div class="panel-main__r">
-                    <span style="position:absolute;margin: 10px 0 0 20px;">地图位置</span>
-                    <div id="panel-map-container"></div>
-                </div>
-            </ul>
-            <div class="popup-item-panel__ft">
-                <div class="remark-title">评论留言</div>
-                <div class="remark-add">
-                    <input type="text" id="panelAddRemark" placeholder="在此处留下评论...">
-                    <input type="button" id="panelSendRemark" value="发送">
-                </div>
-            </div>
-        </div>
-    </div> -->
+
     
     <script src="./js/utils.js"></script>
     <script src="./js/main.js"></script>

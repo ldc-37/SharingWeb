@@ -31,6 +31,11 @@ $('#login-btn').click(function () {
         Login (username, password);
 })
 
+//忘记密码
+$('.account-forget').click(function () {
+    swal('请联系开发者', 'qq791551236', 'info');
+})
+
 // 用户填写内容实时检查
 $('#reg-username').blur(function () {
     if (this.value) {
@@ -44,11 +49,11 @@ $('#reg-pass').blur(function () {
 })
 $('#reg-pass-2').blur(function () {
     if (this.value == $('#reg-pass').val()) {
-        $('#reg-pass-2').css("border", "2px solid green");
+        $('#reg-pass-2').css("background", "#98ff98");
         $('#reg-tips__password2').hide();
     }
     else {
-        $('#reg-pass-2').css("border", "2px solid #b13e3c");
+        $('#reg-pass-2').css("background", "#ffd3d3");
         $('#reg-tips__password2').html("密码不一致<br>");
         $('#reg-tips__password2').show();
     }
@@ -97,20 +102,18 @@ $('.share-account__login').click(function () {
 
 function CheckUsername (username)
 {
-    $('#reg-username').css("border", "2px solid #b13e3c");
+    $('#reg-username').css("background", "#ffd3d3");
     $.ajax ({
         type: "GET",
         url: apiBase + "/user/checkUsernameAvailability",
         data: {
             username: username
         },
-        //@any problems above?
         dataType: "json",
         success: function (res) {
-            console.log(res);
             if (res.code == 0) {
                 isLegalName = 1;
-                $('#reg-username').css("border", "2px solid green");
+                $('#reg-username').css("background", "#98ff98");
                 $('#reg-tips__username').hide();
             }
             else {
@@ -122,11 +125,11 @@ function CheckUsername (username)
         error: function (xhr) {
             if (xhr.status == 500) {
                 isLegalName = 0;
-                $('#reg-tips__username').html('长度限制3-15<br>');
+                $('#reg-tips__username').html('长度限制为3-15<br>');
                 $('#reg-tips__username').show();
             }
             else {
-                swal("未知错误", xhr.status+ "错误", "error");
+                swal("网络错误", xhr.status+ "错误", "error");
             }
         }
     })
@@ -135,7 +138,7 @@ function CheckUsername (username)
 function CheckEmail (email)
 {
 	//!!当email为空的时候该接口认为*合法*
-    $('#reg-email').css("border", "2px solid #b13e3c");
+    $('#reg-email').css("background", "#ffd3d3");
     $.ajax ({
         type: "GET",
         url: apiBase + "/user/checkEmailAvailability",
@@ -147,7 +150,7 @@ function CheckEmail (email)
         success: function (res) {
             if (res.code == 0) {
             	isLegalEmail = 1;
-                $('#reg-email').css("border", "2px solid green");
+                $('#reg-email').css("background", "#98ff98");
                 $('#reg-tips__email').hide();
             }
             else {
@@ -163,7 +166,7 @@ function CheckEmail (email)
                 $('#reg-tips__email').show();
         	}
         	else {
-                swal("未知错误", xhr.status+ "错误", "error");                
+                swal("网络错误", xhr.status+ "错误", "error");                
         	}
         }
     })
@@ -172,18 +175,17 @@ function CheckEmail (email)
 function CheckPassword (password)
 {
     let errMsg;
-    if (password.length < 3 || password.length > 15) {
-        errMsg = "长度限制3-15";
+    if (password.length < 6 || password.length > 20) {
+        errMsg = "长度限制6-20";
     }
-    //@other checks
     if (!errMsg) {
     	isLegalPass = 1;
-        $('#reg-pass').css("border", "2px solid green");
+        $('#reg-pass').css("background", "#98ff98");
         $('#reg-tips__password').hide();
     }
     else {
     	isLegalPass = 0;
-        $('#reg-pass').css("border", "2px solid #b13e3c");
+        $('#reg-pass').css("background", "#ffd3d3");
         $('#reg-tips__password').html(errMsg + '<br>');
         $('#reg-tips__password').show();
     }
@@ -211,8 +213,6 @@ function Register (username, password, email)
         url: apiBase + "/auth/signup",
         contentType: "application/json",
         dataType: "json",
-        // async: false,
-        // processData: false,
         data: regInfo,
         success: function (res) {
             $('#reg-btn').text('注册');
@@ -253,7 +253,28 @@ function Login (username, password)
             $('#login-tips').hide();
             setCookie("accessToken", res.data.accessToken);
             setCookie("tokenType", res.data.tokenType);
+            userInfo.uid = GetUserInfo().user_id;
             HideLoginSidebar ();
+            //检查实名认证
+            $.ajax({
+                type: "GET",
+                url: apiBase + "/user/identity/" + userInfo.uid,
+                headers: {
+                    Authorization: AuthorizationText ()
+                },
+                success: (res) => {
+                    if (res.fzuVerified)
+                        $('#certificationState').text('已实名认证');
+                    else {
+                        $('#certificationState').text('未实名认证！')
+                            .css('text-decoration', 'underline').click(CertAlertInit);
+                        CertAlertInit ();
+                    }
+                },
+                error: (xhr) => {
+                    console.log('获取实名认证失败：' + xhr.status);
+                }
+            })
             $('#share-user-info__name').text(username)
                 .attr('title', '查看/修改用户信息')
                 .unbind('click')

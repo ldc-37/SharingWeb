@@ -1,6 +1,7 @@
 'use strict'
 const apiBase = "https://api.hs.rtxux.xyz";
-let info = {
+//@还未全部使用此全局变量
+let userInfo = {
     uid: 0,
     nickname: ''
 }
@@ -14,8 +15,8 @@ let chatFirstSnarlId;
 let AuthorizationText = () => {
     if (location.host == "127.0.0.1:5500") {
         //LiveServer调试 @test13
-        return "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNTQzNTgzOTE2LCJleHAiOjE1NDQxODg3MTZ9.lUAU--t404NDygg0OOH-WnVF0UlzAGqgNd_BoQuN9Yw08xd6SUb---AW5_4KFUnCpCEw5q__4PGGsz4QGGSJIg";
-        ;
+        // return ' ';
+        return "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNTQ0MTk2Mjg1LCJleHAiOjE1NDQ4MDEwODV9.a0CbTvvhrxCHVGZtK9sixcSHhG8bn4nc9oXpawq67nFWcriwmcqOcPZ64nRjfOGR1E9BGQILWEq7ZHwbpwDDvA";
     }
     return getCookie("tokenType") + " " + getCookie("accessToken");
 };
@@ -252,6 +253,15 @@ $(function () {
         $('.favorite-container').hide();
     });
     $('.favorite-container').text('物品');
+    //排序
+    $('#sortByDist').click(() => {
+        swal({
+            text: '请在Android版乐享上使用该功能',
+            button: false,
+            className: 'red-bg',
+            timer: 2500
+        });
+    })
 
 
     /**
@@ -456,7 +466,8 @@ function FillMain (data)
             time = data.duration;
             imgId = data.images;
             uid = data.owner_id;
-            owner = GetUserInfo(uid).nickName;
+            //搜索时没有owner_id
+            if (uid) owner = GetUserInfo(uid).nickName;
             lon = data.location.longitude;
             lat = data.location.latitude;
         }
@@ -469,7 +480,8 @@ function FillMain (data)
             time = data[i].duration;
             imgId = data[i].images;
             uid = data[i].owner_id;
-            owner = GetUserInfo(uid).nickName;            
+            //搜索时没有owner_id
+            if (uid) owner = GetUserInfo(uid).nickName;
             lon = data[i].location.longitude;
             lat = data[i].location.latitude;
         }
@@ -486,9 +498,6 @@ function FillMain (data)
         $newItem.find('.goods-date__txt').text('17-12-22');
         if (imgId.length) {
             $newItem.find('.goods-img').attr('src', apiBase + '/image/' + imgId[0]);
-            // for (let i = 1; i < imgId.length; ++i) {
-            //     $newItem.find('.goods-img').last().after($('<img alt="物品图片" class="goods-img">').attr('src', apiBase + '/image/' + imgId[i]));
-            // }
         }
         $newItem.find('.goods-img-intro').text(desc);
         $newItem.find('.goods-name__txt').text(name);
@@ -715,7 +724,7 @@ function FillMyLend (data)
         let duration = data[i].duration;
         let itemId = data[i].id;
         let ownerId = data[i].owner_id;
-        let imgId = data[i].images; //@temp
+        let imgId = data[i].images;
         // let lon = data[i].location.longitude;
         // let lat = data[i].location.latitude;
         let status = data[i].status;
@@ -748,7 +757,7 @@ function FillMyLend (data)
         // $newItem.attr('data-lon', lon);
         // $newItem.attr('data-lat', lat);
         if (imgId.length) {
-            $newItem.find('.my-item-img').attr('src', apiBase + '/image/' + imgId[0]); //@temp
+            $newItem.find('.my-item-img').attr('src', apiBase + '/image/' + imgId[0]);
         }
         $newItem.find('.my-lend-item-description__txt').text(desc);
         $newItem.find('.my-lend-item-name__txt').text(name);
@@ -1251,7 +1260,7 @@ function PromptLogin ()
 {
     swal({
         title: "还未登陆",
-        text: "请先登录后才能查看哦", 
+        text: "请先登录账号", 
         icon: "error",
         buttons: ["再看看", "去登陆!"]
     }).then((value) => {
@@ -1290,10 +1299,10 @@ function ToggleLike (el)
             }
         },
         error: function (xhr) {
-            if (xhr.status == '401') {
-                swal('登陆后才可以收藏！', '', 'error');
-            }
-            swal('收藏失败', xhr.status + '错误', 'error');
+            if (xhr.status == 401)
+                swal('收藏失败', '登陆后才可以收藏！', 'error');
+            else
+                swal('收藏失败', xhr.status + '错误', 'error');
         }
     });
 }

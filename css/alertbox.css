@@ -1,12 +1,10 @@
+/* -----------物品信息弹窗----------- */
 #itemAlert {
     display: flex;
     width: 100%;
     height: 100%;
     padding: 20px;
     overflow: hidden;
-}
-#itemAlert * {
-    /* border: 1px solid #000; */
 }
 
 .popup-shade {
@@ -241,4 +239,28 @@
     margin-top: 10px;
     text-align: center;
     color: #bbb;
+}
+
+
+/* -----------实名认证弹窗----------- */
+#certAlert {
+    width: 100%;
+    height: 100%;
+    padding: 15px;
+    text-align: center;
+}
+
+.cert-title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.cert-input-group {
+    display: block;
+    margin: 20px;
+}
+
+#certBtn {
+    width: 70px;
+    height: 30px;
 }

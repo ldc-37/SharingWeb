@@ -4,7 +4,7 @@
 
  let g_longitude, g_latitude;
 
-////发起借出弹窗
+// =============发起借出部分==============
 $('#share-require__btn').click(function () {
     if (AuthorizationText () == " ") {
         PromptLogin ();
@@ -120,6 +120,7 @@ Dropzone.options.lendPicDropzone = {
     sending: function (file, xhr, formData) {
         formData.append("item", uploadItemId);
     },
+    // @异常，暂时取消
     // maxfilesreached: function () {
     // },
     maxfilesexceeded: function (file) {
@@ -127,7 +128,6 @@ Dropzone.options.lendPicDropzone = {
         this.removeFile(file);
     },
     // error: function (file, msg) {
-        //
         // alert('图片上传错误：' + msg);
     // },
     queuecomplete: function () {
@@ -218,7 +218,6 @@ $('#lend-submit').click(function () {
                     contentType: "application/json",
                     data: lendItemJson,
                     success: function (res) {
-                        //TODO: no /publish?!
                         //上传图片
                         uploadItemId = res.id;
                         imgDataObj.processQueue();
@@ -234,7 +233,7 @@ $('#lend-submit').click(function () {
     }
 });
 
-
+// =============物品详情部分==============
 function ItemAlertInit (itemId, uid)
 {
     const itemInfo = GetItemInfo(itemId);
@@ -375,7 +374,9 @@ function LoadRemark (itemId)
             $('.popup-item-panel__ft').append('<span class="remark-none">没有评论</span>')
             return;
         }
-        const myUid = GetUserInfo().user_id;
+        let myUid;
+        if (AuthorizationText () != ' ') 
+            myUid = GetUserInfo().user_id;
         const remarkHTML = `
         <div class="panel-remark__hd">
             <img src="" alt="">
@@ -488,8 +489,85 @@ function LoadRemark (itemId)
                 }
             },
             error: function (xhr) {
-                swal('发布评论失败', xhr.status + '错误', 'error');
+                if (xhr.status == 401)
+                    PromptLogin ();
+                else
+                    swal('发布评论失败', xhr.status + '错误', 'error');
             }
         })
     }
+}
+
+// =============实名认证部分==============
+function CheckCertification ()
+{
+    $.ajax({
+        type: "GET",
+        url: apiBase + "/user/identity/" + userInfo.uid,
+        headers: {
+            Authorization: AuthorizationText ()
+        },
+        success: (res) => {
+            if (res.fzuVerified)
+                $('#certificationState').text('已实名认证');
+            else {
+                $('#certificationState').text('未实名认证！')
+                    .css('text-decoration', 'underline').click(CertAlertInit);
+                CertAlertInit ();
+            }
+        },
+        error: (xhr) => {
+            console.log('获取实名认证失败：' + xhr.status);
+        }
+    })
+}
+
+function CertAlertInit ()
+{
+    const itemHTML = `
+    <div id="certAlert">
+        <p class="cert-title">请输入福大教务处账号密码<br>以完成实名认证</p>
+        <div class="cert-input-group">
+            <span>账号</span> 
+            <input type="text" id="certAccount">
+        </div>
+        <div class="cert-input-group">
+            <span>密码</span> 
+            <input type="password" id="certPass">
+        </div>
+        <input type="button" value="提交" id="certBtn">
+    </div>`;
+    layer.open({
+        type: 1,
+        area: ['400px', '300px'],
+        title: '实名认证',
+        content: itemHTML,
+        zIndex: 5,
+        success: function () {
+            $('#certBtn').click(() => {
+                $.ajax({
+                    type: 'POST',
+                    url: apiBase + '/user/identity/verifyFzu',
+                    headers: {
+                        Authorization: AuthorizationText ()
+                    },
+                    data: {
+                        "fzuNumber": $('#certAccount').val(),
+                        "fzuPassword": $('#certPass').val()
+                    },
+                    success: (res) => {
+                        if (res.data == 0) {
+                            swal('实名认证通过！', '欢迎你，' + res.data.fzuName + '同学', 'success')
+                            $('#certificationState').text('已完成认证');
+                        }
+                        else
+                            swal('实名认证失败', '错误码：' + res.code, 'warning');
+                    },
+                    error: (xhr) => {
+                        swal('实名认证失败', xhr.status + '错误', 'error');
+                    }
+                })
+            })
+        }
+    })
 }
