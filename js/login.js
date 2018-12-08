@@ -145,7 +145,6 @@ function CheckEmail (email)
         data: {
             email: email
         },
-        //@any problems above?
         dataType: "json",
         success: function (res) {
             if (res.code == 0) {
@@ -256,25 +255,7 @@ function Login (username, password)
             userInfo.uid = GetUserInfo().user_id;
             HideLoginSidebar ();
             //检查实名认证
-            $.ajax({
-                type: "GET",
-                url: apiBase + "/user/identity/" + userInfo.uid,
-                headers: {
-                    Authorization: AuthorizationText ()
-                },
-                success: (res) => {
-                    if (res.fzuVerified)
-                        $('#certificationState').text('已实名认证');
-                    else {
-                        $('#certificationState').text('未实名认证！')
-                            .css('text-decoration', 'underline').click(CertAlertInit);
-                        CertAlertInit ();
-                    }
-                },
-                error: (xhr) => {
-                    console.log('获取实名认证失败：' + xhr.status);
-                }
-            })
+            CheckCertification ();
             $('#share-user-info__name').text(username)
                 .attr('title', '查看/修改用户信息')
                 .unbind('click')
@@ -319,4 +300,27 @@ function HideLoginSidebar () {
         $('.l-sidebar--account').hide();
     });
     clearInterval(logoCycle);
+}
+
+function CheckCertification ()
+{
+    $.ajax({
+        type: "GET",
+        url: apiBase + "/user/identity/" + userInfo.uid,
+        headers: {
+            Authorization: AuthorizationText ()
+        },
+        success: (res) => {
+            if (res.fzuVerified)
+                $('#certificationState').text('已实名认证');
+            else {
+                $('#certificationState').text('未实名认证！')
+                    .css('text-decoration', 'underline').click(CertAlertInit);
+                CertAlertInit ();
+            }
+        },
+        error: (xhr) => {
+            console.log('获取实名认证失败：' + xhr.status);
+        }
+    });
 }

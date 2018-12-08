@@ -117,6 +117,7 @@ Dropzone.options.lendPicDropzone = {
     addRemoveLinks: true,
     dictDefaultMessage: '点击空白处上传图片',
     dictCancelUpload: '删除该图片',
+    parallelUploads: 5,
     sending: function (file, xhr, formData) {
         formData.append("item", uploadItemId);
     },
@@ -152,7 +153,7 @@ Dropzone.options.lendPicDropzone = {
                     swal("发布失败", xhr.status + "错误", "error");
                     $('#lend-submit').text('提交');
                 }
-            })
+            });
         }
     }
 }
@@ -186,52 +187,83 @@ $('#lend-submit').click(function () {
         $('.lend-tips').eq(0).text('描述不能为空');
         return;
     }
-    else if (imgDataObj.files) {
+    else if (imgDataObj.files.length == 0) {
         swal('没有图片', '真的不上传一张图片让大家看看？', 'info', {
             buttons: ['丑拒', '好吧']
         }).then((value) => {
-            if (!value) {
-                const itemName = $('#lend-item-name').val();
-                const itemTime = $('#lend-time').val() * 60 * 60 * 24;
-                const itemDescription = $('#lend-description').val();
-                const locationText = $('#lend-map-position-txt').val();
-                const itemPrice = $('#lend-price').attr('disabled') ? 0 : parseFloat($('#lend-price').val());
-                const lendLocationJson = `{
-                    "longitude": "${g_longitude}",
-                    "latitude": "${g_latitude}",
-                    "locationDescription": "${locationText}"
-                }`;
-                const lendItemJson = `{
-                    "name": "${itemName}",
-                    "duration": ${itemTime},
-                    "description": "${itemDescription}",
-                    "price": ${itemPrice},
-                    "location": ${lendLocationJson}
-                }`;
-                $('#lend-submit').text('发布中...');
+            if (!value) LendRequest ();
+        });
+    }
+    else {
+        LendRequest ();
+    }
+});
+
+function LendRequest ()
+{
+    const itemName = $('#lend-item-name').val();
+    const itemTime = $('#lend-time').val() * 60 * 60 * 24;
+    const itemDescription = $('#lend-description').val();
+    const locationText = $('#lend-map-position-txt').val();
+    const itemPrice = $('#lend-price').attr('disabled') ? 0 : parseFloat($('#lend-price').val());
+    const lendLocationJson = `{
+        "longitude": "${g_longitude}",
+        "latitude": "${g_latitude}",
+        "locationDescription": "${locationText}"
+    }`;
+    const lendItemJson = `{
+        "name": "${itemName}",
+        "duration": ${itemTime},
+        "description": "${itemDescription}",
+        "price": ${itemPrice},
+        "location": ${lendLocationJson}
+    }`;
+    $('#lend-submit').text('发布中...');
+    $.ajax({
+        type: "POST",
+        url: apiBase + "/item",
+        headers: {
+            Authorization: AuthorizationText ()
+        },
+        contentType: "application/json",
+        data: lendItemJson,
+        success: function (res) {
+            uploadItemId = res.id;
+            if (imgDataObj.files.length) {
+                //上传图片
+                imgDataObj.processQueue();
+            }
+            else {
+                //没有图片
                 $.ajax({
                     type: "POST",
-                    url: apiBase + "/item",
+                    url: apiBase + "/item/" + uploadItemId + "/publish",
                     headers: {
                         Authorization: AuthorizationText ()
                     },
-                    contentType: "application/json",
-                    data: lendItemJson,
                     success: function (res) {
-                        //上传图片
-                        uploadItemId = res.id;
-                        imgDataObj.processQueue();
-                        $('#lend-submit').text('提交');
+                        if (res.code == 0) {
+                            swal("完成", "借出请求已发布", "success");
+                            $('#lend-launch-close').click();
+                        }
+                        else {
+                            swal("publish失败", "错误代码：" + res.code, "error");
+                        }
                     },
                     error: function (xhr) {
-                        swal("提交失败", xhr.status + "错误", "error");
+                        swal("发布失败", xhr.status + "错误", "error");
                         $('#lend-submit').text('提交');
                     }
-                })
+                });
             }
-        });
-    }
-});
+            $('#lend-submit').text('提交');
+        },
+        error: function (xhr) {
+            swal("提交失败", xhr.status + "错误", "error");
+            $('#lend-submit').text('提交');
+        }
+    });
+}
 
 // =============物品详情部分==============
 function ItemAlertInit (itemId, uid)

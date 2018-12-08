@@ -81,6 +81,7 @@ $(function () {
                 Authorization: AuthorizationText ()
             },
             success: function (res) {
+                userInfo.uid = res.user_id;
                 $('#share-user-info__name').text(res.nickName)
                     .unbind('click')
                     .click(function () {
@@ -88,6 +89,7 @@ $(function () {
                         $('.l-sidebar--nor').css('filter', 'blur(3px)');
                         LoadUserInfoEdit ();
                     });
+                CheckCertification ();
             },
             error: function (xhr) {
                 setCookie("accessToken", "");
