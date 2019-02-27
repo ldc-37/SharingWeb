@@ -528,7 +528,7 @@ button:disabled:hover {
     transition: .3s;
 }
 
-.favorite-container {
+.favorite-wrapper {
     display: none;
     position: relative;
     height: 200px;
@@ -536,19 +536,60 @@ button:disabled:hover {
     top: -10px;
     right: 50px;
     background: #fff;
+    border: 1px solid #ddd;
+    box-shadow: 3px 5px 6px 0px #888;
     z-index: 2;
     transition: opacity .5s;
 }
 
-.favorite-container::before {
+.favorite-wrapper::before {
     content: '';
     position: absolute;
     left: 92.5px;
     top: -7px;
-    background: #fff;
+    background: #f2f2f2;
     width: 15px;
     height: 15px;
     transform: rotate(45deg);
+}
+
+.favorite-container {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;
+}
+
+.favorite-item {
+    height: 50px;
+    line-height: 50px;
+    padding: 0 12px;
+}
+
+.favorite-item:nth-child(odd) {
+    background: #f2f2f2;
+}
+
+.favorite-item__name {
+    display: inline-block;
+    width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    cursor: pointer;
+}
+.favorite-item__name:hover {
+    text-decoration: underline;
+}
+
+.favorite-item__cancel {
+    float: right;
+    width: 20px;
+    cursor: pointer;
+    text-align: center;
+}
+.favorite-item__cancel:hover {
+    color: red;
+    text-shadow: 0px 0px 1px #777;
 }
 
 
@@ -707,7 +748,7 @@ div.goods-list__item {
 }
 
 .position-txt {
-    text-decoration: underline;
+    color: #4169e1;
     cursor: pointer;
     word-break: break-all;
 }
@@ -718,7 +759,6 @@ div.goods-list__item {
 }
 .position-txt:hover {
     text-decoration: underline;
-    color: blue;
 }
 
 .position-map {

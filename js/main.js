@@ -11,12 +11,11 @@ let settings = {
 };
 let chatFirstSnarlId;
 
-//惰性求值
 let AuthorizationText = () => {
     if (location.host == "127.0.0.1:5500") {
         //LiveServer调试 @test13
         // return ' ';
-        return "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNTQ0MTk2Mjg1LCJleHAiOjE1NDQ4MDEwODV9.a0CbTvvhrxCHVGZtK9sixcSHhG8bn4nc9oXpawq67nFWcriwmcqOcPZ64nRjfOGR1E9BGQILWEq7ZHwbpwDDvA";
+        return "Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiIzIiwiaWF0IjoxNTUxMTk5MzEzLCJleHAiOjE1NTE4MDQxMTN9.KU0BbChf0j1fqziFmChBAwXXWPgmQb8acCaZSNH36NuM7WioUZ4TzZSi3kIFGoTnUVPeRe2bP288GcCkJD5GWw";
     }
     return getCookie("tokenType") + " " + getCookie("accessToken");
 };
@@ -189,6 +188,7 @@ $(function () {
         if (e.keyCode == "13") 
             $('#mainSearchBtn').click();
     })
+
     //搜索按钮
     $('#mainSearchBtn').click(function () {
         const words = $('#searchBox').val();
@@ -237,6 +237,7 @@ $(function () {
             });
         }
     })
+
     //二维码 APP下载
     $('.main-head-qrcode').mouseover(function () {
         $('.main-head-qrcode__pic').stop(true);
@@ -248,13 +249,64 @@ $(function () {
         // window.open("https://xilym.tk/storage/apk/happySharing.apk");
         window.open("https://copy.im/a/xjfx34");
     });
-    //用户收藏
+
+    //TODO:用户收藏 @等待修改
     $('.main-head-favorite-text, .favorite-container').mouseover(function () {
-        $('.favorite-container').show();
+        const $favContainer = $('.favorite-container');
+        if ($favContainer.children().length === 0) {
+            $.ajax({
+                type: 'GET',
+                url: apiBase + '/user/favorite/',
+                headers: {
+                    Authorization: AuthorizationText ()
+                },  
+                success: function (res) {
+                    const itemHTML = 
+                    `<span class="favorite-item__name"></span>
+                    <span class="favorite-item__cancel">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </span>`;
+                    for (let i in res) {
+                        const $favItem = $('<div>').addClass('favorite-item');
+                        $favItem.html(itemHTML).find('.favorite-item__name')
+                            .text(res[i].name)
+                            .attr('data-id', res[i].id)
+                            .click(function () {
+                                // open this
+                                console.log(this);
+                            });
+                        $favItem.find('.favorite-item__cancel').click(function () {
+                            $.ajax({
+                                type: 'DELETE',
+                                url: apiBase + '/user/favorite/' + this.parentNode.firstChild.dataset.id,
+                                headers: {
+                                    Authorization: AuthorizationText ()
+                                },
+                                success: res => {
+                                    if (res.code === 0) {
+                                        $(this.parentNode).remove();
+                                    }
+                                },
+                                error: xhr => {
+                                    swal('取消收藏失败', xhr.status + '错误', 'error');
+                                }
+                            });
+                        })
+                        $favContainer.append($favItem);
+                    }
+                },
+                error: function (xhr) {
+                    if (xhr.status !== 401) {
+                        swal('读取收藏列表失败', xhr.status + '错误', 'error');
+                    }
+                }
+            });
+        }
+        $('.favorite-wrapper').show();
     }).mouseout(function () {
-        $('.favorite-container').hide();
+        $('.favorite-wrapper').hide();
     });
-    $('.favorite-container').text('物品');
+
     //排序
     $('#sortByDist').click(() => {
         swal({
@@ -624,7 +676,9 @@ function FillMain (data)
                 }
             },
             error: function (xhr) {
-                swal('读取收藏列表失败', xhr.status + '错误', 'error');
+                if (xhr.status !== 401) {
+                    swal('读取收藏列表失败', xhr.status + '错误', 'error');
+                }
             }
         });
     }
@@ -632,10 +686,10 @@ function FillMain (data)
 
 function LoadMain ()
 {
-    const RANDOM_NUM = 10;
+    const GET_NUM = 10;
     $.ajax({
         type: 'GET',
-        url: apiBase + '/item?random=' + RANDOM_NUM,
+        url: apiBase + '/item?random=' + GET_NUM,
         dataType: 'json',
         headers: {
             Authorization: AuthorizationText ()
